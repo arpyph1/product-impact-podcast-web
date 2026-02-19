@@ -62,6 +62,7 @@ export default {
         coral:  "hsl(var(--coral))",
         teal:   "hsl(var(--teal))",
         amber:  "hsl(var(--amber))",
+        orange: "hsl(var(--orange))",
         "dark-surface":   "hsl(var(--dark-surface))",
         "darker-surface": "hsl(var(--darker-surface))",
       },
