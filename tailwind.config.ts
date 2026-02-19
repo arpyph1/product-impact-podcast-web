@@ -12,7 +12,7 @@ export default {
     },
     extend: {
       fontFamily: {
-        sans: ["Space Grotesk", "sans-serif"],
+        sans: ["Inter", "system-ui", "sans-serif"],
         display: ["Syne", "sans-serif"],
       },
       colors: {
@@ -59,10 +59,12 @@ export default {
           border:              "hsl(var(--sidebar-border))",
           ring:                "hsl(var(--sidebar-ring))",
         },
-        coral:  "hsl(var(--coral))",
-        teal:   "hsl(var(--teal))",
-        amber:  "hsl(var(--amber))",
-        orange: "hsl(var(--orange))",
+        coral:    "hsl(var(--coral))",
+        teal:     "hsl(var(--teal))",
+        amber:    "hsl(var(--amber))",
+        orange:   "hsl(var(--orange))",
+        lavender: "hsl(var(--lavender))",
+        sage:     "hsl(var(--sage))",
         "dark-surface":   "hsl(var(--dark-surface))",
         "darker-surface": "hsl(var(--darker-surface))",
       },
