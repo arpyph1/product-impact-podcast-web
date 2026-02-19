@@ -6,9 +6,6 @@ const corsHeaders = {
     "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
 };
 
-/**
- * Parse ISO 8601 duration (PT#M#S) to seconds.
- */
 function parseDuration(iso: string): number {
   const m = iso.match(/PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?/);
   if (!m) return 9999;
@@ -37,41 +34,45 @@ serve(async (req) => {
       );
     }
 
-    // Step 1: Fetch latest 50 videos from channel
-    const searchUrl = `https://www.googleapis.com/youtube/v3/search?part=snippet&channelId=${encodeURIComponent(channelId)}&type=video&order=date&maxResults=50&key=${apiKey}`;
-    const searchRes = await fetch(searchUrl);
-    const searchData = await searchRes.json();
+    // Use the uploads playlist (replace UC with UU) — more reliable than Search API
+    const uploadsPlaylistId = channelId.replace(/^UC/, "UU");
 
-    if (!searchRes.ok) {
-      console.error("YouTube search API error:", JSON.stringify(searchData));
+    // Fetch latest 50 uploads via PlaylistItems API
+    const playlistUrl = `https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&playlistId=${encodeURIComponent(uploadsPlaylistId)}&maxResults=50&key=${apiKey}`;
+    const playlistRes = await fetch(playlistUrl);
+    const playlistData = await playlistRes.json();
+
+    if (!playlistRes.ok) {
+      console.error("YouTube PlaylistItems API error:", JSON.stringify(playlistData));
       return new Response(
-        JSON.stringify({ error: "YouTube API error", details: searchData.error?.message || "Unknown error" }),
+        JSON.stringify({ error: "YouTube API error", details: playlistData.error?.message || "Unknown error" }),
         { status: 502, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
 
-    const items = searchData.items || [];
+    const items = playlistData.items || [];
     if (items.length === 0) {
       return new Response(
-        JSON.stringify({ error: "No videos found for this channel", shorts: [] }),
+        JSON.stringify({ error: "No videos found", shorts: [] }),
         { status: 404, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
 
-    // Step 2: Get video details (duration) in batch to identify Shorts (≤60s)
-    const videoIds = items.map((item: any) => item.id?.videoId).filter(Boolean);
+    // Get video IDs to check durations
+    const videoIds = items.map((item: any) => item.snippet?.resourceId?.videoId).filter(Boolean);
     const detailsUrl = `https://www.googleapis.com/youtube/v3/videos?part=contentDetails,snippet&id=${videoIds.join(",")}&key=${apiKey}`;
     const detailsRes = await fetch(detailsUrl);
     const detailsData = await detailsRes.json();
 
     if (!detailsRes.ok) {
-      console.error("YouTube videos API error:", JSON.stringify(detailsData));
+      console.error("YouTube Videos API error:", JSON.stringify(detailsData));
       return new Response(
         JSON.stringify({ error: "YouTube API error fetching video details" }),
         { status: 502, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
 
+    // Filter to shorts (≤60s), preserving upload order (newest first)
     const shorts: Array<{
       videoId: string;
       title: string;
@@ -79,16 +80,25 @@ serve(async (req) => {
       publishedAt: string;
     }> = [];
 
-    for (const video of (detailsData.items || [])) {
+    // Build a map of video details keyed by ID
+    const detailsMap = new Map<string, any>();
+    for (const v of (detailsData.items || [])) {
+      detailsMap.set(v.id, v);
+    }
+
+    // Iterate in playlist order (newest first)
+    for (const item of items) {
       if (shorts.length >= count) break;
-      const duration = parseDuration(video.contentDetails?.duration || "");
-      // Shorts are ≤ 60 seconds
+      const vid = item.snippet?.resourceId?.videoId;
+      const detail = detailsMap.get(vid);
+      if (!detail) continue;
+      const duration = parseDuration(detail.contentDetails?.duration || "");
       if (duration <= 60) {
         shorts.push({
-          videoId: video.id,
-          title: video.snippet?.title || "",
-          thumbnail: video.snippet?.thumbnails?.high?.url || video.snippet?.thumbnails?.medium?.url || "",
-          publishedAt: video.snippet?.publishedAt || "",
+          videoId: vid,
+          title: detail.snippet?.title || "",
+          thumbnail: detail.snippet?.thumbnails?.high?.url || detail.snippet?.thumbnails?.medium?.url || "",
+          publishedAt: detail.snippet?.publishedAt || "",
         });
       }
     }
