@@ -5,17 +5,18 @@ import Navbar from "@/components/Navbar";
 import Hero from "@/components/Hero";
 import Episodes from "@/components/Episodes";
 import About from "@/components/About";
-import Engage from "@/components/Engage";
+import Hosts from "@/components/Hosts";
+import PlatformBar from "@/components/PlatformBar";
 import Sponsors from "@/components/Sponsors";
 import Newsletter from "@/components/Newsletter";
 import Footer from "@/components/Footer";
 import ContactModal from "@/components/ContactModal";
 import CMSPanel from "@/components/CMSPanel";
 
-// Section ordering — defined order is what the user can reorder via CMS
-type SectionId = "about" | "episodes" | "sponsors" | "newsletter" | "engage";
+// Section ordering — "engage" is now replaced by "hosts" and "platforms"
+type SectionId = "about" | "episodes" | "hosts" | "platforms" | "sponsors" | "newsletter";
 
-const DEFAULT_ORDER: SectionId[] = ["about", "episodes", "sponsors", "newsletter", "engage"];
+const DEFAULT_ORDER: SectionId[] = ["about", "episodes", "hosts", "platforms", "sponsors", "newsletter"];
 
 const Index = () => {
   const { content, update, updateMany, reset, isEditing, setIsEditing } = useCMS();
@@ -23,8 +24,12 @@ const Index = () => {
   const [contactOpen, setContactOpen] = useState(false);
 
   // Section order — stored in CMS if available, else default
-  const sectionOrder: SectionId[] =
-    ((content as any).sectionOrder as SectionId[] | undefined) || DEFAULT_ORDER;
+  const rawOrder = ((content as any).sectionOrder as string[] | undefined) || DEFAULT_ORDER;
+  // Filter to only known section IDs (handles legacy "engage" gracefully)
+  const knownIds = new Set<SectionId>(["about", "episodes", "hosts", "platforms", "sponsors", "newsletter"]);
+  const sectionOrder: SectionId[] = rawOrder.filter(id => knownIds.has(id as SectionId)) as SectionId[];
+  // Append any missing sections
+  DEFAULT_ORDER.forEach(id => { if (!sectionOrder.includes(id)) sectionOrder.push(id); });
 
   const moveSectionUp = (id: SectionId) => {
     const idx = sectionOrder.indexOf(id);
@@ -68,7 +73,7 @@ const Index = () => {
         return (
           <div key="about">
             {controls}
-            <About content={content} isEditing={isEditing} onUpdate={update} episodes={episodes.slice(0, 4)} />
+            <About content={content} isEditing={isEditing} onUpdate={update} />
           </div>
         );
       case "episodes":
@@ -79,6 +84,20 @@ const Index = () => {
               content={content} isEditing={isEditing} onUpdate={update}
               episodes={episodes} loading={loading} error={error} podcastTitle={podcastTitle}
             />
+          </div>
+        );
+      case "hosts":
+        return (
+          <div key="hosts">
+            {controls}
+            <Hosts content={content} isEditing={isEditing} onUpdate={update} />
+          </div>
+        );
+      case "platforms":
+        return (
+          <div key="platforms">
+            {controls}
+            <PlatformBar content={content} isEditing={isEditing} />
           </div>
         );
       case "sponsors":
@@ -93,13 +112,6 @@ const Index = () => {
           <div key="newsletter">
             {controls}
             <Newsletter content={content} isEditing={isEditing} onUpdate={update} />
-          </div>
-        );
-      case "engage":
-        return (
-          <div key="engage">
-            {controls}
-            <Engage content={content} isEditing={isEditing} onUpdate={update} onContactClick={() => setContactOpen(true)} />
           </div>
         );
       default:

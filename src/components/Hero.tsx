@@ -55,24 +55,20 @@ function getYouTubeThumbnail(url: string): string {
   return id ? `https://img.youtube.com/vi/${id}/hqdefault.jpg` : "";
 }
 
-// Angled video card — like the reference: slight rotation, rounded corners, filter overlay
+// Flat (no rotation) video card with dark filter overlay
 function VideoCard({
-  url, label, urlKey, labelKey, isEditing, onUpdate, rotation,
+  url, label, urlKey, labelKey, isEditing, onUpdate,
 }: {
   url: string; label: string; urlKey: keyof CMSContent; labelKey: keyof CMSContent;
   isEditing: boolean; onUpdate: (key: keyof CMSContent, value: any) => void;
-  rotation: number;
 }) {
   const [playing, setPlaying] = useState(false);
   const videoId = getYouTubeEmbedId(url);
   const thumb = getYouTubeThumbnail(url);
 
   return (
-    <div
-      className="relative flex flex-col gap-2"
-      style={{ transform: `rotate(${rotation}deg)`, transformOrigin: "center center" }}
-    >
-      <div className="relative aspect-video rounded-2xl overflow-hidden bg-card border border-border group shadow-2xl">
+    <div className="relative flex flex-col gap-2">
+      <div className="relative aspect-video rounded-xl overflow-hidden bg-card border border-border group shadow-xl">
         {playing && videoId ? (
           <iframe
             className="absolute inset-0 w-full h-full"
@@ -90,7 +86,7 @@ function VideoCard({
                 <span className="text-xs text-muted-foreground">No video URL</span>
               </div>
             )}
-            {/* Dark filter overlay — lifts on hover */}
+            {/* Dark filter — lifts on hover */}
             <div className="absolute inset-0 bg-black/55 group-hover:bg-black/20 transition-all duration-500" />
 
             {videoId && (
@@ -98,7 +94,7 @@ function VideoCard({
                 onClick={() => setPlaying(true)}
                 className="absolute inset-0 flex items-center justify-center"
               >
-                <div className="w-12 h-12 rounded-full bg-white/90 flex items-center justify-center shadow-xl hover:scale-110 transition-transform">
+                <div className="w-11 h-11 rounded-full bg-white/90 flex items-center justify-center shadow-xl hover:scale-110 transition-transform">
                   <Play className="w-5 h-5 text-black ml-0.5" />
                 </div>
               </button>
@@ -130,19 +126,21 @@ function VideoCard({
 }
 
 export default function Hero({ content, isEditing, onUpdate }: HeroProps) {
-  const videoCards = [
-    { url: content.heroVideo1Url, label: content.heroVideo1Label, urlKey: "heroVideo1Url" as keyof CMSContent, labelKey: "heroVideo1Label" as keyof CMSContent, rotation: -2.5 },
-    { url: content.heroVideo2Url, label: content.heroVideo2Label, urlKey: "heroVideo2Url" as keyof CMSContent, labelKey: "heroVideo2Label" as keyof CMSContent, rotation: 0 },
-    { url: content.heroVideo3Url, label: content.heroVideo3Label, urlKey: "heroVideo3Url" as keyof CMSContent, labelKey: "heroVideo3Label" as keyof CMSContent, rotation: 2.5 },
+  const cards = [
+    { url: content.heroVideo1Url, label: content.heroVideo1Label, urlKey: "heroVideo1Url" as keyof CMSContent, labelKey: "heroVideo1Label" as keyof CMSContent },
+    { url: content.heroVideo2Url, label: content.heroVideo2Label, urlKey: "heroVideo2Url" as keyof CMSContent, labelKey: "heroVideo2Label" as keyof CMSContent },
+    { url: content.heroVideo3Url, label: content.heroVideo3Label, urlKey: "heroVideo3Url" as keyof CMSContent, labelKey: "heroVideo3Label" as keyof CMSContent },
   ];
 
   return (
-    <section id="podcast" className="relative bg-background pt-16">
-      {/* Top: title + description + platform buttons — NO logo */}
-      <div className="container mx-auto px-6 pt-14 pb-6 text-center">
-        {/* Headline */}
+    <section id="podcast" className="relative bg-background pt-20">
+      {/* Small top gap between nav and hero content */}
+      <div className="pt-8" />
+
+      {/* Headline + description + platform buttons */}
+      <div className="container mx-auto px-6 pb-8 text-center">
         <h1
-          className={`font-display font-black uppercase leading-[0.92] tracking-tight text-foreground mb-4 ${isEditing ? "cursor-text" : ""}`}
+          className={`font-display font-black uppercase leading-[0.92] tracking-tight text-foreground mb-5 ${isEditing ? "cursor-text" : ""}`}
           style={{ fontSize: "clamp(2.4rem, 6vw, 5.5rem)", letterSpacing: "-0.03em" }}
           contentEditable={isEditing}
           suppressContentEditableWarning
@@ -151,9 +149,10 @@ export default function Hero({ content, isEditing, onUpdate }: HeroProps) {
           {content.heroTitle}
         </h1>
 
-        {/* Subline */}
+        {/* Subline — same font style as About body text */}
         <p
-          className="text-muted-foreground max-w-xl mx-auto text-base leading-relaxed mb-7"
+          className="text-muted-foreground max-w-xl mx-auto leading-relaxed mb-8"
+          style={{ fontSize: "1.125rem", fontFamily: "'Inter', system-ui, sans-serif", fontWeight: 400 }}
           contentEditable={isEditing}
           suppressContentEditableWarning
           onBlur={e => isEditing && onUpdate("heroDescription", e.currentTarget.textContent || "")}
@@ -162,7 +161,7 @@ export default function Hero({ content, isEditing, onUpdate }: HeroProps) {
         </p>
 
         {/* Platform buttons */}
-        <div className="flex flex-wrap items-center justify-center gap-3 mb-12">
+        <div className="flex flex-wrap items-center justify-center gap-3 mb-10">
           {PLATFORMS.map(p => (
             <a
               key={p.label}
@@ -181,25 +180,35 @@ export default function Hero({ content, isEditing, onUpdate }: HeroProps) {
         </div>
       </div>
 
-      {/* Three angled video cards — stacked like the reference */}
+      {/* 
+        Three video cards in a "brick" layout:
+        Left and Right cards sit at the top, Centre card drops down.
+        On mobile: stacked single column.
+      */}
       <div className="container mx-auto px-6 pb-20">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-6 items-end">
-          {videoCards.map((card, i) => (
-            <VideoCard
-              key={i}
-              url={card.url}
-              label={card.label}
-              urlKey={card.urlKey}
-              labelKey={card.labelKey}
-              isEditing={isEditing}
-              onUpdate={onUpdate}
-              rotation={card.rotation}
-            />
+        <div className="hidden md:grid md:grid-cols-3 gap-6 items-start">
+          {/* Card 1 — top-left */}
+          <div className="mt-0">
+            <VideoCard {...cards[0]} isEditing={isEditing} onUpdate={onUpdate} />
+          </div>
+          {/* Card 2 — centre, shifted down */}
+          <div className="mt-12">
+            <VideoCard {...cards[1]} isEditing={isEditing} onUpdate={onUpdate} />
+          </div>
+          {/* Card 3 — top-right */}
+          <div className="mt-0">
+            <VideoCard {...cards[2]} isEditing={isEditing} onUpdate={onUpdate} />
+          </div>
+        </div>
+
+        {/* Mobile: single column */}
+        <div className="flex flex-col gap-6 md:hidden">
+          {cards.map((card, i) => (
+            <VideoCard key={i} {...card} isEditing={isEditing} onUpdate={onUpdate} />
           ))}
         </div>
       </div>
 
-      {/* Bottom rule */}
       <div className="section-divider" />
     </section>
   );
