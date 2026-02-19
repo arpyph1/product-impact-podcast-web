@@ -232,16 +232,6 @@ export default function Hero({ content, isEditing, onUpdate, episodes = [] }: He
           {content.heroTitle}
         </h1>
 
-        {/* About description merged into hero */}
-        <p
-          className="text-muted-foreground max-w-2xl mx-auto leading-relaxed mb-8"
-          style={{ fontSize: "1.5rem", lineHeight: "1.6" }}
-          contentEditable={isEditing}
-          suppressContentEditableWarning
-          onBlur={e => isEditing && onUpdate("aboutDescription", e.currentTarget.textContent || "")}
-        >
-          {content.aboutDescription}
-        </p>
 
         {/* Platform buttons */}
         <div className="flex flex-wrap items-center justify-center gap-3 mb-10">
@@ -263,7 +253,7 @@ export default function Hero({ content, isEditing, onUpdate, episodes = [] }: He
       </div>
 
       {/* Three vertical video cards — descending staircase, 60% smaller */}
-      <div className="container mx-auto px-6 pb-20">
+      <div className="container mx-auto px-6 pb-12">
         <div className="max-w-2xl mx-auto">
           {/* Desktop: 3-column staircase, each card descends further */}
           <div className="hidden md:grid md:grid-cols-3 gap-9 items-start">
@@ -284,6 +274,21 @@ export default function Hero({ content, isEditing, onUpdate, episodes = [] }: He
               <VideoCard key={i} {...card} isEditing={isEditing} onUpdate={onUpdate} />
             ))}
           </div>
+        </div>
+      </div>
+
+      {/* About description below videos */}
+      <div className="container mx-auto px-6 pb-16">
+        <div className="max-w-3xl mx-auto text-center">
+          <p
+            className="text-muted-foreground leading-relaxed"
+            style={{ fontSize: "1.5rem", lineHeight: "1.6" }}
+            contentEditable={isEditing}
+            suppressContentEditableWarning
+            onBlur={e => isEditing && onUpdate("aboutDescription", e.currentTarget.textContent || "")}
+          >
+            {content.aboutDescription}
+          </p>
         </div>
       </div>
 

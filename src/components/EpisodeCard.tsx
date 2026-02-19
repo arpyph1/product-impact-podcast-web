@@ -31,7 +31,7 @@ export default function EpisodeCard({ episode, index }: EpisodeCardProps) {
   };
 
   return (
-    <article className="episode-card group flex flex-col gap-3">
+    <article className="episode-card group flex flex-col gap-2 max-w-[75%] mx-auto">
       {/* Square image */}
       <div
         className="relative aspect-square rounded-sm overflow-hidden bg-card cursor-pointer"
