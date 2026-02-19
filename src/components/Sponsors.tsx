@@ -22,7 +22,11 @@ const DEFAULT_SPONSORS: Sponsor[] = [
 ];
 
 export default function Sponsors({ content, isEditing, onUpdate }: SponsorsProps) {
-  const sponsors: Sponsor[] = content.sponsors?.length ? content.sponsors : DEFAULT_SPONSORS;
+  // In edit mode show defaults so user can fill them in; in display mode only show filled sponsors
+  const allSponsors: Sponsor[] = content.sponsors?.length ? content.sponsors : (isEditing ? DEFAULT_SPONSORS : []);
+  const sponsors = isEditing
+    ? allSponsors
+    : allSponsors.filter(s => s.name && s.name !== "Sponsor Name" && s.name !== "Partner Co." && s.name !== "Brand Inc." && s.name !== "New Sponsor" && (s.url !== "#" || s.logoUrl || s.tagline !== "Your company tagline goes here"));
 
   const updateSponsor = (id: string, field: keyof Sponsor, value: string) => {
     const updated = sponsors.map(s => s.id === id ? { ...s, [field]: value } : s);
@@ -69,8 +73,9 @@ export default function Sponsors({ content, isEditing, onUpdate }: SponsorsProps
             )}
           </div>
 
-          {/* Sponsor grid */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-px bg-border">
+          {/* Sponsor grid — columns adapt to number of sponsors */}
+          {sponsors.length > 0 && (
+          <div className={`grid gap-px bg-border ${sponsors.length === 1 ? "grid-cols-1 max-w-md" : sponsors.length === 2 ? "grid-cols-1 md:grid-cols-2" : "grid-cols-1 md:grid-cols-3"}`}>
             {sponsors.map(sponsor => (
               <div key={sponsor.id} className="bg-background group relative">
                 {isEditing ? (
@@ -155,6 +160,7 @@ export default function Sponsors({ content, isEditing, onUpdate }: SponsorsProps
               </div>
             ))}
           </div>
+          )}
 
           {/* Become a sponsor CTA */}
           <div className="mt-8 flex items-center justify-between py-6 px-8 rounded-xl border border-border bg-card">

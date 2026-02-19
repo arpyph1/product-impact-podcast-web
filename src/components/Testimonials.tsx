@@ -23,7 +23,7 @@ export default function Testimonials() {
         <div className="py-20 border-b border-border">
           <div className="max-w-3xl mx-auto text-center">
             <Quote className="w-10 h-10 text-primary mx-auto mb-8 opacity-60" />
-            <div className="relative min-h-[120px] flex items-center justify-center">
+            <div className="relative min-h-[168px] flex items-center justify-center">
               {REVIEWS.map((review, i) => (
                 <p
                   key={i}
