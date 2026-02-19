@@ -4,31 +4,28 @@ import { useRSSFeed } from "@/hooks/useRSSFeed";
 import Navbar from "@/components/Navbar";
 import Hero from "@/components/Hero";
 import Episodes from "@/components/Episodes";
-import About from "@/components/About";
 import Hosts from "@/components/Hosts";
 import Stats from "@/components/Stats";
 import Sponsors from "@/components/Sponsors";
 import Newsletter from "@/components/Newsletter";
+import Testimonials from "@/components/Testimonials";
 import Footer from "@/components/Footer";
 import ContactModal from "@/components/ContactModal";
 import CMSPanel from "@/components/CMSPanel";
 
-// Section ordering — platforms now live only in footer
-type SectionId = "about" | "episodes" | "hosts" | "sponsors" | "newsletter";
+// Section ordering — about is now merged into hero
+type SectionId = "acclaim" | "episodes" | "hosts" | "sponsors" | "newsletter" | "testimonials";
 
-const DEFAULT_ORDER: SectionId[] = ["about", "episodes", "hosts", "sponsors", "newsletter"];
+const DEFAULT_ORDER: SectionId[] = ["episodes", "acclaim", "hosts", "sponsors", "newsletter", "testimonials"];
 
 const Index = () => {
   const { content, update, updateMany, reset, isEditing, setIsEditing } = useCMS();
   const { episodes, loading, error, podcastTitle } = useRSSFeed(content.rssFeedUrl);
   const [contactOpen, setContactOpen] = useState(false);
 
-  // Section order — stored in CMS if available, else default
   const rawOrder = ((content as any).sectionOrder as string[] | undefined) || DEFAULT_ORDER;
-  // Filter to only known section IDs (strips legacy "platforms" / "engage" gracefully)
-  const knownIds = new Set<SectionId>(["about", "episodes", "hosts", "sponsors", "newsletter"]);
+  const knownIds = new Set<SectionId>(["acclaim", "episodes", "hosts", "sponsors", "newsletter", "testimonials"]);
   const sectionOrder: SectionId[] = rawOrder.filter(id => knownIds.has(id as SectionId)) as SectionId[];
-  // Append any missing sections
   DEFAULT_ORDER.forEach(id => { if (!sectionOrder.includes(id)) sectionOrder.push(id); });
 
   const moveSectionUp = (id: SectionId) => {
@@ -53,61 +50,29 @@ const Index = () => {
     const controls = isEditing ? (
       <div className="flex items-center justify-end gap-2 px-6 py-1 bg-amber/10 border-b border-amber/20">
         <span className="text-[10px] uppercase tracking-widest text-amber/60 mr-auto font-semibold">{id}</span>
-        <button
-          onClick={() => moveSectionUp(id)}
-          className="text-[10px] px-2 py-0.5 rounded border border-amber/30 text-amber hover:bg-amber/20 transition-colors"
-        >
-          ↑ Move Up
-        </button>
-        <button
-          onClick={() => moveSectionDown(id)}
-          className="text-[10px] px-2 py-0.5 rounded border border-amber/30 text-amber hover:bg-amber/20 transition-colors"
-        >
-          ↓ Move Down
-        </button>
+        <button onClick={() => moveSectionUp(id)} className="text-[10px] px-2 py-0.5 rounded border border-amber/30 text-amber hover:bg-amber/20 transition-colors">↑ Move Up</button>
+        <button onClick={() => moveSectionDown(id)} className="text-[10px] px-2 py-0.5 rounded border border-amber/30 text-amber hover:bg-amber/20 transition-colors">↓ Move Down</button>
       </div>
     ) : null;
 
     switch (id) {
-      case "about":
-        return (
-          <div key="about">
-            {controls}
-            <About content={content} isEditing={isEditing} onUpdate={update} />
-          </div>
-        );
+      case "acclaim":
+        return <div key="acclaim">{controls}<Stats /></div>;
       case "episodes":
         return (
           <div key="episodes">
             {controls}
-            <Episodes
-              content={content} isEditing={isEditing} onUpdate={update}
-              episodes={episodes} loading={loading} error={error} podcastTitle={podcastTitle}
-            />
+            <Episodes content={content} isEditing={isEditing} onUpdate={update} episodes={episodes} loading={loading} error={error} podcastTitle={podcastTitle} />
           </div>
         );
       case "hosts":
-        return (
-          <div key="hosts">
-            {controls}
-            <Hosts content={content} isEditing={isEditing} onUpdate={update} />
-          </div>
-        );
+        return <div key="hosts">{controls}<Hosts content={content} isEditing={isEditing} onUpdate={update} /></div>;
       case "sponsors":
-        return (
-          <div key="sponsors">
-            {controls}
-            <Stats />
-            <Sponsors content={content} isEditing={isEditing} onUpdate={update} />
-          </div>
-        );
+        return <div key="sponsors">{controls}<Sponsors content={content} isEditing={isEditing} onUpdate={update} /></div>;
       case "newsletter":
-        return (
-          <div key="newsletter">
-            {controls}
-            <Newsletter content={content} isEditing={isEditing} onUpdate={update} />
-          </div>
-        );
+        return <div key="newsletter">{controls}<Newsletter content={content} isEditing={isEditing} onUpdate={update} /></div>;
+      case "testimonials":
+        return <div key="testimonials">{controls}<Testimonials /></div>;
       default:
         return null;
     }
@@ -115,52 +80,18 @@ const Index = () => {
 
   return (
     <div className={isEditing ? "cms-editing" : ""}>
-      <Navbar
-        content={content}
-        isEditing={isEditing}
-        onToggleEdit={() => setIsEditing(v => !v)}
-        onContactClick={() => setContactOpen(true)}
-        onUpdate={update}
-      />
+      <Navbar content={content} isEditing={isEditing} onToggleEdit={() => setIsEditing(v => !v)} onContactClick={() => setContactOpen(true)} onUpdate={update} />
 
       <main>
-        <Hero
-          content={content}
-          isEditing={isEditing}
-          onUpdate={update}
-          latestEpisodeAudio={latestEp?.audioUrl}
-          latestEpisodeTitle={latestEp?.title}
-          latestEpisodeLink={latestEp?.link}
-          episodes={episodes}
-        />
-
+        <Hero content={content} isEditing={isEditing} onUpdate={update} latestEpisodeAudio={latestEp?.audioUrl} latestEpisodeTitle={latestEp?.title} latestEpisodeLink={latestEp?.link} episodes={episodes} />
         {sectionOrder.map(id => renderSection(id))}
       </main>
 
-      <Footer
-        content={content}
-        isEditing={isEditing}
-        onUpdate={update}
-        onContactClick={() => setContactOpen(true)}
-      />
+      <Footer content={content} isEditing={isEditing} onUpdate={update} onContactClick={() => setContactOpen(true)} />
 
-      {contactOpen && (
-        <ContactModal
-          content={content}
-          isEditing={isEditing}
-          onUpdate={update}
-          onClose={() => setContactOpen(false)}
-        />
-      )}
+      {contactOpen && <ContactModal content={content} isEditing={isEditing} onUpdate={update} onClose={() => setContactOpen(false)} />}
 
-      {isEditing && (
-        <CMSPanel
-          content={content}
-          onUpdate={update}
-          onReset={reset}
-          onClose={() => setIsEditing(false)}
-        />
-      )}
+      {isEditing && <CMSPanel content={content} onUpdate={update} onReset={reset} onClose={() => setIsEditing(false)} />}
     </div>
   );
 };

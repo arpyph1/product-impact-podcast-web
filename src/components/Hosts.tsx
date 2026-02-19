@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { CMSContent } from "@/types/cms";
-import { User } from "lucide-react";
+import { User, Linkedin } from "lucide-react";
 
 interface HostsProps {
   content: CMSContent;
@@ -15,15 +15,17 @@ interface HostCardProps {
   bio: string;
   imageUrl: string;
   role: string;
+  linkedinUrl: string;
   nameKey: keyof CMSContent;
   bioKey: keyof CMSContent;
   imageKey: keyof CMSContent;
   roleKey: keyof CMSContent;
+  linkedinKey: keyof CMSContent;
   isEditing: boolean;
   onUpdate: (k: keyof CMSContent, v: any) => void;
 }
 
-function HostCard({ name, bio, imageUrl, role, nameKey, bioKey, imageKey, roleKey, isEditing, onUpdate }: HostCardProps) {
+function HostCard({ name, bio, imageUrl, role, linkedinUrl, nameKey, bioKey, imageKey, roleKey, linkedinKey, isEditing, onUpdate }: HostCardProps) {
   const [bioVal, setBioVal] = useState(bio);
 
   return (
@@ -96,6 +98,29 @@ function HostCard({ name, bio, imageUrl, role, nameKey, bioKey, imageKey, roleKe
         ) : (
           <p className="text-muted-foreground leading-relaxed" style={{ fontSize: "1rem" }}>{bio}</p>
         )}
+
+        {/* LinkedIn button */}
+        {isEditing ? (
+          <div className="mt-3">
+            <label className="text-[10px] text-muted-foreground block mb-1">LinkedIn URL</label>
+            <input
+              className="w-full text-xs bg-card border border-border rounded px-2 py-1.5 text-foreground focus:outline-none focus:border-primary"
+              defaultValue={linkedinUrl}
+              placeholder="https://linkedin.com/in/..."
+              onBlur={e => onUpdate(linkedinKey, e.target.value)}
+            />
+          </div>
+        ) : linkedinUrl ? (
+          <a
+            href={linkedinUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 mt-3 px-4 py-2 rounded-full border border-border text-sm text-foreground hover:border-foreground transition-colors"
+          >
+            <Linkedin className="w-4 h-4" />
+            LinkedIn
+          </a>
+        ) : null}
       </div>
     </div>
   );
@@ -106,14 +131,18 @@ export default function Hosts({ content, isEditing, onUpdate }: HostsProps) {
     {
       name: content.host1Name, bio: content.host1Bio,
       imageUrl: content.host1ImageUrl, role: content.host1Role,
+      linkedinUrl: content.host1LinkedinUrl || "",
       nameKey: "host1Name" as keyof CMSContent, bioKey: "host1Bio" as keyof CMSContent,
       imageKey: "host1ImageUrl" as keyof CMSContent, roleKey: "host1Role" as keyof CMSContent,
+      linkedinKey: "host1LinkedinUrl" as keyof CMSContent,
     },
     {
       name: content.host2Name, bio: content.host2Bio,
       imageUrl: content.host2ImageUrl, role: content.host2Role,
+      linkedinUrl: content.host2LinkedinUrl || "",
       nameKey: "host2Name" as keyof CMSContent, bioKey: "host2Bio" as keyof CMSContent,
       imageKey: "host2ImageUrl" as keyof CMSContent, roleKey: "host2Role" as keyof CMSContent,
+      linkedinKey: "host2LinkedinUrl" as keyof CMSContent,
     },
   ];
 

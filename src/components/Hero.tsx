@@ -218,9 +218,9 @@ export default function Hero({ content, isEditing, onUpdate, episodes = [] }: He
   return (
     <section id="podcast" className="relative bg-background pt-20">
       {/* Vertical spacer between nav and hero */}
-      <div style={{ paddingTop: "60px" }} />
+      <div style={{ paddingTop: "120px" }} />
 
-      {/* Headline + description + platform buttons */}
+      {/* Headline + about description + platform buttons */}
       <div className="container mx-auto px-6 pb-8 text-center">
         <h1
           className={`font-display font-black uppercase leading-[0.92] tracking-tight text-foreground mb-5 mx-auto ${isEditing ? "cursor-text" : ""}`}
@@ -232,15 +232,15 @@ export default function Hero({ content, isEditing, onUpdate, episodes = [] }: He
           {content.heroTitle}
         </h1>
 
-        {/* Subline — same font style as About body text */}
+        {/* About description merged into hero */}
         <p
-          className="text-muted-foreground max-w-xl mx-auto leading-relaxed mb-8"
-          style={{ fontSize: "1.5rem", lineHeight: "1.6", fontFamily: "'Inter', system-ui, sans-serif", fontWeight: 400 }}
+          className="text-muted-foreground max-w-2xl mx-auto leading-relaxed mb-8"
+          style={{ fontSize: "1.5rem", lineHeight: "1.6" }}
           contentEditable={isEditing}
           suppressContentEditableWarning
-          onBlur={e => isEditing && onUpdate("heroDescription", e.currentTarget.textContent || "")}
+          onBlur={e => isEditing && onUpdate("aboutDescription", e.currentTarget.textContent || "")}
         >
-          {content.heroDescription}
+          {content.aboutDescription}
         </p>
 
         {/* Platform buttons */}

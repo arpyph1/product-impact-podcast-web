@@ -113,7 +113,6 @@ export default function Newsletter({ content, isEditing, onUpdate }: NewsletterP
         {/* Header */}
         <div className="flex items-end justify-between py-10 border-b border-border gap-4 flex-wrap">
           <div>
-            <p className="text-xs text-primary font-semibold uppercase tracking-widest mb-3">Newsletter</p>
             <h2
               className="font-display font-black uppercase leading-none tracking-tight text-foreground"
               style={{ fontSize: "clamp(1.5rem, 3.5vw, 2.8rem)", letterSpacing: "-0.02em" }}
