@@ -77,6 +77,7 @@ export interface CMSContent {
   sectionOrder?: string[];
 }
 
+
 export const defaultCMS: CMSContent = {
   heroTitle: "Product Impact Podcast",
   heroSubtitle: "The Podcast",
@@ -136,5 +137,5 @@ export const defaultCMS: CMSContent = {
   navLink3Href: "#engage",
 
   sponsors: [],
-  sectionOrder: ["about", "episodes", "sponsors", "newsletter", "engage"],
+  sectionOrder: ["about", "episodes", "hosts", "platforms", "sponsors", "newsletter"],
 };

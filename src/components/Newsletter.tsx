@@ -7,7 +7,6 @@ interface SubstackPost {
   link: string;
   pubDate: string;
   description: string;
-  imageUrl: string;
 }
 
 interface NewsletterProps {
@@ -16,36 +15,73 @@ interface NewsletterProps {
   onUpdate: (key: keyof CMSContent, value: any) => void;
 }
 
-function parseSubstackFeed(xml: string): SubstackPost[] {
+const RSS2JSON = "https://api.rss2json.com/v1/api.json?rss_url=";
+const ALLORIGINS = "https://api.allorigins.win/get?url=";
+
+function parseSubstackXML(xml: string): SubstackPost[] {
   const parser = new DOMParser();
   const doc = parser.parseFromString(xml, "text/xml");
   const items = Array.from(doc.querySelectorAll("item"));
-  return items.slice(0, 6).map(item => {
-    const title = item.querySelector("title")?.textContent?.replace(/^<!\[CDATA\[|\]\]>$/g, "").trim() || "";
-    // <link> in RSS is often a text node sibling — try multiple approaches
-    const linkEl = item.querySelector("link");
-    const link =
-      linkEl?.textContent?.trim() ||
-      item.querySelector("guid")?.textContent?.trim() ||
-      "";
+  return items.slice(0, 8).map(item => {
+    const rawTitle = item.querySelector("title")?.textContent || "";
+    const title = rawTitle.replace(/^<!\[CDATA\[|\]\]>$/g, "").trim();
+
+    // <link> is a text node sibling in many RSS feeds
+    let link = item.querySelector("link")?.textContent?.trim() || "";
+    if (!link) {
+      const linkEl = item.querySelector("link");
+      let sib = linkEl?.nextSibling;
+      while (sib) {
+        if (sib.nodeType === Node.TEXT_NODE && sib.textContent?.trim()) {
+          link = sib.textContent.trim(); break;
+        }
+        sib = sib.nextSibling;
+      }
+    }
+    if (!link) link = item.querySelector("guid")?.textContent?.trim() || "";
+
     const pubDateRaw = item.querySelector("pubDate")?.textContent || "";
     const date = pubDateRaw
       ? new Date(pubDateRaw).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })
       : "";
-    // Strip HTML from description
+
     const rawDesc = item.querySelector("description")?.textContent || "";
     const description = rawDesc.replace(/<[^>]*>/g, "").replace(/&nbsp;/g, " ").replace(/&amp;/g, "&").trim().slice(0, 200);
 
-    // Try to get image from enclosure or media:content
-    const enclosure = item.querySelector("enclosure");
-    const mediaContent = item.querySelector("media\\:content, content");
-    const imageUrl =
-      enclosure?.getAttribute("url") ||
-      mediaContent?.getAttribute("url") ||
-      "";
-
-    return { title, link, pubDate: date, description, imageUrl };
+    return { title, link, pubDate: date, description };
   });
+}
+
+async function fetchSubstack(substackUrl: string): Promise<SubstackPost[]> {
+  let rssUrl = substackUrl.trim().replace(/\/$/, "");
+  if (!rssUrl.endsWith("/feed")) rssUrl = rssUrl + "/feed";
+
+  // 1. rss2json
+  try {
+    const r = await fetch(`${RSS2JSON}${encodeURIComponent(rssUrl)}`, { signal: AbortSignal.timeout(10000) });
+    const data = await r.json();
+    if (data.status === "ok" && Array.isArray(data.items) && data.items.length > 0) {
+      return data.items.slice(0, 8).map((item: any) => ({
+        title: item.title || "",
+        link: item.link || item.guid || "",
+        pubDate: item.pubDate
+          ? new Date(item.pubDate).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })
+          : "",
+        description: (item.description || item.content || "")
+          .replace(/<[^>]*>/g, "").replace(/&nbsp;/g, " ").trim().slice(0, 200),
+      }));
+    }
+  } catch (e) {
+    console.warn("rss2json substack failed:", e);
+  }
+
+  // 2. allorigins raw XML
+  const r2 = await fetch(`${ALLORIGINS}${encodeURIComponent(rssUrl)}`, { signal: AbortSignal.timeout(10000) });
+  const data2 = await r2.json();
+  if (!data2.contents) throw new Error("No content");
+  const posts = parseSubstackXML(data2.contents);
+  if (posts.length === 0) throw new Error("No posts found");
+  return posts;
 }
 
 export default function Newsletter({ content, isEditing, onUpdate }: NewsletterProps) {
@@ -56,32 +92,17 @@ export default function Newsletter({ content, isEditing, onUpdate }: NewsletterP
   const substackUrl = content.substackUrl || "";
 
   useEffect(() => {
-    if (!substackUrl) {
-      setPosts([]);
-      return;
-    }
-
-    // Derive RSS feed URL from substack publication URL
-    let rssUrl = substackUrl.trim().replace(/\/$/, "");
-    if (!rssUrl.endsWith("/feed")) rssUrl = rssUrl + "/feed";
+    if (!substackUrl) { setPosts([]); return; }
 
     setLoading(true);
     setError(null);
     setPosts([]);
 
-    const proxy = `https://api.allorigins.win/get?url=${encodeURIComponent(rssUrl)}`;
-    fetch(proxy, { signal: AbortSignal.timeout(10000) })
-      .then(r => r.json())
-      .then(data => {
-        if (!data.contents) throw new Error("No content returned");
-        const parsed = parseSubstackFeed(data.contents);
-        if (parsed.length === 0) throw new Error("No posts found — check the URL");
-        setPosts(parsed);
-        setLoading(false);
-      })
+    fetchSubstack(substackUrl)
+      .then(p => { setPosts(p); setLoading(false); })
       .catch(err => {
         console.error("Substack fetch error:", err);
-        setError("Could not load newsletter posts. Check your Substack URL (e.g. https://yourname.substack.com).");
+        setError("Could not load posts. Check your Substack URL (e.g. https://yourname.substack.com).");
         setLoading(false);
       });
   }, [substackUrl]);
@@ -117,7 +138,6 @@ export default function Newsletter({ content, isEditing, onUpdate }: NewsletterP
           </div>
         </div>
 
-        {/* States */}
         {loading && (
           <div className="flex items-center justify-center py-16 gap-3">
             <Loader2 className="w-5 h-5 text-primary animate-spin" />
@@ -135,12 +155,11 @@ export default function Newsletter({ content, isEditing, onUpdate }: NewsletterP
         {!loading && !error && !substackUrl && (
           <div className="py-16 text-center text-muted-foreground text-sm">
             {isEditing
-              ? "Enter your Substack URL in the field above (e.g. https://yourname.substack.com) to load posts."
+              ? "Enter your Substack URL above (e.g. https://yourname.substack.com) to load posts."
               : "No newsletter configured yet."}
           </div>
         )}
 
-        {/* Posts list — full title, clickable */}
         {!loading && posts.length > 0 && (
           <div className="divide-y divide-border">
             {posts.map((post, i) => (
@@ -157,9 +176,10 @@ export default function Newsletter({ content, isEditing, onUpdate }: NewsletterP
                       {post.pubDate}
                     </span>
                   )}
-                  {/* Full title — no truncation */}
-                  <h3 className="font-display font-bold text-foreground leading-snug tracking-tight group-hover:text-primary transition-colors mb-2"
-                    style={{ fontSize: "clamp(1rem, 1.5vw, 1.25rem)" }}>
+                  <h3
+                    className="font-display font-bold text-foreground leading-snug tracking-tight group-hover:text-primary transition-colors mb-2"
+                    style={{ fontSize: "clamp(1rem, 1.5vw, 1.25rem)" }}
+                  >
                     {post.title}
                   </h3>
                   {post.description && (
@@ -176,7 +196,6 @@ export default function Newsletter({ content, isEditing, onUpdate }: NewsletterP
           </div>
         )}
 
-        {/* Subscribe CTA */}
         {substackUrl && !loading && !error && posts.length > 0 && (
           <div className="py-8 border-t border-border text-center">
             <a

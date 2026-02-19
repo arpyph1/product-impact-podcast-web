@@ -12,9 +12,10 @@ export interface PodcastEpisode {
   guid: string;
 }
 
-// Two proxy options — try primary, fallback to secondary
-const PROXY_PRIMARY = "https://api.allorigins.win/get?url=";
-const PROXY_FALLBACK = "https://corsproxy.io/?";
+// Use rss2json — most reliable in production (no CORS issues)
+const RSS2JSON = "https://api.rss2json.com/v1/api.json?rss_url=";
+// Fallback: allorigins raw XML
+const PROXY_FALLBACK = "https://api.allorigins.win/get?url=";
 
 function parseRSSXML(xml: string): { episodes: PodcastEpisode[]; title: string; image: string } {
   const parser = new DOMParser();
@@ -22,22 +23,35 @@ function parseRSSXML(xml: string): { episodes: PodcastEpisode[]; title: string; 
 
   const channelTitle = doc.querySelector("channel > title")?.textContent || "";
 
-  // Channel image — try several locations
   const channelImage =
     doc.querySelector("channel > image > url")?.textContent ||
-    doc.querySelector("channel > itunes\\:image")?.getAttribute("href") ||
     doc.getElementsByTagNameNS("http://www.itunes.com/dtds/podcast-1.0.dtd", "image")[0]?.getAttribute("href") ||
+    doc.querySelector("channel > itunes\\:image")?.getAttribute("href") ||
     "";
 
   const items = Array.from(doc.querySelectorAll("item"));
   const episodes: PodcastEpisode[] = items.map((item, idx) => {
     const title = item.querySelector("title")?.textContent?.trim() || `Episode ${idx + 1}`;
+
+    // <link> in RSS is a text node sibling — walk nextSibling
+    let link = "";
     const linkEl = item.querySelector("link");
-    // <link> is sometimes a text node after the element
-    const link =
-      linkEl?.textContent?.trim() ||
-      item.querySelector("guid")?.textContent?.trim() ||
-      "";
+    if (linkEl) {
+      // Try text content first
+      link = linkEl.textContent?.trim() || "";
+      // If empty, check next sibling text node
+      if (!link) {
+        let sib = linkEl.nextSibling;
+        while (sib) {
+          if (sib.nodeType === Node.TEXT_NODE && sib.textContent?.trim()) {
+            link = sib.textContent.trim();
+            break;
+          }
+          sib = sib.nextSibling;
+        }
+      }
+    }
+    if (!link) link = item.querySelector("guid")?.textContent?.trim() || "";
 
     const guid = item.querySelector("guid")?.textContent || String(idx);
 
@@ -51,30 +65,21 @@ function parseRSSXML(xml: string): { episodes: PodcastEpisode[]; title: string; 
       }
     } catch { /* ignore */ }
 
-    // Audio from enclosure
     const enclosure = item.querySelector("enclosure");
     const audioUrl = enclosure?.getAttribute("url") || "";
 
-    // Image — namespace-aware first, then fallback
     const itunesNsImage =
-      item.getElementsByTagNameNS("http://www.itunes.com/dtds/podcast-1.0.dtd", "image")[0]?.getAttribute("href") ||
-      "";
-    const itunesAttrImage =
-      item.querySelector("itunes\\:image")?.getAttribute("href") || "";
-    const mediaContent =
-      item.querySelector("media\\:content")?.getAttribute("url") || "";
-    const mediaThumbnail =
-      item.querySelector("media\\:thumbnail")?.getAttribute("url") || "";
-
+      item.getElementsByTagNameNS("http://www.itunes.com/dtds/podcast-1.0.dtd", "image")[0]?.getAttribute("href") || "";
+    const itunesAttrImage = item.querySelector("itunes\\:image")?.getAttribute("href") || "";
+    const mediaContent = item.querySelector("media\\:content")?.getAttribute("url") || "";
+    const mediaThumbnail = item.querySelector("media\\:thumbnail")?.getAttribute("url") || "";
     const imageUrl = itunesNsImage || itunesAttrImage || mediaContent || mediaThumbnail || channelImage;
 
-    // Duration
     const durationEl =
       item.getElementsByTagNameNS("http://www.itunes.com/dtds/podcast-1.0.dtd", "duration")[0] ||
       item.querySelector("itunes\\:duration");
     const duration = durationEl?.textContent || "";
 
-    // Episode number
     const epNumEl =
       item.getElementsByTagNameNS("http://www.itunes.com/dtds/podcast-1.0.dtd", "episode")[0] ||
       item.querySelector("itunes\\:episode");
@@ -87,20 +92,59 @@ function parseRSSXML(xml: string): { episodes: PodcastEpisode[]; title: string; 
 }
 
 async function fetchWithFallback(feedUrl: string): Promise<string> {
-  // Try primary proxy
+  // 1. Try rss2json — returns clean JSON, no CORS issues in production
   try {
-    const r = await fetch(`${PROXY_PRIMARY}${encodeURIComponent(feedUrl)}`, { signal: AbortSignal.timeout(8000) });
+    const r = await fetch(`${RSS2JSON}${encodeURIComponent(feedUrl)}`, { signal: AbortSignal.timeout(10000) });
     const data = await r.json();
-    if (data.contents && data.contents.length > 100) return data.contents;
-    throw new Error("Empty response from primary proxy");
+    if (data.status === "ok" && Array.isArray(data.items) && data.items.length > 0) {
+      // Convert rss2json JSON to episodes directly
+      return JSON.stringify({ __rss2json: true, feed: data.feed, items: data.items });
+    }
   } catch (e) {
-    console.warn("Primary RSS proxy failed, trying fallback:", e);
+    console.warn("rss2json failed:", e);
   }
 
-  // Try fallback proxy
-  const r2 = await fetch(`${PROXY_FALLBACK}${encodeURIComponent(feedUrl)}`, { signal: AbortSignal.timeout(8000) });
-  if (!r2.ok) throw new Error(`Fallback proxy HTTP ${r2.status}`);
-  return r2.text();
+  // 2. Try allorigins raw XML
+  try {
+    const r2 = await fetch(`${PROXY_FALLBACK}${encodeURIComponent(feedUrl)}`, { signal: AbortSignal.timeout(10000) });
+    const data2 = await r2.json();
+    if (data2.contents && data2.contents.length > 100) return data2.contents;
+  } catch (e) {
+    console.warn("allorigins failed:", e);
+  }
+
+  throw new Error("All proxies failed");
+}
+
+function parseRss2Json(jsonStr: string): { episodes: PodcastEpisode[]; title: string; image: string } {
+  const { feed, items } = JSON.parse(jsonStr);
+  const channelImage = feed?.image || "";
+  const channelTitle = feed?.title || "";
+
+  const episodes: PodcastEpisode[] = items.map((item: any, idx: number) => {
+    const audioUrl =
+      item.enclosure?.link ||
+      (Array.isArray(item.enclosures) && item.enclosures[0]?.link) ||
+      "";
+    const imageUrl = item.thumbnail || item.enclosure?.thumbnail || channelImage;
+    const pubDate = item.pubDate
+      ? new Date(item.pubDate).toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" })
+      : "";
+
+    return {
+      title: item.title || `Episode ${idx + 1}`,
+      description: "",
+      pubDate,
+      audioUrl,
+      imageUrl,
+      duration: item.itunes_duration || "",
+      episodeNumber: item.itunes_episode || String(items.length - idx),
+      link: item.link || item.guid || "",
+      guid: item.guid || String(idx),
+    };
+  });
+
+  return { episodes, title: channelTitle, image: channelImage };
 }
 
 export function useRSSFeed(feedUrl: string) {
@@ -122,13 +166,23 @@ export function useRSSFeed(feedUrl: string) {
     setEpisodes([]);
 
     fetchWithFallback(feedUrl)
-      .then(xml => {
+      .then(raw => {
         if (cancelled) return;
-        const { episodes, title, image } = parseRSSXML(xml);
-        if (episodes.length === 0) throw new Error("No episodes found in feed");
-        setPodcastTitle(title);
-        setPodcastImage(image);
-        setEpisodes(episodes);
+        let result: { episodes: PodcastEpisode[]; title: string; image: string };
+        try {
+          const parsed = JSON.parse(raw);
+          if (parsed.__rss2json) {
+            result = parseRss2Json(raw);
+          } else {
+            throw new Error("not rss2json");
+          }
+        } catch {
+          result = parseRSSXML(raw);
+        }
+        if (result.episodes.length === 0) throw new Error("No episodes found in feed");
+        setPodcastTitle(result.title);
+        setPodcastImage(result.image);
+        setEpisodes(result.episodes);
         setLoading(false);
       })
       .catch(err => {
