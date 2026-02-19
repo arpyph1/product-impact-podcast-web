@@ -12,83 +12,7 @@ export interface PodcastEpisode {
   guid: string;
 }
 
-const CORS_PROXY = "https://corsproxy.io/?url=";
-
-function parseXML(xmlText: string): PodcastEpisode[] {
-  try {
-    const parser = new DOMParser();
-    const doc = parser.parseFromString(xmlText, "text/xml");
-
-    // Get channel-level image as fallback
-    const channelImage =
-      doc.querySelector("channel > image > url")?.textContent ||
-      doc.querySelector("channel > itunes\\:image, channel > *|image")?.getAttribute("href") ||
-      "";
-
-    const items = Array.from(doc.querySelectorAll("item"));
-
-    return items.map((item, idx) => {
-      const get = (tag: string) =>
-        item.querySelector(tag)?.textContent?.trim() || "";
-
-      // Audio URL
-      let audioUrl = item.querySelector("enclosure")?.getAttribute("url") || "";
-      if (!audioUrl) {
-        audioUrl = get("link");
-      }
-
-      // Episode image - try multiple sources
-      const itunesImage =
-        item.querySelector("itunes\\:image")?.getAttribute("href") ||
-        item.querySelector("*|image[href]")?.getAttribute("href") ||
-        item.querySelector("image")?.getAttribute("href") || "";
-
-      const mediaContent =
-        item.querySelector("media\\:content[type^='image'], *|content[type^='image']")?.getAttribute("url") ||
-        item.querySelector("media\\:thumbnail, *|thumbnail")?.getAttribute("url") || "";
-
-      const imageUrl = itunesImage || mediaContent || channelImage;
-
-      // Duration
-      const rawDuration =
-        item.querySelector("itunes\\:duration, *|duration")?.textContent?.trim() || "";
-      const duration = rawDuration || "–";
-
-      // Episode number
-      const epNumber =
-        item.querySelector("itunes\\:episode, *|episode")?.textContent?.trim() ||
-        String(items.length - idx);
-
-      // Pub date
-      const pubDate = get("pubDate") || get("dc\\:date") || "";
-      let formattedDate = pubDate;
-      try {
-        if (pubDate) {
-          formattedDate = new Date(pubDate).toLocaleDateString("en-US", {
-            year: "numeric",
-            month: "short",
-            day: "numeric",
-          });
-        }
-      } catch {}
-
-      return {
-        title: get("title") || `Episode ${epNumber}`,
-        description: get("description") || get("itunes\\:summary") || "",
-        pubDate: formattedDate,
-        audioUrl,
-        imageUrl,
-        duration,
-        episodeNumber: epNumber,
-        link: get("link"),
-        guid: get("guid") || String(idx),
-      };
-    });
-  } catch (err) {
-    console.error("RSS parse error:", err);
-    return [];
-  }
-}
+const RSS2JSON = "https://api.rss2json.com/v1/api.json?rss_url=";
 
 export function useRSSFeed(feedUrl: string) {
   const [episodes, setEpisodes] = useState<PodcastEpisode[]>([]);
@@ -103,27 +27,57 @@ export function useRSSFeed(feedUrl: string) {
     let cancelled = false;
     setLoading(true);
     setError(null);
+    setEpisodes([]);
 
-    const url = `${CORS_PROXY}${encodeURIComponent(feedUrl)}`;
-
-    fetch(url)
-      .then(r => r.text())
-      .then(xmlText => {
+    fetch(`${RSS2JSON}${encodeURIComponent(feedUrl)}`)
+      .then(r => r.json())
+      .then(data => {
         if (cancelled) return;
-        const parsed = parseXML(xmlText);
 
-        // Parse channel metadata
-        const parser = new DOMParser();
-        const doc = parser.parseFromString(xmlText, "text/xml");
-        const title = doc.querySelector("channel > title")?.textContent?.trim() || "";
-        const img =
-          doc.querySelector("channel > itunes\\:image")?.getAttribute("href") ||
-          doc.querySelector("channel > image > url")?.textContent?.trim() ||
-          doc.querySelector("channel > *|image")?.getAttribute("href") || "";
+        if (data.status !== "ok") {
+          throw new Error(data.message || "Feed error");
+        }
 
-        setPodcastTitle(title);
-        setPodcastImage(img);
-        setEpisodes(parsed);
+        setPodcastTitle(data.feed?.title || "");
+        setPodcastImage(data.feed?.image || "");
+
+        const items: PodcastEpisode[] = (data.items || []).map((item: any, idx: number) => {
+          // Format date
+          let formattedDate = item.pubDate || "";
+          try {
+            if (formattedDate) {
+              formattedDate = new Date(formattedDate).toLocaleDateString("en-US", {
+                year: "numeric", month: "short", day: "numeric",
+              });
+            }
+          } catch {}
+
+          // Audio URL from enclosure
+          const audioUrl = item.enclosure?.link || item.enclosure?.url || "";
+
+          // Episode image: thumbnail > feed image
+          const imageUrl = item.thumbnail || data.feed?.image || "";
+
+          // Duration from itunes:duration (rss2json puts it in item.itunes?.duration or not at all)
+          const duration = item.itunes_duration || "";
+
+          // Episode number
+          const epNumber = item.itunes_episode || String((data.items?.length || 0) - idx);
+
+          return {
+            title: item.title || `Episode ${epNumber}`,
+            description: item.description || "",
+            pubDate: formattedDate,
+            audioUrl,
+            imageUrl,
+            duration,
+            episodeNumber: String(epNumber),
+            link: item.link || "",
+            guid: item.guid || String(idx),
+          };
+        });
+
+        setEpisodes(items);
         setLoading(false);
       })
       .catch(err => {
