@@ -15,7 +15,7 @@ interface EpisodesProps {
 }
 
 const INITIAL_COUNT = 8;
-const LOAD_MORE_COUNT = 8; // loads 8 more per click
+const LOAD_MORE_COUNT = 8;
 
 export default function Episodes({
   content, isEditing, onUpdate, episodes, loading, error, podcastTitle
@@ -29,7 +29,6 @@ export default function Episodes({
         {/* Section header row */}
         <div className="flex items-end justify-between py-10 border-b border-border gap-4">
           <div>
-            <p className="text-xs text-primary font-semibold uppercase tracking-widest mb-3">Episodes</p>
             <h2 className="font-display font-extrabold leading-none tracking-tight text-foreground"
               style={{ fontSize: "clamp(1.4rem, 3.5vw, 2.8rem)" }}>
               Latest Episodes

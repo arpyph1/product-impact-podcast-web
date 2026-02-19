@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { CMSContent } from "@/types/cms";
-import { ArrowUpRight, Play } from "lucide-react";
+import { Play } from "lucide-react";
+import { PodcastEpisode } from "@/hooks/useRSSFeed";
 
 interface HeroProps {
   content: CMSContent;
@@ -9,6 +10,7 @@ interface HeroProps {
   latestEpisodeAudio?: string;
   latestEpisodeTitle?: string;
   latestEpisodeLink?: string;
+  episodes?: PodcastEpisode[];
 }
 
 const PLATFORMS = [
@@ -50,25 +52,72 @@ function getYouTubeEmbedId(url: string): string | null {
   return m ? m[1] : null;
 }
 
-function getYouTubeThumbnail(url: string): string {
-  const id = getYouTubeEmbedId(url);
-  return id ? `https://img.youtube.com/vi/${id}/hqdefault.jpg` : "";
+function getYouTubeThumbnail(videoId: string): string {
+  return `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`;
 }
 
-// Flat (no rotation) video card with dark filter overlay
+// Resolve which YouTube video ID to display for a card
+function resolveVideoId(
+  mode: string,
+  customUrl: string,
+  episodes: PodcastEpisode[],
+  youtubeChannelUrl: string,
+): string | null {
+  if (mode === "custom") {
+    return getYouTubeEmbedId(customUrl);
+  }
+  if (mode === "latest") {
+    // Try to get a youtube link from episodes
+    for (const ep of episodes) {
+      const id = getYouTubeEmbedId(ep.link || "");
+      if (id) return id;
+    }
+    // Fallback: use the channel/url from CMS if it's a video link
+    return getYouTubeEmbedId(youtubeChannelUrl);
+  }
+  if (mode === "second") {
+    let count = 0;
+    for (const ep of episodes) {
+      const id = getYouTubeEmbedId(ep.link || "");
+      if (id) {
+        count++;
+        if (count === 2) return id;
+      }
+    }
+    return null;
+  }
+  return null;
+}
+
+// Vertical video card (portrait 9:16)
 function VideoCard({
-  url, label, urlKey, labelKey, isEditing, onUpdate,
+  videoId,
+  label,
+  labelKey,
+  urlKey,
+  modeKey,
+  mode,
+  customUrl,
+  isEditing,
+  onUpdate,
 }: {
-  url: string; label: string; urlKey: keyof CMSContent; labelKey: keyof CMSContent;
-  isEditing: boolean; onUpdate: (key: keyof CMSContent, value: any) => void;
+  videoId: string | null;
+  label: string;
+  labelKey: keyof CMSContent;
+  urlKey: keyof CMSContent;
+  modeKey: keyof CMSContent;
+  mode: string;
+  customUrl: string;
+  isEditing: boolean;
+  onUpdate: (key: keyof CMSContent, value: any) => void;
 }) {
   const [playing, setPlaying] = useState(false);
-  const videoId = getYouTubeEmbedId(url);
-  const thumb = getYouTubeThumbnail(url);
+  const thumb = videoId ? getYouTubeThumbnail(videoId) : "";
 
   return (
     <div className="relative flex flex-col gap-2">
-      <div className="relative aspect-video rounded-xl overflow-hidden bg-card border border-border group shadow-xl">
+      {/* Portrait aspect ratio 9:16 */}
+      <div className="relative rounded-xl overflow-hidden bg-card border border-border group shadow-xl" style={{ aspectRatio: "9/16" }}>
         {playing && videoId ? (
           <iframe
             className="absolute inset-0 w-full h-full"
@@ -83,58 +132,102 @@ function VideoCard({
               <img src={thumb} alt={label} className="absolute inset-0 w-full h-full object-cover" />
             ) : (
               <div className="absolute inset-0 bg-muted flex items-center justify-center">
-                <span className="text-xs text-muted-foreground">No video URL</span>
+                <span className="text-xs text-muted-foreground text-center px-3">
+                  {mode === "latest" ? "Latest YouTube video" : mode === "second" ? "2nd most recent YouTube video" : "No video URL"}
+                </span>
               </div>
             )}
-            {/* Dark filter — lifts on hover */}
-            <div className="absolute inset-0 bg-black/55 group-hover:bg-black/20 transition-all duration-500" />
+            {/* Dark overlay — lifts on hover */}
+            <div className="absolute inset-0 bg-black/60 group-hover:bg-black/20 transition-all duration-500" />
 
             {videoId && (
               <button
                 onClick={() => setPlaying(true)}
                 className="absolute inset-0 flex items-center justify-center"
               >
-                <div className="w-11 h-11 rounded-full bg-white/90 flex items-center justify-center shadow-xl hover:scale-110 transition-transform">
+                <div className="w-12 h-12 rounded-full bg-white/90 flex items-center justify-center shadow-xl hover:scale-110 transition-transform">
                   <Play className="w-5 h-5 text-black ml-0.5" />
                 </div>
               </button>
             )}
+
+            {/* Label overlay at bottom */}
+            <div className="absolute bottom-0 left-0 right-0 p-3 bg-gradient-to-t from-black/80 to-transparent">
+              <p
+                className="text-[11px] font-semibold text-white uppercase tracking-wider"
+                contentEditable={isEditing}
+                suppressContentEditableWarning
+                onBlur={e => isEditing && onUpdate(labelKey, e.currentTarget.textContent || "")}
+              >
+                {label}
+              </p>
+            </div>
           </>
         )}
       </div>
 
-      {/* Label */}
-      <p
-        className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wider text-center"
-        contentEditable={isEditing}
-        suppressContentEditableWarning
-        onBlur={e => isEditing && onUpdate(labelKey, e.currentTarget.textContent || "")}
-      >
-        {label}
-      </p>
-
+      {/* CMS controls */}
       {isEditing && (
-        <input
-          className="text-xs bg-black/40 border border-amber/50 text-foreground rounded px-2 py-1.5 focus:outline-none focus:border-amber w-full"
-          defaultValue={url}
-          placeholder="https://youtube.com/watch?v=..."
-          onBlur={e => { onUpdate(urlKey, e.target.value); setPlaying(false); }}
-        />
+        <div className="flex flex-col gap-1.5 mt-1">
+          <select
+            value={mode}
+            onChange={e => { onUpdate(modeKey, e.target.value); setPlaying(false); }}
+            className="text-xs bg-card border border-amber/50 text-foreground rounded px-2 py-1.5 focus:outline-none focus:border-amber"
+          >
+            <option value="latest">Most recent YouTube video</option>
+            <option value="second">2nd most recent YouTube video</option>
+            <option value="custom">Custom YouTube URL</option>
+          </select>
+          {mode === "custom" && (
+            <input
+              className="text-xs bg-card border border-amber/50 text-foreground rounded px-2 py-1.5 focus:outline-none focus:border-amber"
+              defaultValue={customUrl}
+              placeholder="https://youtube.com/watch?v=..."
+              onBlur={e => { onUpdate(urlKey, e.target.value); setPlaying(false); }}
+            />
+          )}
+        </div>
       )}
     </div>
   );
 }
 
-export default function Hero({ content, isEditing, onUpdate }: HeroProps) {
+export default function Hero({ content, isEditing, onUpdate, episodes = [] }: HeroProps) {
+  const youtubeChannelUrl = content.youtubeUrl || "";
+
   const cards = [
-    { url: content.heroVideo1Url, label: content.heroVideo1Label, urlKey: "heroVideo1Url" as keyof CMSContent, labelKey: "heroVideo1Label" as keyof CMSContent },
-    { url: content.heroVideo2Url, label: content.heroVideo2Label, urlKey: "heroVideo2Url" as keyof CMSContent, labelKey: "heroVideo2Label" as keyof CMSContent },
-    { url: content.heroVideo3Url, label: content.heroVideo3Label, urlKey: "heroVideo3Url" as keyof CMSContent, labelKey: "heroVideo3Label" as keyof CMSContent },
+    {
+      videoId: resolveVideoId(content.heroVideo1Mode, content.heroVideo1Url, episodes, youtubeChannelUrl),
+      label: content.heroVideo1Label,
+      labelKey: "heroVideo1Label" as keyof CMSContent,
+      urlKey: "heroVideo1Url" as keyof CMSContent,
+      modeKey: "heroVideo1Mode" as keyof CMSContent,
+      mode: content.heroVideo1Mode,
+      customUrl: content.heroVideo1Url,
+    },
+    {
+      videoId: resolveVideoId(content.heroVideo2Mode, content.heroVideo2Url, episodes, youtubeChannelUrl),
+      label: content.heroVideo2Label,
+      labelKey: "heroVideo2Label" as keyof CMSContent,
+      urlKey: "heroVideo2Url" as keyof CMSContent,
+      modeKey: "heroVideo2Mode" as keyof CMSContent,
+      mode: content.heroVideo2Mode,
+      customUrl: content.heroVideo2Url,
+    },
+    {
+      videoId: resolveVideoId(content.heroVideo3Mode, content.heroVideo3Url, episodes, youtubeChannelUrl),
+      label: content.heroVideo3Label,
+      labelKey: "heroVideo3Label" as keyof CMSContent,
+      urlKey: "heroVideo3Url" as keyof CMSContent,
+      modeKey: "heroVideo3Mode" as keyof CMSContent,
+      mode: content.heroVideo3Mode,
+      customUrl: content.heroVideo3Url,
+    },
   ];
 
   return (
     <section id="podcast" className="relative bg-background pt-20">
-      {/* Small top gap between nav and hero content */}
+      {/* Small gap between nav and hero content */}
       <div className="pt-8" />
 
       {/* Headline + description + platform buttons */}
@@ -170,33 +263,26 @@ export default function Hero({ content, isEditing, onUpdate }: HeroProps) {
               rel="noopener noreferrer"
               className="group flex items-center gap-2.5 px-5 py-2.5 rounded-full border border-border text-sm font-medium text-foreground hover:border-foreground transition-all duration-200"
             >
-              <span className="w-4 h-4 rounded-full flex items-center justify-center shrink-0" style={{ background: p.color }}>
+              <span className="w-4 h-4 rounded-full flex items-center justify-center shrink-0 text-white" style={{ background: p.color }}>
                 {p.svg}
               </span>
               {p.label}
-              <ArrowUpRight className="w-3.5 h-3.5 opacity-40 group-hover:opacity-100 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all" />
             </a>
           ))}
         </div>
       </div>
 
-      {/* 
-        Three video cards in a "brick" layout:
-        Left and Right cards sit at the top, Centre card drops down.
-        On mobile: stacked single column.
-      */}
+      {/* Three vertical video cards — descending staircase left to right */}
       <div className="container mx-auto px-6 pb-20">
+        {/* Desktop: 3-column staircase, each card descends further */}
         <div className="hidden md:grid md:grid-cols-3 gap-6 items-start">
-          {/* Card 1 — top-left */}
           <div className="mt-0">
             <VideoCard {...cards[0]} isEditing={isEditing} onUpdate={onUpdate} />
           </div>
-          {/* Card 2 — centre, shifted down */}
-          <div className="mt-12">
+          <div className="mt-16">
             <VideoCard {...cards[1]} isEditing={isEditing} onUpdate={onUpdate} />
           </div>
-          {/* Card 3 — top-right */}
-          <div className="mt-0">
+          <div className="mt-32">
             <VideoCard {...cards[2]} isEditing={isEditing} onUpdate={onUpdate} />
           </div>
         </div>

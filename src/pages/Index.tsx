@@ -6,17 +6,16 @@ import Hero from "@/components/Hero";
 import Episodes from "@/components/Episodes";
 import About from "@/components/About";
 import Hosts from "@/components/Hosts";
-import PlatformBar from "@/components/PlatformBar";
 import Sponsors from "@/components/Sponsors";
 import Newsletter from "@/components/Newsletter";
 import Footer from "@/components/Footer";
 import ContactModal from "@/components/ContactModal";
 import CMSPanel from "@/components/CMSPanel";
 
-// Section ordering — "engage" is now replaced by "hosts" and "platforms"
-type SectionId = "about" | "episodes" | "hosts" | "platforms" | "sponsors" | "newsletter";
+// Section ordering — platforms now live only in footer
+type SectionId = "about" | "episodes" | "hosts" | "sponsors" | "newsletter";
 
-const DEFAULT_ORDER: SectionId[] = ["about", "episodes", "hosts", "platforms", "sponsors", "newsletter"];
+const DEFAULT_ORDER: SectionId[] = ["about", "episodes", "hosts", "sponsors", "newsletter"];
 
 const Index = () => {
   const { content, update, updateMany, reset, isEditing, setIsEditing } = useCMS();
@@ -25,8 +24,8 @@ const Index = () => {
 
   // Section order — stored in CMS if available, else default
   const rawOrder = ((content as any).sectionOrder as string[] | undefined) || DEFAULT_ORDER;
-  // Filter to only known section IDs (handles legacy "engage" gracefully)
-  const knownIds = new Set<SectionId>(["about", "episodes", "hosts", "platforms", "sponsors", "newsletter"]);
+  // Filter to only known section IDs (strips legacy "platforms" / "engage" gracefully)
+  const knownIds = new Set<SectionId>(["about", "episodes", "hosts", "sponsors", "newsletter"]);
   const sectionOrder: SectionId[] = rawOrder.filter(id => knownIds.has(id as SectionId)) as SectionId[];
   // Append any missing sections
   DEFAULT_ORDER.forEach(id => { if (!sectionOrder.includes(id)) sectionOrder.push(id); });
@@ -93,13 +92,6 @@ const Index = () => {
             <Hosts content={content} isEditing={isEditing} onUpdate={update} />
           </div>
         );
-      case "platforms":
-        return (
-          <div key="platforms">
-            {controls}
-            <PlatformBar content={content} isEditing={isEditing} />
-          </div>
-        );
       case "sponsors":
         return (
           <div key="sponsors">
@@ -137,6 +129,7 @@ const Index = () => {
           latestEpisodeAudio={latestEp?.audioUrl}
           latestEpisodeTitle={latestEp?.title}
           latestEpisodeLink={latestEp?.link}
+          episodes={episodes}
         />
 
         {sectionOrder.map(id => renderSection(id))}
