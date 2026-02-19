@@ -14,7 +14,7 @@ interface EpisodesProps {
   podcastTitle: string;
 }
 
-const INITIAL_COUNT = 12;
+const INITIAL_COUNT = 8;
 const LOAD_MORE_COUNT = 8;
 
 export default function Episodes({
