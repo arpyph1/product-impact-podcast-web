@@ -17,7 +17,7 @@ interface EpisodesProps {
 export default function Episodes({
   content, isEditing, onUpdate, episodes, loading, error, podcastTitle
 }: EpisodesProps) {
-  const [visibleCount, setVisibleCount] = useState(9);
+  const [visibleCount, setVisibleCount] = useState(6);
 
   return (
     <section id="episodes" className="bg-background">
@@ -81,7 +81,7 @@ export default function Episodes({
             {visibleCount < episodes.length && (
               <div className="py-8 text-center border-t border-border">
                 <button
-                  onClick={() => setVisibleCount(c => c + 9)}
+                  onClick={() => setVisibleCount(c => c + 6)}
                   className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors"
                 >
                   <ChevronDown className="w-4 h-4" />

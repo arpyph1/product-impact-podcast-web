@@ -6,6 +6,7 @@ import Hero from "@/components/Hero";
 import Episodes from "@/components/Episodes";
 import About from "@/components/About";
 import Engage from "@/components/Engage";
+import Sponsors from "@/components/Sponsors";
 import Footer from "@/components/Footer";
 import ContactModal from "@/components/ContactModal";
 import CMSPanel from "@/components/CMSPanel";
@@ -24,6 +25,7 @@ const Index = () => {
         isEditing={isEditing}
         onToggleEdit={() => setIsEditing(v => !v)}
         onContactClick={() => setContactOpen(true)}
+        onUpdate={update}
       />
 
       <main>
@@ -51,6 +53,12 @@ const Index = () => {
           isEditing={isEditing}
           onUpdate={update}
           episodes={episodes.slice(0, 4)}
+        />
+
+        <Sponsors
+          content={content}
+          isEditing={isEditing}
+          onUpdate={update}
         />
 
         <Engage

@@ -74,6 +74,23 @@ export default function CMSPanel({ content, onUpdate, onReset, onClose }: CMSPan
             <Field label="Engage Description" value={content.engageDescription} onChange={v => onUpdate("engageDescription", v)} multiline />
             <Field label="Engage CTA" value={content.engageCta} onChange={v => onUpdate("engageCta", v)} />
             <div className="pt-2 border-t border-border">
+              <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-3">Navigation Links</p>
+              <div className="space-y-3">
+                <div className="grid grid-cols-2 gap-2">
+                  <Field label="Nav 1 Label" value={content.navLink1Label} onChange={v => onUpdate("navLink1Label", v)} />
+                  <Field label="Nav 1 Href" value={content.navLink1Href} onChange={v => onUpdate("navLink1Href", v)} />
+                </div>
+                <div className="grid grid-cols-2 gap-2">
+                  <Field label="Nav 2 Label" value={content.navLink2Label} onChange={v => onUpdate("navLink2Label", v)} />
+                  <Field label="Nav 2 Href" value={content.navLink2Href} onChange={v => onUpdate("navLink2Href", v)} />
+                </div>
+                <div className="grid grid-cols-2 gap-2">
+                  <Field label="Nav 3 Label" value={content.navLink3Label} onChange={v => onUpdate("navLink3Label", v)} />
+                  <Field label="Nav 3 Href" value={content.navLink3Href} onChange={v => onUpdate("navLink3Href", v)} />
+                </div>
+              </div>
+            </div>
+            <div className="pt-2 border-t border-border">
               <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-3">Platform URLs</p>
               <div className="space-y-3">
                 <Field label="Spotify URL" value={content.spotifyUrl} onChange={v => onUpdate("spotifyUrl", v)} />
