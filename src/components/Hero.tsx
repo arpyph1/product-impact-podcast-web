@@ -2,6 +2,7 @@ import { useState } from "react";
 import { CMSContent } from "@/types/cms";
 import { Play } from "lucide-react";
 import { PodcastEpisode } from "@/hooks/useRSSFeed";
+import LatestShortCard from "@/components/LatestShortCard";
 
 interface HeroProps {
   content: CMSContent;
@@ -254,22 +255,27 @@ export default function Hero({ content, isEditing, onUpdate, episodes = [] }: He
 
       {/* Three vertical video cards — descending staircase, 60% smaller */}
       <div className="container mx-auto px-6 pb-12">
-        <div className="max-w-2xl mx-auto">
-          {/* Desktop: 3-column staircase, each card descends further */}
-          <div className="hidden md:grid md:grid-cols-3 gap-9 items-start">
+        <div className="max-w-3xl mx-auto">
+          {/* Desktop: 4-column staircase with Latest Short as first card */}
+          <div className="hidden md:grid md:grid-cols-4 gap-7 items-start">
             <div className="mt-0">
+              <LatestShortCard channelId={content.youtubeChannelId || undefined} />
+              <p className="text-xs text-muted-foreground text-center mt-2">Latest Short</p>
+            </div>
+            <div className="mt-10">
               <VideoCard {...cards[0]} isEditing={isEditing} onUpdate={onUpdate} />
             </div>
-            <div className="mt-12">
+            <div className="mt-20">
               <VideoCard {...cards[1]} isEditing={isEditing} onUpdate={onUpdate} />
             </div>
-            <div className="mt-24">
+            <div className="mt-[7.5rem]">
               <VideoCard {...cards[2]} isEditing={isEditing} onUpdate={onUpdate} />
             </div>
           </div>
 
           {/* Mobile: single column */}
           <div className="flex flex-col gap-4 md:hidden max-w-[200px] mx-auto">
+            <LatestShortCard channelId={content.youtubeChannelId || undefined} />
             {cards.map((card, i) => (
               <VideoCard key={i} {...card} isEditing={isEditing} onUpdate={onUpdate} />
             ))}
