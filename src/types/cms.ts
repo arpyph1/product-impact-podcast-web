@@ -41,6 +41,8 @@ export interface CMSContent {
   host2Bio: string;
   host2ImageUrl: string;
   host2Role: string;
+  host1LinkedinUrl: string;
+  host2LinkedinUrl: string;
 
   // Engage
   engageTitle: string;
@@ -119,6 +121,8 @@ export const defaultCMS: CMSContent = {
   host2Bio: "Product strategist, speaker, and advisor. Has helped scale teams at three unicorn startups and writes about product culture for leading industry publications.",
   host2ImageUrl: "",
   host2Role: "Co-Host",
+  host1LinkedinUrl: "",
+  host2LinkedinUrl: "",
 
   engageTitle: "Join the Community",
   engageDescription: "Get exclusive behind-the-scenes content, early access to episodes, and connect with fellow product leaders from around the world.",

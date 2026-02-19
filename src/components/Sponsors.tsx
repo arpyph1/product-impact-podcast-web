@@ -52,7 +52,6 @@ export default function Sponsors({ content, isEditing, onUpdate }: SponsorsProps
           {/* Header */}
           <div className="flex items-end justify-between mb-12">
             <div>
-              <p className="text-xs text-primary font-semibold uppercase tracking-widest mb-3">Partners &amp; Sponsors</p>
               <h2
                 className="font-display font-extrabold leading-none tracking-tight text-foreground"
                 style={{ fontSize: "clamp(2rem, 5vw, 4rem)" }}
