@@ -4,7 +4,7 @@ import { CMSContent, defaultCMS } from "@/types/cms";
 const STORAGE_KEY = "podcast_cms_content";
 
 // Current schema version — bump when adding new fields to force a re-merge
-const CMS_SCHEMA_VERSION = 2;
+const CMS_SCHEMA_VERSION = 3;
 
 /**
  * Deep-merge saved CMS data with defaults so that:
