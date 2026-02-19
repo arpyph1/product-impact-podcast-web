@@ -12,6 +12,14 @@ function parseDuration(iso: string): number {
   return (parseInt(m[1] || "0") * 3600) + (parseInt(m[2] || "0") * 60) + parseInt(m[3] || "0");
 }
 
+interface ShortInfo {
+  videoId: string;
+  title: string;
+  thumbnail: string;
+  publishedAt: string;
+  viewCount: number;
+}
+
 serve(async (req) => {
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
@@ -34,10 +42,8 @@ serve(async (req) => {
       );
     }
 
-    // Use the uploads playlist (replace UC with UU) — more reliable than Search API
     const uploadsPlaylistId = channelId.replace(/^UC/, "UU");
 
-    // Fetch latest 50 uploads via PlaylistItems API
     const playlistUrl = `https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&playlistId=${encodeURIComponent(uploadsPlaylistId)}&maxResults=50&key=${apiKey}`;
     const playlistRes = await fetch(playlistUrl);
     const playlistData = await playlistRes.json();
@@ -53,14 +59,14 @@ serve(async (req) => {
     const items = playlistData.items || [];
     if (items.length === 0) {
       return new Response(
-        JSON.stringify({ error: "No videos found", shorts: [] }),
+        JSON.stringify({ error: "No videos found", shorts: [], mostWatched: null }),
         { status: 404, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
 
-    // Get video IDs to check durations
+    // Get video details including statistics for view counts
     const videoIds = items.map((item: any) => item.snippet?.resourceId?.videoId).filter(Boolean);
-    const detailsUrl = `https://www.googleapis.com/youtube/v3/videos?part=contentDetails,snippet&id=${videoIds.join(",")}&key=${apiKey}`;
+    const detailsUrl = `https://www.googleapis.com/youtube/v3/videos?part=contentDetails,snippet,statistics&id=${videoIds.join(",")}&key=${apiKey}`;
     const detailsRes = await fetch(detailsUrl);
     const detailsData = await detailsRes.json();
 
@@ -72,46 +78,48 @@ serve(async (req) => {
       );
     }
 
-    // Filter to shorts (≤60s), preserving upload order (newest first)
-    const shorts: Array<{
-      videoId: string;
-      title: string;
-      thumbnail: string;
-      publishedAt: string;
-    }> = [];
-
-    // Build a map of video details keyed by ID
     const detailsMap = new Map<string, any>();
     for (const v of (detailsData.items || [])) {
       detailsMap.set(v.id, v);
     }
 
-    // Iterate in playlist order (newest first)
+    // Collect ALL shorts (≤120s) for both recency and view-count sorting
+    const allShorts: ShortInfo[] = [];
+
     for (const item of items) {
-      if (shorts.length >= count) break;
       const vid = item.snippet?.resourceId?.videoId;
       const detail = detailsMap.get(vid);
       if (!detail) continue;
       const duration = parseDuration(detail.contentDetails?.duration || "");
       if (duration <= 120) {
-        shorts.push({
+        allShorts.push({
           videoId: vid,
           title: detail.snippet?.title || "",
           thumbnail: detail.snippet?.thumbnails?.high?.url || detail.snippet?.thumbnails?.medium?.url || "",
           publishedAt: detail.snippet?.publishedAt || "",
+          viewCount: parseInt(detail.statistics?.viewCount || "0"),
         });
       }
     }
 
-    if (shorts.length === 0) {
+    if (allShorts.length === 0) {
       return new Response(
-        JSON.stringify({ error: "No Shorts found (videos ≤2min) in the latest uploads", shorts: [] }),
+        JSON.stringify({ error: "No Shorts found (videos ≤2min) in the latest uploads", shorts: [], mostWatched: null }),
         { status: 404, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
 
+    // Latest shorts by date (already in playlist order = newest first)
+    const shorts = allShorts.slice(0, count).map(({ viewCount, ...s }) => s);
+
+    // Most watched short by view count
+    const mostWatched = [...allShorts].sort((a, b) => b.viewCount - a.viewCount)[0];
+    const mostWatchedResult = mostWatched
+      ? { videoId: mostWatched.videoId, title: mostWatched.title, thumbnail: mostWatched.thumbnail, publishedAt: mostWatched.publishedAt }
+      : null;
+
     return new Response(
-      JSON.stringify({ shorts }),
+      JSON.stringify({ shorts, mostWatched: mostWatchedResult }),
       { headers: { ...corsHeaders, "Content-Type": "application/json" } }
     );
   } catch (err) {

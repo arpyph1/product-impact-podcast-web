@@ -62,6 +62,7 @@ function resolveCard(
   mode: string,
   customUrl: string,
   shorts: ShortResult[],
+  mostWatched: ShortResult | null,
 ): { videoId: string | null; thumbnail: string | null; title: string } {
   if (mode === "latest_short") {
     const s = shorts[0];
@@ -70,6 +71,11 @@ function resolveCard(
   if (mode === "second_short") {
     const s = shorts[1];
     return s ? { videoId: s.videoId, thumbnail: s.thumbnail, title: s.title } : { videoId: null, thumbnail: null, title: "" };
+  }
+  if (mode === "most_watched") {
+    return mostWatched
+      ? { videoId: mostWatched.videoId, thumbnail: mostWatched.thumbnail, title: mostWatched.title }
+      : { videoId: null, thumbnail: null, title: "" };
   }
   if (mode === "custom") {
     const id = getYouTubeEmbedId(customUrl);
@@ -107,7 +113,7 @@ function VideoCard({
   shortsError: string | null;
 }) {
   const [playing, setPlaying] = useState(false);
-  const isShortMode = mode === "latest_short" || mode === "second_short";
+  const isShortMode = mode === "latest_short" || mode === "second_short" || mode === "most_watched";
 
   return (
     <div className="relative flex flex-col gap-2">
@@ -142,7 +148,7 @@ function VideoCard({
             ) : (
               <div className="absolute inset-0 bg-muted flex items-center justify-center">
                 <span className="text-xs text-muted-foreground text-center px-3">
-                  {mode === "latest_short" ? "Latest Short" : mode === "second_short" ? "2nd Latest Short" : "No video URL"}
+                  {mode === "latest_short" ? "Latest Short" : mode === "second_short" ? "2nd Latest Short" : mode === "most_watched" ? "Most Watched" : "No video URL"}
                 </span>
               </div>
             )}
@@ -179,6 +185,7 @@ function VideoCard({
           >
             <option value="latest_short">Most recent YouTube Short</option>
             <option value="second_short">2nd most recent YouTube Short</option>
+            <option value="most_watched">Most watched YouTube Short</option>
             <option value="custom">Custom YouTube URL</option>
           </select>
           {mode === "custom" && (
@@ -196,7 +203,7 @@ function VideoCard({
 }
 
 export default function Hero({ content, isEditing, onUpdate, episodes = [] }: HeroProps) {
-  const { shorts, loading: shortsLoading, error: shortsError } = useLatestShorts(content.youtubeChannelId || undefined);
+  const { shorts, mostWatched, loading: shortsLoading, error: shortsError } = useLatestShorts(content.youtubeChannelId || undefined);
 
   const cards = [
     {
@@ -262,7 +269,7 @@ export default function Hero({ content, isEditing, onUpdate, episodes = [] }: He
           {/* Desktop: 3-column staircase */}
           <div className="hidden md:grid md:grid-cols-3 gap-7 items-start">
             {cards.map((card, i) => {
-              const resolved = resolveCard(card.mode, card.customUrl, shorts);
+              const resolved = resolveCard(card.mode, card.customUrl, shorts, mostWatched);
               return (
                 <div key={i} style={{ marginTop: `${i * 2.5}rem` }}>
                   <VideoCard
@@ -291,7 +298,7 @@ export default function Hero({ content, isEditing, onUpdate, episodes = [] }: He
               style={{ scrollbarWidth: "none", msOverflowStyle: "none", WebkitOverflowScrolling: "touch" }}
             >
               {cards.map((card, i) => {
-                const resolved = resolveCard(card.mode, card.customUrl, shorts);
+                const resolved = resolveCard(card.mode, card.customUrl, shorts, mostWatched);
                 return (
                   <div key={i} className="snap-center shrink-0" style={{ width: "55vw", maxWidth: "220px" }}>
                     <VideoCard
