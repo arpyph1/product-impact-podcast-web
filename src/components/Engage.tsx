@@ -42,85 +42,80 @@ const PLATFORMS = [
 
 export default function Engage({ content, isEditing, onUpdate, onContactClick }: EngageProps) {
   return (
-    <section id="engage" className="py-24 bg-dark-surface relative overflow-hidden">
-      {/* Glow */}
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[300px] bg-primary/8 rounded-full blur-[120px] pointer-events-none" />
-
-      <div className="container mx-auto px-4 relative">
-        <div className="section-divider mb-16" />
-
-        <div className="max-w-4xl mx-auto">
-          {/* Header */}
-          <div className="text-center space-y-4 mb-16">
-            <h2
-              className="font-display font-extrabold text-4xl lg:text-6xl text-foreground leading-none"
-              contentEditable={isEditing}
-              suppressContentEditableWarning
-              onBlur={e => isEditing && onUpdate("engageTitle", e.currentTarget.textContent || "")}
-            >
-              {content.engageTitle}
-            </h2>
-            <p
-              className="text-muted-foreground leading-relaxed max-w-lg mx-auto"
-              contentEditable={isEditing}
-              suppressContentEditableWarning
-              onBlur={e => isEditing && onUpdate("engageDescription", e.currentTarget.textContent || "")}
-            >
-              {content.engageDescription}
-            </p>
-          </div>
-
-          {/* Platform cards */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-12">
-            {PLATFORMS.map(p => (
-              <a
-                key={p.name}
-                href={isEditing ? undefined : (content[p.urlKey] as string) || "#"}
-                target={!isEditing ? "_blank" : undefined}
-                rel="noopener noreferrer"
-                className="group flex flex-col items-center gap-4 p-8 rounded-2xl bg-card border border-border hover:border-primary/50 transition-all cursor-pointer"
-              >
-                <div
-                  className="w-14 h-14 rounded-2xl flex items-center justify-center text-white"
-                  style={{ background: p.color }}
-                >
-                  {p.svg}
-                </div>
-                <div className="text-center">
-                  <p className="font-display font-bold text-foreground text-sm">Listen on</p>
-                  <p className="font-display font-extrabold text-foreground text-lg group-hover:text-primary transition-colors">
-                    {p.name}
-                  </p>
-                </div>
-
-                {/* URL edit in editing mode */}
-                {isEditing && (
-                  <input
-                    className="w-full text-xs bg-muted border border-amber/50 text-foreground rounded px-2 py-1 focus:outline-none focus:border-amber"
-                    defaultValue={content[p.urlKey] as string}
-                    placeholder={`${p.name} URL`}
-                    onBlur={e => onUpdate(p.urlKey, e.target.value)}
-                    onClick={e => e.preventDefault()}
-                  />
-                )}
-              </a>
-            ))}
-          </div>
-
-          {/* CTA */}
-          <div className="text-center">
-            <button
-              className="px-10 py-4 rounded-full bg-primary text-primary-foreground font-semibold text-lg hover:bg-primary/80 transition-all glow-purple"
-              onClick={onContactClick}
-            >
-              <span
+    <section id="engage" className="py-6 px-4 pb-12 bg-background">
+      <div className="container mx-auto">
+        <div className="rounded-2xl bg-dark-surface border border-border/50 p-8 lg:p-12">
+          <div className="max-w-4xl mx-auto">
+            {/* Header */}
+            <div className="text-center space-y-4 mb-12">
+              <h2
+                className="font-display font-extrabold text-4xl lg:text-6xl text-foreground leading-none"
                 contentEditable={isEditing}
                 suppressContentEditableWarning
-                onBlur={e => isEditing && onUpdate("engageCta", e.currentTarget.textContent || "")}
+                onBlur={e => isEditing && onUpdate("engageTitle", e.currentTarget.textContent || "")}
               >
-                {content.engageCta}
-              </span>
-            </button>
+                {content.engageTitle}
+              </h2>
+              <p
+                className="text-muted-foreground leading-relaxed max-w-lg mx-auto"
+                contentEditable={isEditing}
+                suppressContentEditableWarning
+                onBlur={e => isEditing && onUpdate("engageDescription", e.currentTarget.textContent || "")}
+              >
+                {content.engageDescription}
+              </p>
+            </div>
+
+            {/* Platform cards */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-10">
+              {PLATFORMS.map(p => (
+                <a
+                  key={p.name}
+                  href={isEditing ? undefined : (content[p.urlKey] as string) || "#"}
+                  target={!isEditing ? "_blank" : undefined}
+                  rel="noopener noreferrer"
+                  className="group flex flex-col items-center gap-4 p-8 rounded-2xl bg-card border border-border hover:border-primary/50 transition-all cursor-pointer"
+                >
+                  <div
+                    className="w-14 h-14 rounded-2xl flex items-center justify-center text-white"
+                    style={{ background: p.color }}
+                  >
+                    {p.svg}
+                  </div>
+                  <div className="text-center">
+                    <p className="font-display font-bold text-foreground text-sm">Listen on</p>
+                    <p className="font-display font-extrabold text-foreground text-lg group-hover:text-primary transition-colors">
+                      {p.name}
+                    </p>
+                  </div>
+                  {isEditing && (
+                    <input
+                      className="w-full text-xs bg-muted border border-amber/50 text-foreground rounded px-2 py-1 focus:outline-none focus:border-amber"
+                      defaultValue={content[p.urlKey] as string}
+                      placeholder={`${p.name} URL`}
+                      onBlur={e => onUpdate(p.urlKey, e.target.value)}
+                      onClick={e => e.preventDefault()}
+                    />
+                  )}
+                </a>
+              ))}
+            </div>
+
+            {/* CTA */}
+            <div className="text-center">
+              <button
+                className="px-10 py-4 rounded-full bg-primary text-primary-foreground font-semibold text-lg hover:bg-primary/80 transition-all glow-purple"
+                onClick={onContactClick}
+              >
+                <span
+                  contentEditable={isEditing}
+                  suppressContentEditableWarning
+                  onBlur={e => isEditing && onUpdate("engageCta", e.currentTarget.textContent || "")}
+                >
+                  {content.engageCta}
+                </span>
+              </button>
+            </div>
           </div>
         </div>
       </div>
