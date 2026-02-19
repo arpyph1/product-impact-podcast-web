@@ -9,7 +9,7 @@ interface CMSPanelProps {
   onClose: () => void;
 }
 
-type Tab = "general" | "hero" | "about" | "settings";
+type Tab = "general" | "hero" | "about" | "hosts" | "settings";
 
 export default function CMSPanel({ content, onUpdate, onReset, onClose }: CMSPanelProps) {
   const [tab, setTab] = useState<Tab>("general");
@@ -19,6 +19,7 @@ export default function CMSPanel({ content, onUpdate, onReset, onClose }: CMSPan
     { key: "general", label: "General" },
     { key: "hero", label: "Hero" },
     { key: "about", label: "About" },
+    { key: "hosts", label: "Hosts" },
     { key: "settings", label: "Settings" },
   ];
 
@@ -39,17 +40,17 @@ export default function CMSPanel({ content, onUpdate, onReset, onClose }: CMSPan
       <div className="mx-4 mt-3 mb-2 p-2.5 rounded-lg bg-amber/10 border border-amber/30 flex gap-2 items-start">
         <Info className="w-3.5 h-3.5 text-amber mt-0.5 shrink-0" />
         <p className="text-xs text-amber/90 leading-snug">
-          Yellow dashed outlines = clickable text fields. Teal outlines = card backgrounds.
+          Click text on the page to edit inline. Hover host cards to change their photo URL.
         </p>
       </div>
 
       {/* Tabs */}
-      <div className="flex border-b border-border px-2">
+      <div className="flex border-b border-border px-1 overflow-x-auto">
         {tabs.map(t => (
           <button
             key={t.key}
             onClick={() => setTab(t.key)}
-            className={`flex-1 py-2 text-xs font-semibold transition-colors ${
+            className={`flex-shrink-0 px-2 py-2 text-xs font-semibold transition-colors ${
               tab === t.key
                 ? "text-primary border-b-2 border-primary"
                 : "text-muted-foreground hover:text-foreground"
@@ -72,6 +73,14 @@ export default function CMSPanel({ content, onUpdate, onReset, onClose }: CMSPan
             <Field label="Engage Title" value={content.engageTitle} onChange={v => onUpdate("engageTitle", v)} />
             <Field label="Engage Description" value={content.engageDescription} onChange={v => onUpdate("engageDescription", v)} multiline />
             <Field label="Engage CTA" value={content.engageCta} onChange={v => onUpdate("engageCta", v)} />
+            <div className="pt-2 border-t border-border">
+              <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-3">Platform URLs</p>
+              <div className="space-y-3">
+                <Field label="Spotify URL" value={content.spotifyUrl} onChange={v => onUpdate("spotifyUrl", v)} />
+                <Field label="Apple Podcasts URL" value={content.appleUrl} onChange={v => onUpdate("appleUrl", v)} />
+                <Field label="YouTube URL" value={content.youtubeUrl} onChange={v => onUpdate("youtubeUrl", v)} />
+              </div>
+            </div>
           </>
         )}
 
@@ -83,6 +92,12 @@ export default function CMSPanel({ content, onUpdate, onReset, onClose }: CMSPan
             <Field label="CTA Button 1 Link" value={content.heroCta1Link} onChange={v => onUpdate("heroCta1Link", v)} />
             <Field label="CTA Button 2 Text" value={content.heroCta2Text} onChange={v => onUpdate("heroCta2Text", v)} />
             <Field label="CTA Button 2 Link" value={content.heroCta2Link} onChange={v => onUpdate("heroCta2Link", v)} />
+            <Field
+              label="Hero Image URL"
+              value={content.heroImageUrl}
+              onChange={v => onUpdate("heroImageUrl", v)}
+              placeholder="https://..."
+            />
             <ColorPicker
               label="Hero Card Background"
               value={content.heroCardBg}
@@ -96,11 +111,6 @@ export default function CMSPanel({ content, onUpdate, onReset, onClose }: CMSPan
             <Field label="About Title" value={content.aboutTitle} onChange={v => onUpdate("aboutTitle", v)} />
             <Field label="About Description" value={content.aboutDescription} onChange={v => onUpdate("aboutDescription", v)} multiline />
             <Field label="About CTA Text" value={content.aboutCta} onChange={v => onUpdate("aboutCta", v)} />
-            <ColorPicker
-              label="About Card Background"
-              value={content.aboutCardBg}
-              onChange={v => onUpdate("aboutCardBg", v)}
-            />
             <div>
               <label className="text-xs text-muted-foreground uppercase tracking-wider block mb-1">Tags (comma separated)</label>
               <input
@@ -108,6 +118,26 @@ export default function CMSPanel({ content, onUpdate, onReset, onClose }: CMSPan
                 value={content.tags.join(", ")}
                 onChange={e => onUpdate("tags", e.target.value.split(",").map(t => t.trim()).filter(Boolean))}
               />
+            </div>
+          </>
+        )}
+
+        {tab === "hosts" && (
+          <>
+            <p className="text-xs text-muted-foreground uppercase tracking-widest font-semibold">Host 1</p>
+            <Field label="Name" value={content.host1Name} onChange={v => onUpdate("host1Name", v)} />
+            <Field label="Role / Title" value={content.host1Role} onChange={v => onUpdate("host1Role", v)} />
+            <Field label="Bio" value={content.host1Bio} onChange={v => onUpdate("host1Bio", v)} multiline />
+            <Field label="Photo URL" value={content.host1ImageUrl} onChange={v => onUpdate("host1ImageUrl", v)} placeholder="https://..." />
+
+            <div className="border-t border-border pt-4">
+              <p className="text-xs text-muted-foreground uppercase tracking-widest font-semibold mb-3">Host 2</p>
+              <div className="space-y-3">
+                <Field label="Name" value={content.host2Name} onChange={v => onUpdate("host2Name", v)} />
+                <Field label="Role / Title" value={content.host2Role} onChange={v => onUpdate("host2Role", v)} />
+                <Field label="Bio" value={content.host2Bio} onChange={v => onUpdate("host2Bio", v)} multiline />
+                <Field label="Photo URL" value={content.host2ImageUrl} onChange={v => onUpdate("host2ImageUrl", v)} placeholder="https://..." />
+              </div>
             </div>
           </>
         )}
@@ -163,13 +193,14 @@ export default function CMSPanel({ content, onUpdate, onReset, onClose }: CMSPan
 }
 
 function Field({
-  label, value, onChange, type = "text", multiline = false,
+  label, value, onChange, type = "text", multiline = false, placeholder,
 }: {
   label: string;
   value: string;
   onChange: (v: string) => void;
   type?: string;
   multiline?: boolean;
+  placeholder?: string;
 }) {
   return (
     <div>
@@ -180,6 +211,7 @@ function Field({
           className="w-full bg-muted border border-border rounded-lg px-3 py-2 text-sm text-foreground focus:outline-none focus:border-primary resize-none"
           value={value}
           onChange={e => onChange(e.target.value)}
+          placeholder={placeholder}
         />
       ) : (
         <input
@@ -187,6 +219,7 @@ function Field({
           className="w-full bg-muted border border-border rounded-lg px-3 py-2 text-sm text-foreground focus:outline-none focus:border-primary"
           value={value}
           onChange={e => onChange(e.target.value)}
+          placeholder={placeholder}
         />
       )}
     </div>
