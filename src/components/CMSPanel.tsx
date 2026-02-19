@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { CMSContent } from "@/types/cms";
+import { CMSContent, NavItem } from "@/types/cms";
 import { X, RotateCcw, Settings2, Info } from "lucide-react";
 
 interface CMSPanelProps {
@@ -73,21 +73,18 @@ export default function CMSPanel({ content, onUpdate, onReset, onClose }: CMSPan
             <Field label="Engage Title" value={content.engageTitle} onChange={v => onUpdate("engageTitle", v)} />
             <Field label="Engage Description" value={content.engageDescription} onChange={v => onUpdate("engageDescription", v)} multiline />
             <div className="pt-2 border-t border-border">
-              <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-3">Navigation Links</p>
-              <div className="space-y-3">
-                <div className="grid grid-cols-2 gap-2">
-                  <Field label="Nav 1 Label" value={content.navLink1Label} onChange={v => onUpdate("navLink1Label", v)} />
-                  <Field label="Nav 1 Href" value={content.navLink1Href} onChange={v => onUpdate("navLink1Href", v)} />
-                </div>
-                <div className="grid grid-cols-2 gap-2">
-                  <Field label="Nav 2 Label" value={content.navLink2Label} onChange={v => onUpdate("navLink2Label", v)} />
-                  <Field label="Nav 2 Href" value={content.navLink2Href} onChange={v => onUpdate("navLink2Href", v)} />
-                </div>
-                <div className="grid grid-cols-2 gap-2">
-                  <Field label="Nav 3 Label" value={content.navLink3Label} onChange={v => onUpdate("navLink3Label", v)} />
-                  <Field label="Nav 3 Href" value={content.navLink3Href} onChange={v => onUpdate("navLink3Href", v)} />
-                </div>
-              </div>
+              <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-3">Left Nav Items</p>
+              <NavItemsEditor
+                items={content.navLeftItems || []}
+                onChange={items => onUpdate("navLeftItems", items)}
+              />
+            </div>
+            <div className="pt-2 border-t border-border">
+              <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-3">Right Nav Items</p>
+              <NavItemsEditor
+                items={content.navRightItems || []}
+                onChange={items => onUpdate("navRightItems", items)}
+              />
             </div>
             <div className="pt-2 border-t border-border">
               <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-3">Platform URLs</p>
@@ -272,3 +269,46 @@ function Field({ label, value, onChange, type = "text", multiline = false, place
   );
 }
 
+
+interface NavItemsEditorProps {
+  items: NavItem[];
+  onChange: (items: NavItem[]) => void;
+}
+
+function NavItemsEditor({ items, onChange }: NavItemsEditorProps) {
+  const updateItem = (idx: number, field: "label" | "href", value: string) => {
+    const next = [...items];
+    next[idx] = { ...next[idx], [field]: value };
+    onChange(next);
+  };
+  const addItem = () => onChange([...items, { label: "New", href: "#" }]);
+  const removeItem = (idx: number) => onChange(items.filter((_, i) => i !== idx));
+
+  return (
+    <div className="space-y-3">
+      {items.map((item, i) => (
+        <div key={i} className="flex items-end gap-1.5">
+          <div className="flex-1">
+            <Field label={`Label ${i + 1}`} value={item.label} onChange={v => updateItem(i, "label", v)} />
+          </div>
+          <div className="flex-1">
+            <Field label={`Href ${i + 1}`} value={item.href} onChange={v => updateItem(i, "href", v)} />
+          </div>
+          <button
+            onClick={() => removeItem(i)}
+            className="mb-0.5 px-2 py-2 text-xs text-destructive hover:bg-destructive/10 rounded transition-colors"
+            title="Remove"
+          >
+            ✕
+          </button>
+        </div>
+      ))}
+      <button
+        onClick={addItem}
+        className="w-full py-1.5 rounded border border-dashed border-border text-xs text-muted-foreground hover:text-foreground hover:border-foreground/40 transition-colors"
+      >
+        + Add nav item
+      </button>
+    </div>
+  );
+}

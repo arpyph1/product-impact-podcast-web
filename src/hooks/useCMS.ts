@@ -1,28 +1,39 @@
 import { useState, useCallback, useEffect, useRef } from "react";
-import { CMSContent, defaultCMS } from "@/types/cms";
+import { CMSContent, NavItem, defaultCMS } from "@/types/cms";
 import { supabase } from "@/integrations/supabase/client";
 
 /**
  * Deep-merge saved CMS data with defaults so every key in defaultCMS is present.
  * Never overwrites a default with an empty string — preserves defaults if saved value is blank.
+ * Also migrates legacy navLink fields to navLeftItems/navRightItems if arrays are missing.
  */
 function mergeSaved(saved: Record<string, any>): CMSContent {
   const merged: Record<string, any> = {};
   for (const key of Object.keys(defaultCMS) as (keyof CMSContent)[]) {
     const savedVal = saved[key];
     const defaultVal = (defaultCMS as Record<string, any>)[key];
-    // If saved is undefined/null, use default
     if (savedVal === undefined || savedVal === null) {
       merged[key] = defaultVal;
-    }
-    // If saved is an empty string but default has a real value, keep default
-    else if (savedVal === "" && typeof defaultVal === "string" && defaultVal !== "") {
+    } else if (savedVal === "" && typeof defaultVal === "string" && defaultVal !== "") {
       merged[key] = defaultVal;
-    }
-    else {
+    } else {
       merged[key] = savedVal;
     }
   }
+
+  // Migrate legacy nav fields → arrays if arrays are empty/missing
+  if (!Array.isArray(merged.navLeftItems) || merged.navLeftItems.length === 0) {
+    const left: NavItem[] = [];
+    if (merged.navLink1Label) left.push({ label: merged.navLink1Label, href: merged.navLink1Href || "#" });
+    if (merged.navLink2Label) left.push({ label: merged.navLink2Label, href: merged.navLink2Href || "#" });
+    merged.navLeftItems = left.length > 0 ? left : defaultCMS.navLeftItems;
+  }
+  if (!Array.isArray(merged.navRightItems) || merged.navRightItems.length === 0) {
+    const right: NavItem[] = [];
+    if (merged.navLink3Label) right.push({ label: merged.navLink3Label, href: merged.navLink3Href || "#" });
+    merged.navRightItems = right.length > 0 ? right : defaultCMS.navRightItems;
+  }
+
   return merged as CMSContent;
 }
 

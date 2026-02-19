@@ -1,4 +1,4 @@
-import { CMSContent } from "@/types/cms";
+import { CMSContent, NavItem } from "@/types/cms";
 import { Menu, X, ArrowUpRight } from "lucide-react";
 import { useState, useEffect } from "react";
 import logo from "@/assets/logo-new.png";
@@ -21,35 +21,32 @@ export default function Navbar({ content, isEditing, onToggleEdit, onContactClic
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  const leftLinks = [
-    { label: content.navLink1Label, href: content.navLink1Href, labelKey: "navLink1Label" as keyof CMSContent, hrefKey: "navLink1Href" as keyof CMSContent },
-    { label: content.navLink2Label, href: content.navLink2Href, labelKey: "navLink2Label" as keyof CMSContent, hrefKey: "navLink2Href" as keyof CMSContent },
-  ];
+  const leftItems = content.navLeftItems || [];
+  const rightItems = content.navRightItems || [];
 
-  const rightLinks = [
-    { label: content.navLink3Label, href: content.navLink3Href, labelKey: "navLink3Label" as keyof CMSContent, hrefKey: "navLink3Href" as keyof CMSContent },
-  ];
-
-  const renderLink = (link: typeof leftLinks[0]) =>
+  const renderLink = (item: NavItem, idx: number, side: "left" | "right") =>
     isEditing ? (
-      <div key={link.labelKey} className="flex flex-col gap-0.5">
+      <div key={`${side}-${idx}`} className="flex flex-col gap-0.5">
         <input
           className="text-xs font-medium uppercase tracking-wide bg-transparent border-b border-amber/50 text-foreground focus:outline-none w-24"
-          defaultValue={link.label}
-          onBlur={e => onUpdate(link.labelKey, e.target.value)}
+          defaultValue={item.label}
+          onBlur={e => {
+            const items = side === "left" ? [...leftItems] : [...rightItems];
+            items[idx] = { ...items[idx], label: e.target.value };
+            onUpdate(side === "left" ? "navLeftItems" : "navRightItems", items);
+          }}
         />
       </div>
     ) : (
       <a
-        key={link.labelKey}
-        href={link.href}
+        key={`${side}-${idx}`}
+        href={item.href}
         className="text-xs font-medium text-muted-foreground hover:text-foreground transition-colors tracking-wide uppercase"
       >
-        {link.label}
+        {item.label}
       </a>
     );
 
-  // Logo: 113px default (84 * 1.35) → 76px scrolled (56 * 1.35)
   const logoSize = scrolled ? 76 : 113;
 
   return (
@@ -60,10 +57,10 @@ export default function Navbar({ content, isEditing, onToggleEdit, onContactClic
       >
         {/* Left nav links */}
         <nav className="hidden md:flex items-center gap-8 flex-1">
-          {leftLinks.map(renderLink)}
+          {leftItems.map((item, i) => renderLink(item, i, "left"))}
         </nav>
 
-        {/* Center logo — shrinks on scroll */}
+        {/* Center logo */}
         <div className="flex items-center justify-center flex-shrink-0">
           <a href="#" className="flex items-center justify-center">
             <img
@@ -81,7 +78,7 @@ export default function Navbar({ content, isEditing, onToggleEdit, onContactClic
 
         {/* Right nav + actions */}
         <div className="hidden md:flex items-center justify-end gap-6 flex-1">
-          {rightLinks.map(renderLink)}
+          {rightItems.map((item, i) => renderLink(item, i, "right"))}
           <button
             onClick={onToggleEdit}
             className={`text-xs font-medium px-3 py-1.5 rounded border transition-all ${
@@ -110,10 +107,10 @@ export default function Navbar({ content, isEditing, onToggleEdit, onContactClic
 
       {menuOpen && (
         <div className="md:hidden border-t border-border bg-background px-6 py-5 flex flex-col gap-4">
-          {[...leftLinks, ...rightLinks].map(link => (
-            <a key={link.labelKey} href={link.href} onClick={() => setMenuOpen(false)}
+          {[...leftItems, ...rightItems].map((item, i) => (
+            <a key={i} href={item.href} onClick={() => setMenuOpen(false)}
               className="text-sm font-medium text-muted-foreground hover:text-foreground uppercase tracking-wide">
-              {link.label}
+              {item.label}
             </a>
           ))}
           <button onClick={() => { onContactClick(); setMenuOpen(false); }}
