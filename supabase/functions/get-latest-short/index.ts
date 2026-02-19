@@ -93,7 +93,7 @@ serve(async (req) => {
       const detail = detailsMap.get(vid);
       if (!detail) continue;
       const duration = parseDuration(detail.contentDetails?.duration || "");
-      if (duration <= 60) {
+      if (duration <= 120) {
         shorts.push({
           videoId: vid,
           title: detail.snippet?.title || "",
@@ -105,7 +105,7 @@ serve(async (req) => {
 
     if (shorts.length === 0) {
       return new Response(
-        JSON.stringify({ error: "No Shorts found (videos ≤60s) in the latest uploads", shorts: [] }),
+        JSON.stringify({ error: "No Shorts found (videos ≤2min) in the latest uploads", shorts: [] }),
         { status: 404, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }

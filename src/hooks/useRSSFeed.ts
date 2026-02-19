@@ -12,10 +12,9 @@ export interface PodcastEpisode {
   guid: string;
 }
 
-// Use rss2json — most reliable in production (no CORS issues)
-const RSS2JSON = "https://api.rss2json.com/v1/api.json?rss_url=";
-// Fallback: allorigins raw XML
-const PROXY_FALLBACK = "https://api.allorigins.win/get?url=";
+// rss2json free tier only returns ~10 items, so we prefer raw XML for full feeds
+const PROXY_ALLORIGINS = "https://api.allorigins.win/get?url=";
+const PROXY_RSS2JSON = "https://api.rss2json.com/v1/api.json?rss_url=";
 
 function parseRSSXML(xml: string): { episodes: PodcastEpisode[]; title: string; image: string } {
   const parser = new DOMParser();
@@ -33,13 +32,10 @@ function parseRSSXML(xml: string): { episodes: PodcastEpisode[]; title: string; 
   const episodes: PodcastEpisode[] = items.map((item, idx) => {
     const title = item.querySelector("title")?.textContent?.trim() || `Episode ${idx + 1}`;
 
-    // <link> in RSS is a text node sibling — walk nextSibling
     let link = "";
     const linkEl = item.querySelector("link");
     if (linkEl) {
-      // Try text content first
       link = linkEl.textContent?.trim() || "";
-      // If empty, check next sibling text node
       if (!link) {
         let sib = linkEl.nextSibling;
         while (sib) {
@@ -91,33 +87,7 @@ function parseRSSXML(xml: string): { episodes: PodcastEpisode[]; title: string; 
   return { episodes, title: channelTitle, image: channelImage };
 }
 
-async function fetchWithFallback(feedUrl: string): Promise<string> {
-  // 1. Try rss2json — returns clean JSON, no CORS issues in production
-  try {
-    const r = await fetch(`${RSS2JSON}${encodeURIComponent(feedUrl)}`, { signal: AbortSignal.timeout(10000) });
-    const data = await r.json();
-    if (data.status === "ok" && Array.isArray(data.items) && data.items.length > 0) {
-      // Convert rss2json JSON to episodes directly
-      return JSON.stringify({ __rss2json: true, feed: data.feed, items: data.items });
-    }
-  } catch (e) {
-    console.warn("rss2json failed:", e);
-  }
-
-  // 2. Try allorigins raw XML
-  try {
-    const r2 = await fetch(`${PROXY_FALLBACK}${encodeURIComponent(feedUrl)}`, { signal: AbortSignal.timeout(10000) });
-    const data2 = await r2.json();
-    if (data2.contents && data2.contents.length > 100) return data2.contents;
-  } catch (e) {
-    console.warn("allorigins failed:", e);
-  }
-
-  throw new Error("All proxies failed");
-}
-
-function parseRss2Json(jsonStr: string): { episodes: PodcastEpisode[]; title: string; image: string } {
-  const { feed, items } = JSON.parse(jsonStr);
+function parseRss2JsonItems(feed: any, items: any[]): { episodes: PodcastEpisode[]; title: string; image: string } {
   const channelImage = feed?.image || "";
   const channelTitle = feed?.title || "";
 
@@ -147,6 +117,33 @@ function parseRss2Json(jsonStr: string): { episodes: PodcastEpisode[]; title: st
   return { episodes, title: channelTitle, image: channelImage };
 }
 
+async function fetchFeed(feedUrl: string): Promise<{ episodes: PodcastEpisode[]; title: string; image: string }> {
+  // 1. Try allorigins first — returns full XML with ALL episodes
+  try {
+    const r = await fetch(`${PROXY_ALLORIGINS}${encodeURIComponent(feedUrl)}`, { signal: AbortSignal.timeout(10000) });
+    const data = await r.json();
+    if (data.contents && data.contents.length > 100) {
+      const result = parseRSSXML(data.contents);
+      if (result.episodes.length > 0) return result;
+    }
+  } catch (e) {
+    console.warn("allorigins failed:", e);
+  }
+
+  // 2. Fallback to rss2json (limited to ~10 items on free tier)
+  try {
+    const r2 = await fetch(`${PROXY_RSS2JSON}${encodeURIComponent(feedUrl)}`, { signal: AbortSignal.timeout(10000) });
+    const data2 = await r2.json();
+    if (data2.status === "ok" && Array.isArray(data2.items) && data2.items.length > 0) {
+      return parseRss2JsonItems(data2.feed, data2.items);
+    }
+  } catch (e) {
+    console.warn("rss2json failed:", e);
+  }
+
+  throw new Error("All proxies failed");
+}
+
 export function useRSSFeed(feedUrl: string) {
   const [episodes, setEpisodes] = useState<PodcastEpisode[]>([]);
   const [loading, setLoading] = useState(true);
@@ -165,20 +162,9 @@ export function useRSSFeed(feedUrl: string) {
     setError(null);
     setEpisodes([]);
 
-    fetchWithFallback(feedUrl)
-      .then(raw => {
+    fetchFeed(feedUrl)
+      .then(result => {
         if (cancelled) return;
-        let result: { episodes: PodcastEpisode[]; title: string; image: string };
-        try {
-          const parsed = JSON.parse(raw);
-          if (parsed.__rss2json) {
-            result = parseRss2Json(raw);
-          } else {
-            throw new Error("not rss2json");
-          }
-        } catch {
-          result = parseRSSXML(raw);
-        }
         if (result.episodes.length === 0) throw new Error("No episodes found in feed");
         setPodcastTitle(result.title);
         setPodcastImage(result.image);

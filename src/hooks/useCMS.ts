@@ -4,13 +4,24 @@ import { supabase } from "@/integrations/supabase/client";
 
 /**
  * Deep-merge saved CMS data with defaults so every key in defaultCMS is present.
+ * Never overwrites a default with an empty string — preserves defaults if saved value is blank.
  */
 function mergeSaved(saved: Record<string, any>): CMSContent {
   const merged: Record<string, any> = {};
   for (const key of Object.keys(defaultCMS) as (keyof CMSContent)[]) {
     const savedVal = saved[key];
     const defaultVal = (defaultCMS as Record<string, any>)[key];
-    merged[key] = savedVal === undefined || savedVal === null ? defaultVal : savedVal;
+    // If saved is undefined/null, use default
+    if (savedVal === undefined || savedVal === null) {
+      merged[key] = defaultVal;
+    }
+    // If saved is an empty string but default has a real value, keep default
+    else if (savedVal === "" && typeof defaultVal === "string" && defaultVal !== "") {
+      merged[key] = defaultVal;
+    }
+    else {
+      merged[key] = savedVal;
+    }
   }
   return merged as CMSContent;
 }
