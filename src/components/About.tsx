@@ -1,5 +1,6 @@
+import { useState } from "react";
 import { CMSContent } from "@/types/cms";
-import { ArrowRight, User } from "lucide-react";
+import { User, ArrowUpRight } from "lucide-react";
 
 interface AboutProps {
   content: CMSContent;
@@ -8,102 +9,140 @@ interface AboutProps {
   episodes: { title: string; imageUrl: string; pubDate: string; duration: string }[];
 }
 
+const MAX_BIO = 250;
+
 function HostCard({
-  name, bio, imageUrl, role, nameKey, bioKey, imageKey,
-  isEditing, onUpdate,
+  name, bio, imageUrl, role,
+  nameKey, bioKey, imageKey, roleKey,
+  isEditing, onUpdate, index,
 }: {
   name: string; bio: string; imageUrl: string; role: string;
-  nameKey: keyof CMSContent; bioKey: keyof CMSContent; imageKey: keyof CMSContent;
+  nameKey: keyof CMSContent; bioKey: keyof CMSContent;
+  imageKey: keyof CMSContent; roleKey: keyof CMSContent;
   isEditing: boolean; onUpdate: (k: keyof CMSContent, v: any) => void;
+  index: number;
 }) {
+  const [bioVal, setBioVal] = useState(bio);
+
   return (
-    <div className="space-y-3">
-      <div className="aspect-square rounded-xl overflow-hidden relative bg-dark-surface border border-border group">
-        {imageUrl ? (
-          <img
-            src={imageUrl}
-            alt={name}
-            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-            onError={e => { (e.target as HTMLImageElement).style.display = "none"; }}
-          />
-        ) : (
-          <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-primary/20 to-accent/20">
-            <User className="w-12 h-12 opacity-30 text-foreground" />
-          </div>
-        )}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
-        <div className="absolute bottom-0 left-0 right-0 p-3">
-          <p className="font-display font-bold text-sm text-white leading-tight">{name}</p>
-          <p className="text-xs text-white/60">{role}</p>
+    <div className="border-t border-border pt-8">
+      <div className="grid md:grid-cols-2 gap-8 items-start">
+        {/* Photo */}
+        <div className="relative aspect-[4/5] bg-muted rounded-sm overflow-hidden group max-w-xs">
+          {imageUrl ? (
+            <img
+              src={imageUrl}
+              alt={name}
+              className="host-card-img w-full h-full object-cover"
+              onError={e => { (e.target as HTMLImageElement).style.display = "none"; }}
+            />
+          ) : (
+            <div className="w-full h-full flex flex-col items-center justify-center gap-3 bg-card">
+              <User className="w-16 h-16 opacity-10 text-foreground" />
+              {isEditing && (
+                <p className="text-xs text-muted-foreground px-4 text-center">Paste a photo URL below</p>
+              )}
+            </div>
+          )}
+          {/* Number badge */}
+          <span className="absolute top-4 left-4 font-display font-extrabold text-5xl leading-none text-white/10 select-none">
+            0{index + 1}
+          </span>
+
+          {isEditing && (
+            <div className="absolute bottom-0 left-0 right-0 p-3 bg-black/80">
+              <input
+                className="w-full text-xs bg-transparent border-b border-amber/50 text-white focus:outline-none focus:border-amber pb-0.5"
+                defaultValue={imageUrl}
+                placeholder="Photo URL…"
+                onBlur={e => onUpdate(imageKey, e.target.value)}
+              />
+            </div>
+          )}
         </div>
 
-        {isEditing && (
-          <div className="absolute inset-0 bg-black/70 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center gap-2 p-3">
-            <p className="text-xs text-white/70">Photo URL:</p>
-            <input
-              className="w-full text-xs bg-black/80 border border-amber/50 text-white rounded px-2 py-1 focus:outline-none focus:border-amber"
-              defaultValue={imageUrl}
-              placeholder="https://..."
-              onBlur={e => onUpdate(imageKey, e.target.value)}
-            />
-          </div>
-        )}
-      </div>
+        {/* Text */}
+        <div className="flex flex-col gap-4">
+          {/* Role chip */}
+          <span
+            className="text-xs font-semibold uppercase tracking-widest text-primary"
+            contentEditable={isEditing}
+            suppressContentEditableWarning
+            onBlur={e => isEditing && onUpdate(roleKey, e.currentTarget.textContent || "")}
+          >
+            {role}
+          </span>
 
-      {isEditing && (
-        <p
-          className="font-display font-bold text-sm text-foreground"
-          contentEditable
-          suppressContentEditableWarning
-          onBlur={e => onUpdate(nameKey, e.currentTarget.textContent || "")}
-        >
-          {name}
-        </p>
-      )}
+          {/* Name — editorial large */}
+          <h3
+            className="font-display font-extrabold leading-none tracking-tight text-foreground"
+            style={{ fontSize: "clamp(2.5rem, 5vw, 4rem)" }}
+            contentEditable={isEditing}
+            suppressContentEditableWarning
+            onBlur={e => isEditing && onUpdate(nameKey, e.currentTarget.textContent || "")}
+          >
+            {name}
+          </h3>
+
+          {/* Bio — 250 char max, large body */}
+          <div className="space-y-1">
+            {isEditing ? (
+              <>
+                <textarea
+                  className="w-full bg-transparent border border-border rounded text-foreground text-lg leading-relaxed resize-none focus:outline-none focus:border-primary p-2"
+                  rows={4}
+                  maxLength={MAX_BIO}
+                  value={bioVal}
+                  onChange={e => setBioVal(e.target.value.slice(0, MAX_BIO))}
+                  onBlur={() => onUpdate(bioKey, bioVal)}
+                />
+                <p className="text-xs text-muted-foreground text-right">{bioVal.length}/{MAX_BIO}</p>
+              </>
+            ) : (
+              <p className="text-foreground/70 text-lg leading-relaxed max-w-sm">
+                {bio}
+              </p>
+            )}
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
 
 export default function About({ content, isEditing, onUpdate }: AboutProps) {
   return (
-    <section id="about" className="py-4 px-4 bg-background">
-      <div className="container mx-auto">
-        <div className="rounded-2xl border border-border/50 overflow-hidden grid lg:grid-cols-2">
+    <section id="about" className="bg-background">
+      <div className="container mx-auto px-6">
 
-          {/* LEFT: Host cards */}
-          <div className="bg-dark-surface p-6 lg:p-8 border-b lg:border-b-0 lg:border-r border-border/50">
-            {/* Accent top line */}
-            <div className="h-0.5 w-12 bg-primary rounded-full mb-5" />
-            <p className="text-xs text-muted-foreground uppercase tracking-widest font-semibold mb-5">Your Hosts</p>
-            <div className="grid grid-cols-2 gap-4">
-              <HostCard
-                name={content.host1Name} bio={content.host1Bio}
-                imageUrl={content.host1ImageUrl} role={content.host1Role}
-                nameKey="host1Name" bioKey="host1Bio" imageKey="host1ImageUrl"
-                isEditing={isEditing} onUpdate={onUpdate}
-              />
-              <HostCard
-                name={content.host2Name} bio={content.host2Bio}
-                imageUrl={content.host2ImageUrl} role={content.host2Role}
-                nameKey="host2Name" bioKey="host2Bio" imageKey="host2ImageUrl"
-                isEditing={isEditing} onUpdate={onUpdate}
-              />
-            </div>
-            {isEditing && (
-              <p className="mt-4 text-xs text-amber/70">🖱 Hover host cards to update photo URLs</p>
-            )}
+        {/* Section header */}
+        <div className="grid md:grid-cols-2 gap-8 py-16 border-b border-border items-end">
+          <div>
+            <p className="text-xs text-primary font-semibold uppercase tracking-widest mb-4">About</p>
+            <h2
+              className="font-display font-extrabold leading-none tracking-tight text-foreground"
+              style={{ fontSize: "clamp(2.5rem, 6vw, 5rem)" }}
+              contentEditable={isEditing}
+              suppressContentEditableWarning
+              onBlur={e => isEditing && onUpdate("aboutTitle", e.currentTarget.textContent || "")}
+            >
+              {content.aboutTitle}
+            </h2>
           </div>
-
-          {/* RIGHT: About info */}
-          <div className="bg-background p-6 lg:p-8 flex flex-col justify-center space-y-5">
-            <div className="h-0.5 w-12 bg-accent rounded-full" />
-
-            {/* Tags */}
-            <div className="flex gap-2 flex-wrap">
+          <div className="flex flex-col gap-4 md:items-end">
+            <p
+              className="text-muted-foreground leading-relaxed text-base max-w-sm md:text-right"
+              contentEditable={isEditing}
+              suppressContentEditableWarning
+              onBlur={e => isEditing && onUpdate("aboutDescription", e.currentTarget.textContent || "")}
+            >
+              {content.aboutDescription}
+            </p>
+            <div className="flex flex-wrap gap-2 md:justify-end">
               {content.tags.map((tag, idx) => (
                 <span
                   key={tag}
-                  className="text-xs font-bold px-3 py-1 rounded-full border border-primary/40 text-primary bg-primary/10"
+                  className="text-xs font-semibold px-3 py-1 rounded-full border border-border text-muted-foreground"
                   contentEditable={isEditing}
                   suppressContentEditableWarning
                   onBlur={e => {
@@ -117,28 +156,34 @@ export default function About({ content, isEditing, onUpdate }: AboutProps) {
                 </span>
               ))}
             </div>
+          </div>
+        </div>
 
-            <h2
-              className="font-display font-extrabold text-3xl lg:text-4xl text-foreground leading-tight"
-              contentEditable={isEditing}
-              suppressContentEditableWarning
-              onBlur={e => isEditing && onUpdate("aboutTitle", e.currentTarget.textContent || "")}
-            >
-              {content.aboutTitle}
-            </h2>
+        {/* Hosts headline */}
+        <div className="py-12">
+          <p className="text-xs text-muted-foreground font-semibold uppercase tracking-widest mb-8">Your Hosts</p>
+          <div className="flex flex-col gap-16">
+            <HostCard
+              name={content.host1Name} bio={content.host1Bio}
+              imageUrl={content.host1ImageUrl} role={content.host1Role}
+              nameKey="host1Name" bioKey="host1Bio"
+              imageKey="host1ImageUrl" roleKey="host1Role"
+              isEditing={isEditing} onUpdate={onUpdate} index={0}
+            />
+            <HostCard
+              name={content.host2Name} bio={content.host2Bio}
+              imageUrl={content.host2ImageUrl} role={content.host2Role}
+              nameKey="host2Name" bioKey="host2Bio"
+              imageKey="host2ImageUrl" roleKey="host2Role"
+              isEditing={isEditing} onUpdate={onUpdate} index={1}
+            />
+          </div>
 
-            <p
-              className="text-muted-foreground leading-relaxed text-sm"
-              contentEditable={isEditing}
-              suppressContentEditableWarning
-              onBlur={e => isEditing && onUpdate("aboutDescription", e.currentTarget.textContent || "")}
-            >
-              {content.aboutDescription}
-            </p>
-
+          {/* CTA */}
+          <div className="mt-12 pt-8 border-t border-border">
             <a
               href="#episodes"
-              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-primary text-primary-foreground font-semibold text-sm hover:brightness-110 transition-all glow-orange w-fit"
+              className="inline-flex items-center gap-2 text-foreground font-semibold text-base hover:text-primary transition-colors agency-link"
             >
               <span
                 contentEditable={isEditing}
@@ -147,27 +192,31 @@ export default function About({ content, isEditing, onUpdate }: AboutProps) {
               >
                 {content.aboutCta}
               </span>
-              <ArrowRight className="w-4 h-4" />
+              <ArrowUpRight className="w-5 h-5" />
             </a>
-
-            {/* Newsletter box */}
-            <div className="p-4 rounded-xl bg-card border border-border neon-border">
-              <p className="text-xs text-muted-foreground uppercase tracking-widest font-semibold mb-3">Newsletter</p>
-              <div className="flex gap-2">
-                <input
-                  type="email"
-                  placeholder="your@email.com"
-                  className="flex-1 bg-muted border border-border rounded-lg px-3 py-2 text-sm text-foreground focus:outline-none focus:border-primary"
-                />
-                <button className="px-4 py-2 rounded-lg bg-primary text-primary-foreground text-sm font-semibold hover:brightness-110 transition-all">
-                  Join
-                </button>
-              </div>
-            </div>
           </div>
-
         </div>
+
+        {/* Newsletter */}
+        <div className="border-t border-border py-10 flex flex-col md:flex-row items-start md:items-center gap-6 justify-between">
+          <div>
+            <p className="font-display font-bold text-xl text-foreground">Stay in the loop.</p>
+            <p className="text-sm text-muted-foreground mt-1">New episodes, guest announcements, and no spam.</p>
+          </div>
+          <div className="flex gap-0 w-full max-w-sm border border-border rounded-full overflow-hidden focus-within:border-primary transition-colors">
+            <input
+              type="email"
+              placeholder="your@email.com"
+              className="flex-1 bg-transparent px-5 py-2.5 text-sm text-foreground focus:outline-none"
+            />
+            <button className="px-5 py-2.5 bg-primary text-primary-foreground text-sm font-semibold hover:brightness-110 transition-all whitespace-nowrap">
+              Subscribe
+            </button>
+          </div>
+        </div>
+
       </div>
+      <div className="section-divider" />
     </section>
   );
 }

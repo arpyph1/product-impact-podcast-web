@@ -18,7 +18,7 @@ export interface CMSContent {
   aboutCardBg: string;
   tags: string[];
 
-  // Hosts
+  // Hosts — name, role, bio (250 char max), image
   host1Name: string;
   host1Bio: string;
   host1ImageUrl: string;
@@ -70,11 +70,11 @@ export const defaultCMS: CMSContent = {
   tags: ["Product", "Strategy", "Leadership", "Innovation"],
 
   host1Name: "Host Name",
-  host1Bio: "Product leader and podcast host.",
+  host1Bio: "Former VP of Product at a Fortune 500 company turned podcast host. A decade building products at the intersection of design, data, and human behaviour.",
   host1ImageUrl: "",
   host1Role: "Host",
   host2Name: "Co-Host Name",
-  host2Bio: "Product strategist and speaker.",
+  host2Bio: "Product strategist, speaker, and advisor. Has helped scale teams at three unicorn startups and writes about product culture for leading industry publications.",
   host2ImageUrl: "",
   host2Role: "Co-Host",
 
