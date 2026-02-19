@@ -12,7 +12,68 @@ export interface PodcastEpisode {
   guid: string;
 }
 
-const RSS2JSON = "https://api.rss2json.com/v1/api.json?rss_url=";
+// Use allorigins proxy to bypass CORS and get full episode list
+const PROXY = "https://api.allorigins.win/get?url=";
+
+function parseRSSXML(xml: string, feedUrl: string): { episodes: PodcastEpisode[]; title: string; image: string } {
+  const parser = new DOMParser();
+  const doc = parser.parseFromString(xml, "text/xml");
+
+  const channelTitle = doc.querySelector("channel > title")?.textContent || "";
+  const channelImage =
+    doc.querySelector("channel > image > url")?.textContent ||
+    doc.querySelector("channel > itunes\\:image")?.getAttribute("href") ||
+    "";
+
+  const items = Array.from(doc.querySelectorAll("item"));
+  const episodes: PodcastEpisode[] = items.map((item, idx) => {
+    const title = item.querySelector("title")?.textContent || `Episode ${idx + 1}`;
+    const link = item.querySelector("link")?.textContent || "";
+    const guid = item.querySelector("guid")?.textContent || String(idx);
+    const pubDateRaw = item.querySelector("pubDate")?.textContent || "";
+    let pubDate = "";
+    try {
+      if (pubDateRaw) {
+        pubDate = new Date(pubDateRaw).toLocaleDateString("en-US", {
+          year: "numeric", month: "short", day: "numeric",
+        });
+      }
+    } catch {}
+
+    // Audio from enclosure
+    const enclosure = item.querySelector("enclosure");
+    const audioUrl = enclosure?.getAttribute("url") || "";
+
+    // Image: item-level itunes:image first, then channel image
+    const itunesImage =
+      item.querySelector("itunes\\:image")?.getAttribute("href") ||
+      item.querySelector("[nodeName='itunes:image']")?.getAttribute("href") ||
+      "";
+
+    // Try namespace-aware approach
+    const itunesNsImage = item.getElementsByTagNameNS(
+      "http://www.itunes.com/dtds/podcast-1.0.dtd", "image"
+    )[0]?.getAttribute("href") || "";
+
+    const imageUrl = itunesNsImage || itunesImage || channelImage;
+
+    // Duration
+    const durationEl =
+      item.getElementsByTagNameNS("http://www.itunes.com/dtds/podcast-1.0.dtd", "duration")[0] ||
+      item.querySelector("itunes\\:duration");
+    const duration = durationEl?.textContent || "";
+
+    // Episode number
+    const epNumEl =
+      item.getElementsByTagNameNS("http://www.itunes.com/dtds/podcast-1.0.dtd", "episode")[0] ||
+      item.querySelector("itunes\\:episode");
+    const episodeNumber = epNumEl?.textContent || String(items.length - idx);
+
+    return { title, description: "", pubDate, audioUrl, imageUrl, duration, episodeNumber, link, guid };
+  });
+
+  return { episodes, title: channelTitle, image: channelImage };
+}
 
 export function useRSSFeed(feedUrl: string) {
   const [episodes, setEpisodes] = useState<PodcastEpisode[]>([]);
@@ -29,55 +90,17 @@ export function useRSSFeed(feedUrl: string) {
     setError(null);
     setEpisodes([]);
 
-    fetch(`${RSS2JSON}${encodeURIComponent(feedUrl)}`)
+    const url = `${PROXY}${encodeURIComponent(feedUrl)}`;
+
+    fetch(url)
       .then(r => r.json())
       .then(data => {
         if (cancelled) return;
-
-        if (data.status !== "ok") {
-          throw new Error(data.message || "Feed error");
-        }
-
-        setPodcastTitle(data.feed?.title || "");
-        setPodcastImage(data.feed?.image || "");
-
-        const items: PodcastEpisode[] = (data.items || []).map((item: any, idx: number) => {
-          // Format date
-          let formattedDate = item.pubDate || "";
-          try {
-            if (formattedDate) {
-              formattedDate = new Date(formattedDate).toLocaleDateString("en-US", {
-                year: "numeric", month: "short", day: "numeric",
-              });
-            }
-          } catch {}
-
-          // Audio URL from enclosure
-          const audioUrl = item.enclosure?.link || item.enclosure?.url || "";
-
-          // Episode image: thumbnail > feed image
-          const imageUrl = item.thumbnail || data.feed?.image || "";
-
-          // Duration from itunes:duration (rss2json puts it in item.itunes?.duration or not at all)
-          const duration = item.itunes_duration || "";
-
-          // Episode number
-          const epNumber = item.itunes_episode || String((data.items?.length || 0) - idx);
-
-          return {
-            title: item.title || `Episode ${epNumber}`,
-            description: item.description || "",
-            pubDate: formattedDate,
-            audioUrl,
-            imageUrl,
-            duration,
-            episodeNumber: String(epNumber),
-            link: item.link || "",
-            guid: item.guid || String(idx),
-          };
-        });
-
-        setEpisodes(items);
+        if (!data.contents) throw new Error("No content received");
+        const { episodes, title, image } = parseRSSXML(data.contents, feedUrl);
+        setPodcastTitle(title);
+        setPodcastImage(image);
+        setEpisodes(episodes);
         setLoading(false);
       })
       .catch(err => {

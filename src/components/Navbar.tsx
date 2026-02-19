@@ -14,48 +14,57 @@ interface NavbarProps {
 export default function Navbar({ content, isEditing, onToggleEdit, onContactClick, onUpdate }: NavbarProps) {
   const [menuOpen, setMenuOpen] = useState(false);
 
-  const navLinks = [
+  const leftLinks = [
     { label: content.navLink1Label, href: content.navLink1Href, labelKey: "navLink1Label" as keyof CMSContent, hrefKey: "navLink1Href" as keyof CMSContent },
     { label: content.navLink2Label, href: content.navLink2Href, labelKey: "navLink2Label" as keyof CMSContent, hrefKey: "navLink2Href" as keyof CMSContent },
+  ];
+
+  const rightLinks = [
     { label: content.navLink3Label, href: content.navLink3Href, labelKey: "navLink3Label" as keyof CMSContent, hrefKey: "navLink3Href" as keyof CMSContent },
   ];
 
+  const renderLink = (link: typeof leftLinks[0]) =>
+    isEditing ? (
+      <div key={link.labelKey} className="flex flex-col gap-0.5">
+        <input
+          className="text-xs font-medium uppercase tracking-wide bg-transparent border-b border-amber/50 text-foreground focus:outline-none w-20"
+          defaultValue={link.label}
+          onBlur={e => onUpdate(link.labelKey, e.target.value)}
+        />
+      </div>
+    ) : (
+      <a
+        key={link.labelKey}
+        href={link.href}
+        className="text-xs font-medium text-muted-foreground hover:text-foreground transition-colors tracking-wide uppercase"
+      >
+        {link.label}
+      </a>
+    );
+
   return (
     <header className="fixed top-0 left-0 right-0 z-50 border-b border-border bg-background/95 backdrop-blur-sm">
-      <div className="container mx-auto flex items-center justify-between h-14 px-6">
-        {/* Logo mark */}
-        <a href="#" className="flex items-center gap-2.5 group">
-          <img src={logo} alt={content.podcastName} className="w-8 h-8 object-contain" />
-          <span className="font-display font-black text-xs text-foreground uppercase tracking-tight hidden sm:block">
-            {content.podcastName}
-          </span>
-        </a>
+      <div className="container mx-auto h-14 px-6 grid grid-cols-3 items-center">
 
-        {/* Desktop nav */}
+        {/* Left nav links */}
         <nav className="hidden md:flex items-center gap-8">
-          {navLinks.map(link => (
-            isEditing ? (
-              <div key={link.labelKey} className="flex flex-col gap-0.5">
-                <input
-                  className="text-xs font-medium uppercase tracking-wide bg-transparent border-b border-amber/50 text-foreground focus:outline-none w-20"
-                  defaultValue={link.label}
-                  onBlur={e => onUpdate(link.labelKey, e.target.value)}
-                />
-              </div>
-            ) : (
-              <a
-                key={link.labelKey}
-                href={link.href}
-                className="text-xs font-medium text-muted-foreground hover:text-foreground transition-colors tracking-wide uppercase"
-              >
-                {link.label}
-              </a>
-            )
-          ))}
+          {leftLinks.map(renderLink)}
         </nav>
 
-        {/* Actions */}
-        <div className="hidden md:flex items-center gap-3">
+        {/* Center logo */}
+        <div className="flex items-center justify-center">
+          <a href="#" className="flex items-center gap-2 group">
+            <img src={logo} alt={content.podcastName} className="w-9 h-9 object-contain" />
+            <span className="font-display font-black text-xs text-foreground uppercase tracking-tight hidden sm:block">
+              {content.podcastName}
+            </span>
+          </a>
+        </div>
+
+        {/* Right nav + actions */}
+        <div className="hidden md:flex items-center justify-end gap-6">
+          {rightLinks.map(renderLink)}
+
           <button
             onClick={onToggleEdit}
             className={`text-xs font-medium px-3 py-1.5 rounded border transition-all ${
@@ -64,7 +73,7 @@ export default function Navbar({ content, isEditing, onToggleEdit, onContactClic
                 : "border-border text-muted-foreground hover:text-foreground hover:border-foreground/40"
             }`}
           >
-            {isEditing ? "✓ Done editing" : "Edit"}
+            {isEditing ? "✓ Done" : "Edit"}
           </button>
           <button
             onClick={onContactClick}
@@ -74,15 +83,17 @@ export default function Navbar({ content, isEditing, onToggleEdit, onContactClic
           </button>
         </div>
 
-        {/* Mobile */}
-        <button className="md:hidden p-2 text-muted-foreground" onClick={() => setMenuOpen(v => !v)}>
-          {menuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
-        </button>
+        {/* Mobile hamburger */}
+        <div className="md:hidden flex justify-end col-span-2">
+          <button className="p-2 text-muted-foreground" onClick={() => setMenuOpen(v => !v)}>
+            {menuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+          </button>
+        </div>
       </div>
 
       {menuOpen && (
         <div className="md:hidden border-t border-border bg-background px-6 py-5 flex flex-col gap-4">
-          {navLinks.map(link => (
+          {[...leftLinks, ...rightLinks].map(link => (
             <a key={link.labelKey} href={link.href} onClick={() => setMenuOpen(false)}
               className="text-sm font-medium text-muted-foreground hover:text-foreground uppercase tracking-wide">
               {link.label}

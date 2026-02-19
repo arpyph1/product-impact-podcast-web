@@ -1,6 +1,6 @@
 import { CMSContent } from "@/types/cms";
 import logo from "@/assets/logo-new.png";
-import { ArrowUpRight } from "lucide-react";
+import { ArrowUpRight, Play } from "lucide-react";
 
 interface HeroProps {
   content: CMSContent;
@@ -46,37 +46,114 @@ const PLATFORMS = [
 
 function getYouTubeEmbedId(url: string): string | null {
   if (!url) return null;
-  const patterns = [
-    /(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([a-zA-Z0-9_-]{11})/,
-  ];
-  for (const p of patterns) {
-    const m = url.match(p);
-    if (m) return m[1];
-  }
-  return null;
+  const m = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([a-zA-Z0-9_-]{11})/);
+  return m ? m[1] : null;
 }
 
-export default function Hero({ content, isEditing, onUpdate }: HeroProps) {
-  const videoId = getYouTubeEmbedId(content.featuredVideoUrl);
+function getYouTubeThumbnail(url: string): string {
+  const id = getYouTubeEmbedId(url);
+  return id ? `https://img.youtube.com/vi/${id}/hqdefault.jpg` : "";
+}
+
+interface VideoCardProps {
+  url: string;
+  label: string;
+  urlKey: keyof CMSContent;
+  labelKey: keyof CMSContent;
+  isEditing: boolean;
+  onUpdate: (key: keyof CMSContent, value: any) => void;
+}
+
+function VideoCard({ url, label, urlKey, labelKey, isEditing, onUpdate }: VideoCardProps) {
+  const [playing, setPlaying] = useState(false);
+  const videoId = getYouTubeEmbedId(url);
+  const thumb = getYouTubeThumbnail(url);
 
   return (
-    <section id="podcast" className="relative min-h-screen bg-background flex flex-col pt-16">
-      <div className="flex-1 flex flex-col items-center justify-center px-6 py-12 text-center">
+    <div className="relative flex flex-col gap-2">
+      <div className="relative aspect-video rounded-xl overflow-hidden bg-card border border-border group">
+        {playing && videoId ? (
+          <iframe
+            className="absolute inset-0 w-full h-full"
+            src={`https://www.youtube.com/embed/${videoId}?autoplay=1`}
+            title={label}
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowFullScreen
+          />
+        ) : (
+          <>
+            {thumb ? (
+              <img src={thumb} alt={label} className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.03]" />
+            ) : (
+              <div className="absolute inset-0 bg-muted flex items-center justify-center">
+                <span className="text-xs text-muted-foreground">No video URL</span>
+              </div>
+            )}
+            <div className="absolute inset-0 bg-black/30" />
+            {videoId && (
+              <button
+                onClick={() => setPlaying(true)}
+                className="absolute inset-0 flex items-center justify-center"
+              >
+                <div className="w-14 h-14 rounded-full bg-white/90 flex items-center justify-center shadow-xl hover:scale-105 transition-transform">
+                  <Play className="w-6 h-6 text-black ml-0.5" />
+                </div>
+              </button>
+            )}
+          </>
+        )}
+      </div>
 
-        {/* Logo — 480×480 (40% reduction from 800) */}
-        <div className="relative mb-8">
+      {/* Label */}
+      <p
+        className="text-xs font-semibold text-muted-foreground uppercase tracking-wider"
+        contentEditable={isEditing}
+        suppressContentEditableWarning
+        onBlur={e => isEditing && onUpdate(labelKey, e.currentTarget.textContent || "")}
+      >
+        {label}
+      </p>
+
+      {/* URL input in edit mode */}
+      {isEditing && (
+        <input
+          className="text-xs bg-black/40 border border-amber/50 text-foreground rounded px-2 py-1.5 focus:outline-none focus:border-amber w-full"
+          defaultValue={url}
+          placeholder="https://youtube.com/watch?v=..."
+          onBlur={e => { onUpdate(urlKey, e.target.value); setPlaying(false); }}
+        />
+      )}
+    </div>
+  );
+}
+
+import { useState } from "react";
+
+export default function Hero({ content, isEditing, onUpdate }: HeroProps) {
+  const videoCards = [
+    { url: content.heroVideo1Url, label: content.heroVideo1Label, urlKey: "heroVideo1Url" as keyof CMSContent, labelKey: "heroVideo1Label" as keyof CMSContent },
+    { url: content.heroVideo2Url, label: content.heroVideo2Label, urlKey: "heroVideo2Url" as keyof CMSContent, labelKey: "heroVideo2Label" as keyof CMSContent },
+    { url: content.heroVideo3Url, label: content.heroVideo3Label, urlKey: "heroVideo3Url" as keyof CMSContent, labelKey: "heroVideo3Label" as keyof CMSContent },
+  ];
+
+  return (
+    <section id="podcast" className="relative bg-background pt-16">
+      {/* Top: logo + title + description + platform buttons */}
+      <div className="container mx-auto px-6 pt-12 pb-8 text-center">
+        {/* Logo */}
+        <div className="flex justify-center mb-6">
           <img
             src={logo}
             alt={content.podcastName}
-            className="w-[min(70vw,312px)] h-[min(70vw,312px)] object-contain mx-auto select-none"
+            className="w-[min(50vw,188px)] h-[min(50vw,188px)] object-contain select-none"
             draggable={false}
           />
         </div>
 
-        {/* Headline — 40% smaller than before */}
+        {/* Headline */}
         <h1
-          className={`font-display font-black uppercase leading-[0.92] tracking-tight text-foreground mb-5 ${isEditing ? "cursor-text" : ""}`}
-          style={{ fontSize: "clamp(2.1rem, 6vw, 5.4rem)", letterSpacing: "-0.02em" }}
+          className={`font-display font-black uppercase leading-[0.92] tracking-tight text-foreground mb-4 ${isEditing ? "cursor-text" : ""}`}
+          style={{ fontSize: "clamp(2.1rem, 5.5vw, 5rem)", letterSpacing: "-0.02em" }}
           contentEditable={isEditing}
           suppressContentEditableWarning
           onBlur={e => isEditing && onUpdate("heroTitle", e.currentTarget.textContent || "")}
@@ -86,7 +163,7 @@ export default function Hero({ content, isEditing, onUpdate }: HeroProps) {
 
         {/* Subline */}
         <p
-          className="text-muted-foreground max-w-xl mx-auto text-base leading-relaxed mb-8"
+          className="text-muted-foreground max-w-xl mx-auto text-base leading-relaxed mb-7"
           contentEditable={isEditing}
           suppressContentEditableWarning
           onBlur={e => isEditing && onUpdate("heroDescription", e.currentTarget.textContent || "")}
@@ -111,44 +188,24 @@ export default function Hero({ content, isEditing, onUpdate }: HeroProps) {
               <ArrowUpRight className="w-3.5 h-3.5 opacity-40 group-hover:opacity-100 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all" />
             </a>
           ))}
-
-          <a
-            href="#episodes"
-            className="flex items-center gap-2 px-5 py-2.5 rounded-full bg-primary text-primary-foreground text-sm font-semibold hover:brightness-110 transition-all"
-          >
-            Listen Now
-            <ArrowUpRight className="w-3.5 h-3.5" />
-          </a>
         </div>
+      </div>
 
-        {/* YouTube video player */}
-        {(videoId || isEditing) && (
-          <div className="w-full max-w-3xl mx-auto">
-            {videoId ? (
-              <div className="relative w-full rounded-lg overflow-hidden border border-border" style={{ paddingBottom: "56.25%" }}>
-                <iframe
-                  className="absolute inset-0 w-full h-full"
-                  src={`https://www.youtube.com/embed/${videoId}`}
-                  title="Featured Episode"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                  allowFullScreen
-                />
-              </div>
-            ) : null}
-
-            {isEditing && (
-              <div className="mt-4 p-4 rounded-lg bg-amber/10 border border-amber/30 text-left">
-                <p className="text-xs text-amber font-semibold mb-2">Featured Video URL (YouTube):</p>
-                <input
-                  className="w-full text-xs bg-black/40 border border-amber/50 text-foreground rounded px-2 py-1.5 focus:outline-none focus:border-amber"
-                  defaultValue={content.featuredVideoUrl}
-                  placeholder="https://youtube.com/watch?v=..."
-                  onBlur={e => onUpdate("featuredVideoUrl", e.target.value)}
-                />
-              </div>
-            )}
-          </div>
-        )}
+      {/* Three video cards */}
+      <div className="container mx-auto px-6 pb-14">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+          {videoCards.map((card, i) => (
+            <VideoCard
+              key={i}
+              url={card.url}
+              label={card.label}
+              urlKey={card.urlKey}
+              labelKey={card.labelKey}
+              isEditing={isEditing}
+              onUpdate={onUpdate}
+            />
+          ))}
+        </div>
       </div>
 
       {/* Bottom rule */}

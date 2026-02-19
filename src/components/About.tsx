@@ -115,30 +115,32 @@ export default function About({ content, isEditing, onUpdate }: AboutProps) {
     <section id="about" className="bg-background">
       <div className="container mx-auto px-6">
 
-        {/* Section header */}
-        <div className="grid md:grid-cols-2 gap-8 py-16 border-b border-border items-end">
+        {/* Editorial "About Us" row — label left, big text right (like reference) */}
+        <div className="grid md:grid-cols-[200px_1fr] gap-12 py-16 border-b border-border items-start">
+          <div className="pt-1">
+            <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground border border-border rounded-full px-3 py-1 inline-block">
+              [About Us]
+            </p>
+          </div>
           <div>
-            <p className="text-xs text-primary font-semibold uppercase tracking-widest mb-4">About</p>
             <h2
-              className="font-display font-extrabold leading-none tracking-tight text-foreground"
-              style={{ fontSize: "clamp(2.5rem, 6vw, 5rem)" }}
+              className="font-display font-extrabold leading-[1.0] tracking-tight text-foreground mb-6"
+              style={{ fontSize: "clamp(2rem, 5vw, 4.5rem)" }}
               contentEditable={isEditing}
               suppressContentEditableWarning
               onBlur={e => isEditing && onUpdate("aboutTitle", e.currentTarget.textContent || "")}
             >
               {content.aboutTitle}
             </h2>
-          </div>
-          <div className="flex flex-col gap-4 md:items-end">
             <p
-              className="text-muted-foreground leading-relaxed text-base max-w-sm md:text-right"
+              className="text-muted-foreground leading-relaxed text-lg max-w-2xl mb-8"
               contentEditable={isEditing}
               suppressContentEditableWarning
               onBlur={e => isEditing && onUpdate("aboutDescription", e.currentTarget.textContent || "")}
             >
               {content.aboutDescription}
             </p>
-            <div className="flex flex-wrap gap-2 md:justify-end">
+            <div className="flex flex-wrap gap-2">
               {content.tags.map((tag, idx) => (
                 <span
                   key={tag}
@@ -159,7 +161,7 @@ export default function About({ content, isEditing, onUpdate }: AboutProps) {
           </div>
         </div>
 
-        {/* Hosts headline */}
+        {/* Hosts */}
         <div className="py-12">
           <p className="text-xs text-muted-foreground font-semibold uppercase tracking-widest mb-8">Your Hosts</p>
           <div className="flex flex-col gap-16">
@@ -197,7 +199,7 @@ export default function About({ content, isEditing, onUpdate }: AboutProps) {
           </div>
         </div>
 
-        {/* Newsletter */}
+        {/* Newsletter signup row */}
         <div className="border-t border-border py-10 flex flex-col md:flex-row items-start md:items-center gap-6 justify-between">
           <div>
             <p className="font-display font-bold text-xl text-foreground">Stay in the loop.</p>
