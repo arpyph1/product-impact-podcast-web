@@ -156,7 +156,7 @@ export default function Sponsors({ content, isEditing, onUpdate, onContactClick 
                     </div>
 
                     <div className="flex items-end justify-between gap-4">
-                      <p className="text-sm text-muted-foreground leading-snug max-w-[200px]">
+                      <p className="text-muted-foreground leading-snug max-w-[280px]" style={{ fontSize: "1.5rem", lineHeight: "1.6" }}>
                         {sponsor.tagline}
                       </p>
                       <ArrowUpRight className="w-8 h-8 text-coral group-hover:text-coral transition-colors shrink-0" />

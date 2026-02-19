@@ -1,4 +1,5 @@
 import { Sponsor } from "@/components/Sponsors";
+import { FAQItem } from "@/components/FAQ";
 
 export interface CMSContent {
   // Hero
@@ -79,6 +80,10 @@ export interface CMSContent {
   h1FontWeight: string;
   h2FontSize: string;
   h2FontWeight: string;
+
+  // FAQ
+  faqs: FAQItem[];
+  faqTitle: string;
 }
 
 
@@ -145,4 +150,7 @@ export const defaultCMS: CMSContent = {
   h1FontWeight: "900",
   h2FontSize: "clamp(1.5rem, 3.5vw, 2.8rem)",
   h2FontWeight: "800",
+
+  faqs: [],
+  faqTitle: "Frequently Asked Questions",
 };
