@@ -72,6 +72,9 @@ export interface CMSContent {
 
   // Sponsors
   sponsors: Sponsor[];
+
+  // Section ordering
+  sectionOrder?: string[];
 }
 
 export const defaultCMS: CMSContent = {
@@ -133,4 +136,5 @@ export const defaultCMS: CMSContent = {
   navLink3Href: "#engage",
 
   sponsors: [],
+  sectionOrder: ["about", "episodes", "sponsors", "newsletter", "engage"],
 };
