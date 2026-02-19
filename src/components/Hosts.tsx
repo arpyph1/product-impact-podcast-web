@@ -36,7 +36,8 @@ function HostCard({ name, bio, imageUrl, role, linkedinUrl, nameKey, bioKey, ima
           <>
             <img
               src={imageUrl}
-              alt={name}
+              alt={`${name} - ${role}`}
+              loading="lazy"
               className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.04]"
               onError={e => { (e.target as HTMLImageElement).style.display = "none"; }}
             />
@@ -147,7 +148,7 @@ export default function Hosts({ content, isEditing, onUpdate }: HostsProps) {
   ];
 
   return (
-    <section id="hosts" className="bg-background">
+    <section id="hosts" className="bg-background" aria-label="Podcast hosts">
       <div className="container mx-auto px-6">
         <div className="py-14 border-b border-border">
           {/* Stepped vertical layout like hero video cards */}

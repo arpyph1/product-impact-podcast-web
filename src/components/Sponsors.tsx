@@ -50,7 +50,7 @@ export default function Sponsors({ content, isEditing, onUpdate, onContactClick 
   };
 
   return (
-    <section id="sponsors" className="bg-background">
+    <section id="sponsors" className="bg-background" aria-label="Podcast sponsors">
       <div className="container mx-auto px-6">
         <div className="py-16 border-b border-border">
 
@@ -140,9 +140,10 @@ export default function Sponsors({ content, isEditing, onUpdate, onContactClick 
                     <div className="mb-6">
                       {sponsor.logoUrl ? (
                         <div className="w-[300px] h-[200px] flex items-center justify-center">
-                          <img
+                         <img
                             src={sponsor.logoUrl}
-                            alt={sponsor.name}
+                            alt={`${sponsor.name} logo`}
+                            loading="lazy"
                             className="max-w-full max-h-full object-contain opacity-80 group-hover:opacity-100 transition-opacity"
                           />
                         </div>

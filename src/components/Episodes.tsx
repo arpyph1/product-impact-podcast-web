@@ -23,7 +23,7 @@ export default function Episodes({
   const [visibleCount, setVisibleCount] = useState(INITIAL_COUNT);
 
   return (
-    <section id="episodes" className="bg-background">
+    <section id="episodes" className="bg-background" aria-label="Podcast episodes">
       <div className="container mx-auto px-6">
 
         {/* Section header row */}
