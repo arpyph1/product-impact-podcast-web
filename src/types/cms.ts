@@ -48,6 +48,9 @@ export interface CMSContent {
   // RSS
   rssFeedUrl: string;
 
+  // Newsletter (Substack)
+  substackUrl: string;
+
   // Podcast name & logo text
   podcastName: string;
   podcastTagline: string;
@@ -74,7 +77,7 @@ export const defaultCMS: CMSContent = {
   heroCta2Link: "#engage",
   heroCardBg: "coral",
   heroImageUrl: "",
-  featuredVideoUrl: "",
+  featuredVideoUrl: "https://www.youtube.com/watch?v=B4EPW7JUMTM",
 
   aboutTitle: "About the Show",
   aboutDescription: "We go deep with product leaders, founders, and innovators to unpack the decisions, frameworks, and mindsets behind impactful products.",
@@ -104,6 +107,7 @@ export const defaultCMS: CMSContent = {
   footerTagline: "Product stories that actually matter.",
 
   rssFeedUrl: "https://feeds.megaphone.fm/darknet-diaries",
+  substackUrl: "",
 
   podcastName: "Product Impact Podcast",
   podcastTagline: "Product stories that actually matter.",

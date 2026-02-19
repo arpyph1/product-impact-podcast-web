@@ -25,8 +25,8 @@ export default function Navbar({ content, isEditing, onToggleEdit, onContactClic
       <div className="container mx-auto flex items-center justify-between h-14 px-6">
         {/* Logo mark */}
         <a href="#" className="flex items-center gap-2.5 group">
-          <img src={logo} alt={content.podcastName} className="w-7 h-7 rounded-full object-cover" />
-          <span className="font-display font-bold text-sm text-foreground tracking-tight hidden sm:block">
+          <img src={logo} alt={content.podcastName} className="w-8 h-8 object-contain" />
+          <span className="font-display font-black text-xs text-foreground uppercase tracking-tight hidden sm:block">
             {content.podcastName}
           </span>
         </a>

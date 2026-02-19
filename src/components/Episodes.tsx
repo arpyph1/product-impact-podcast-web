@@ -14,10 +14,13 @@ interface EpisodesProps {
   podcastTitle: string;
 }
 
+const INITIAL_COUNT = 8;
+const LOAD_MORE_COUNT = 8;
+
 export default function Episodes({
   content, isEditing, onUpdate, episodes, loading, error, podcastTitle
 }: EpisodesProps) {
-  const [visibleCount, setVisibleCount] = useState(6);
+  const [visibleCount, setVisibleCount] = useState(INITIAL_COUNT);
 
   return (
     <section id="episodes" className="bg-background">
@@ -67,10 +70,10 @@ export default function Episodes({
           <div className="text-center py-16 text-muted-foreground text-sm">No episodes found.</div>
         )}
 
-        {/* Grid — 3 columns on md, 3 on lg */}
+        {/* Grid — 2 cols mobile, 4 cols desktop */}
         {!loading && episodes.length > 0 && (
           <>
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-px bg-border">
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-px bg-border">
               {episodes.slice(0, visibleCount).map((ep, i) => (
                 <div key={ep.guid} className="bg-background p-5">
                   <EpisodeCard episode={ep} index={i} />
@@ -81,7 +84,7 @@ export default function Episodes({
             {visibleCount < episodes.length && (
               <div className="py-8 text-center border-t border-border">
                 <button
-                  onClick={() => setVisibleCount(c => c + 6)}
+                  onClick={() => setVisibleCount(c => c + LOAD_MORE_COUNT)}
                   className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors"
                 >
                   <ChevronDown className="w-4 h-4" />
