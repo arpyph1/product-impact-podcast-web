@@ -83,7 +83,7 @@ export default function Episodes({
         {/* Grid */}
         {!loading && episodes.length > 0 && (
           <>
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
               {episodes.slice(0, visibleCount).map((ep, i) => (
                 <EpisodeCard key={ep.guid} episode={ep} index={i} />
               ))}
@@ -92,7 +92,7 @@ export default function Episodes({
             {visibleCount < episodes.length && (
               <div className="mt-10 text-center">
                 <button
-                  onClick={() => setVisibleCount(c => c + 8)}
+                  onClick={() => setVisibleCount(c => c + 6)}
                   className="inline-flex items-center gap-2 px-6 py-3 rounded-full border border-border text-muted-foreground hover:border-primary hover:text-foreground transition-all"
                 >
                   <ChevronDown className="w-4 h-4" />

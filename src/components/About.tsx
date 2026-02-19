@@ -1,5 +1,5 @@
 import { CMSContent } from "@/types/cms";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, User } from "lucide-react";
 
 interface AboutProps {
   content: CMSContent;
@@ -8,78 +8,90 @@ interface AboutProps {
   episodes: { title: string; imageUrl: string; pubDate: string; duration: string }[];
 }
 
-const bgColorMap: Record<string, string> = {
-  coral:  "bg-coral/30",
-  teal:   "bg-teal/30",
-  amber:  "bg-amber/30",
-  purple: "bg-primary/30",
-};
+function HostCard({
+  name, bio, imageUrl, role, nameKey, bioKey, roleKey, imageKey,
+  isEditing, onUpdate, content,
+}: {
+  name: string; bio: string; imageUrl: string; role: string;
+  nameKey: keyof CMSContent; bioKey: keyof CMSContent;
+  roleKey: keyof CMSContent; imageKey: keyof CMSContent;
+  isEditing: boolean; onUpdate: (k: keyof CMSContent, v: any) => void;
+  content: CMSContent;
+}) {
+  return (
+    <div className="flex flex-col gap-5">
+      {/* Photo */}
+      <div className="relative aspect-[3/4] rounded-2xl overflow-hidden bg-dark-surface border border-border group">
+        {imageUrl ? (
+          <img
+            src={imageUrl}
+            alt={name}
+            className="w-full h-full object-cover"
+            onError={e => { (e.target as HTMLImageElement).style.display = "none"; }}
+          />
+        ) : (
+          <div className="w-full h-full flex items-center justify-center">
+            <User className="w-20 h-20 opacity-20 text-foreground" />
+          </div>
+        )}
+        {/* Gradient */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent" />
 
-const BG_OPTIONS = ["coral", "teal", "amber", "purple"];
+        {/* Edit image URL overlay */}
+        {isEditing && (
+          <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center gap-2 p-4">
+            <p className="text-xs text-white/70">Image URL:</p>
+            <input
+              className="w-full text-xs bg-black/80 border border-amber/50 text-white rounded px-2 py-1 focus:outline-none focus:border-amber"
+              defaultValue={imageUrl}
+              placeholder="https://..."
+              onBlur={e => onUpdate(imageKey, e.target.value)}
+            />
+          </div>
+        )}
 
-export default function About({ content, isEditing, onUpdate, episodes }: AboutProps) {
-  const hosts = episodes.slice(0, 4);
+        <div className="absolute bottom-3 left-3 right-3">
+          <span className="text-xs font-semibold text-primary uppercase tracking-widest">{role}</span>
+        </div>
+      </div>
 
+      {/* Info */}
+      <div className="space-y-2">
+        <h3
+          className="font-display font-extrabold text-2xl text-foreground"
+          contentEditable={isEditing}
+          suppressContentEditableWarning
+          onBlur={e => isEditing && onUpdate(nameKey, e.currentTarget.textContent || "")}
+        >
+          {name}
+        </h3>
+        <p
+          className="text-muted-foreground text-sm leading-relaxed"
+          contentEditable={isEditing}
+          suppressContentEditableWarning
+          onBlur={e => isEditing && onUpdate(bioKey, e.currentTarget.textContent || "")}
+        >
+          {bio}
+        </p>
+      </div>
+    </div>
+  );
+}
+
+export default function About({ content, isEditing, onUpdate }: AboutProps) {
   return (
     <section id="about" className="py-24 bg-background">
       <div className="container mx-auto px-4">
         <div className="section-divider mb-16" />
 
-        <div className="grid lg:grid-cols-2 gap-12 items-start">
-          {/* Left: Host cards */}
-          <div>
-            <div className="grid grid-cols-2 gap-4">
-              {(hosts.length > 0 ? hosts : [null, null]).slice(0, 2).map((ep, i) => (
-                <div key={i} className="space-y-2">
-                  <div
-                    className={`aspect-square rounded-xl overflow-hidden relative ${
-                      bgColorMap[content.aboutCardBg] || bgColorMap.teal
-                    }`}
-                    data-cms-bg-editable="aboutCardBg"
-                  >
-                    {isEditing && i === 0 && (
-                      <div className="absolute top-2 left-2 flex gap-1 z-10">
-                        {BG_OPTIONS.map(c => (
-                          <button
-                            key={c}
-                            onClick={() => onUpdate("aboutCardBg", c)}
-                            className={`w-4 h-4 rounded-full border ${content.aboutCardBg === c ? "border-amber scale-125" : "border-white/40"}`}
-                            style={{
-                              background:
-                                c === "coral" ? "hsl(5 80% 60%)" :
-                                c === "teal"  ? "hsl(174 72% 48%)" :
-                                c === "amber" ? "hsl(43 96% 56%)" :
-                                "hsl(265 80% 60%)",
-                            }}
-                          />
-                        ))}
-                      </div>
-                    )}
-                    {ep?.imageUrl ? (
-                      <img src={ep.imageUrl} alt={ep.title} className="w-full h-full object-cover mix-blend-luminosity opacity-90" />
-                    ) : (
-                      <div className="w-full h-full flex items-center justify-center text-5xl opacity-30">🎙</div>
-                    )}
-                  </div>
-                  <p className="font-display font-bold text-sm text-foreground line-clamp-2">
-                    {ep?.title || "Podcast Host"}
-                  </p>
-                  <p className="text-xs text-muted-foreground">
-                    {ep?.pubDate || ""} {ep?.duration ? `· ${ep.duration}` : ""}
-                  </p>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Right: About text */}
-          <div className="space-y-6">
-            {/* Tags */}
+        {/* Section header */}
+        <div className="mb-14 flex flex-col md:flex-row md:items-end gap-6 justify-between">
+          <div className="space-y-3">
             <div className="flex gap-2 flex-wrap">
               {content.tags.map(tag => (
                 <span
                   key={tag}
-                  className="text-xs font-semibold px-3 py-1 rounded-full bg-amber text-accent-foreground"
+                  className="text-xs font-semibold px-3 py-1 rounded-full bg-amber text-black"
                   contentEditable={isEditing}
                   suppressContentEditableWarning
                   onBlur={e => {
@@ -96,8 +108,7 @@ export default function About({ content, isEditing, onUpdate, episodes }: AboutP
             </div>
 
             <h2
-              className="font-display font-extrabold text-4xl leading-tight text-foreground"
-              data-cms-editable="aboutTitle"
+              className="font-display font-extrabold text-4xl lg:text-5xl text-foreground leading-tight"
               contentEditable={isEditing}
               suppressContentEditableWarning
               onBlur={e => isEditing && onUpdate("aboutTitle", e.currentTarget.textContent || "")}
@@ -106,46 +117,50 @@ export default function About({ content, isEditing, onUpdate, episodes }: AboutP
             </h2>
 
             <p
-              className="text-muted-foreground leading-relaxed"
-              data-cms-editable="aboutDescription"
+              className="text-muted-foreground leading-relaxed max-w-lg"
               contentEditable={isEditing}
               suppressContentEditableWarning
               onBlur={e => isEditing && onUpdate("aboutDescription", e.currentTarget.textContent || "")}
             >
               {content.aboutDescription}
             </p>
-
-            <a
-              href="#episodes"
-              className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-primary text-primary-foreground font-semibold hover:bg-primary/80 transition-all glow-purple"
-            >
-              <span
-                contentEditable={isEditing}
-                suppressContentEditableWarning
-                onBlur={e => isEditing && onUpdate("aboutCta", e.currentTarget.textContent || "")}
-              >
-                {content.aboutCta}
-              </span>
-              <ArrowRight className="w-4 h-4" />
-            </a>
-
-            {/* Newsletter box */}
-            <div className="mt-6 p-5 rounded-xl bg-card border border-border neon-border">
-              <p className="text-xs text-muted-foreground uppercase tracking-widest font-semibold mb-3">
-                Newsletter
-              </p>
-              <div className="flex gap-2">
-                <input
-                  type="email"
-                  placeholder="your@email.com"
-                  className="flex-1 bg-muted border border-border rounded-lg px-3 py-2 text-sm text-foreground focus:outline-none focus:border-primary"
-                />
-                <button className="px-4 py-2 rounded-lg bg-primary text-primary-foreground text-sm font-semibold hover:bg-primary/80 transition-all">
-                  Join
-                </button>
-              </div>
-            </div>
           </div>
+
+          <a
+            href="#episodes"
+            className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-primary text-primary-foreground font-semibold hover:bg-primary/80 transition-all glow-purple shrink-0"
+          >
+            <span
+              contentEditable={isEditing}
+              suppressContentEditableWarning
+              onBlur={e => isEditing && onUpdate("aboutCta", e.currentTarget.textContent || "")}
+            >
+              {content.aboutCta}
+            </span>
+            <ArrowRight className="w-4 h-4" />
+          </a>
+        </div>
+
+        {/* Hosts grid */}
+        <div className="grid md:grid-cols-2 gap-10 max-w-3xl">
+          <HostCard
+            name={content.host1Name}
+            bio={content.host1Bio}
+            imageUrl={content.host1ImageUrl}
+            role={content.host1Role}
+            nameKey="host1Name" bioKey="host1Bio"
+            roleKey="host1Role" imageKey="host1ImageUrl"
+            isEditing={isEditing} onUpdate={onUpdate} content={content}
+          />
+          <HostCard
+            name={content.host2Name}
+            bio={content.host2Bio}
+            imageUrl={content.host2ImageUrl}
+            role={content.host2Role}
+            nameKey="host2Name" bioKey="host2Bio"
+            roleKey="host2Role" imageKey="host2ImageUrl"
+            isEditing={isEditing} onUpdate={onUpdate} content={content}
+          />
         </div>
       </div>
     </section>

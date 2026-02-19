@@ -175,9 +175,10 @@ export default function Hero({ content, isEditing, onUpdate, latestEpisodeAudio,
             </div>
 
             <img
-              src={heroPodcast}
+              src={content.heroImageUrl || heroPodcast}
               alt="Podcast host"
               className="w-full h-full object-cover"
+              onError={e => { (e.target as HTMLImageElement).src = heroPodcast; }}
             />
 
             <div

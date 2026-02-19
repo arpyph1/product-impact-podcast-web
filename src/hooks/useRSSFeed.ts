@@ -12,7 +12,7 @@ export interface PodcastEpisode {
   guid: string;
 }
 
-const CORS_PROXY = "https://api.allorigins.win/get?url=";
+const CORS_PROXY = "https://corsproxy.io/?url=";
 
 function parseXML(xmlText: string): PodcastEpisode[] {
   try {
@@ -107,10 +107,9 @@ export function useRSSFeed(feedUrl: string) {
     const url = `${CORS_PROXY}${encodeURIComponent(feedUrl)}`;
 
     fetch(url)
-      .then(r => r.json())
-      .then(data => {
+      .then(r => r.text())
+      .then(xmlText => {
         if (cancelled) return;
-        const xmlText = data.contents;
         const parsed = parseXML(xmlText);
 
         // Parse channel metadata
