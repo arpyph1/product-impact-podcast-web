@@ -44,26 +44,39 @@ const PLATFORMS = [
   },
 ];
 
+function getYouTubeEmbedId(url: string): string | null {
+  if (!url) return null;
+  const patterns = [
+    /(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([a-zA-Z0-9_-]{11})/,
+  ];
+  for (const p of patterns) {
+    const m = url.match(p);
+    if (m) return m[1];
+  }
+  return null;
+}
+
 export default function Hero({ content, isEditing, onUpdate }: HeroProps) {
+  const videoId = getYouTubeEmbedId(content.featuredVideoUrl);
+
   return (
     <section id="podcast" className="relative min-h-screen bg-background flex flex-col pt-16">
-      {/* Main hero content — centered, full-width */}
-      <div className="flex-1 flex flex-col items-center justify-center px-6 py-16 text-center">
+      <div className="flex-1 flex flex-col items-center justify-center px-6 py-12 text-center">
 
-        {/* Logo — 800×800 logical max, responsive */}
-        <div className="relative mb-10">
+        {/* Logo — 480×480 (40% reduction from 800) */}
+        <div className="relative mb-8">
           <img
             src={logo}
             alt={content.podcastName}
-            className="w-[min(80vw,520px)] h-[min(80vw,520px)] object-contain mx-auto select-none"
+            className="w-[min(70vw,312px)] h-[min(70vw,312px)] object-contain mx-auto select-none"
             draggable={false}
           />
         </div>
 
-        {/* Headline */}
+        {/* Headline — 40% smaller than before */}
         <h1
-          className={`font-display font-extrabold leading-[0.9] tracking-tight text-foreground mb-6 ${isEditing ? "cursor-text" : ""}`}
-          style={{ fontSize: "clamp(3.5rem, 10vw, 9rem)" }}
+          className={`font-display font-black uppercase leading-[0.92] tracking-tight text-foreground mb-5 ${isEditing ? "cursor-text" : ""}`}
+          style={{ fontSize: "clamp(2.1rem, 6vw, 5.4rem)", letterSpacing: "-0.02em" }}
           contentEditable={isEditing}
           suppressContentEditableWarning
           onBlur={e => isEditing && onUpdate("heroTitle", e.currentTarget.textContent || "")}
@@ -73,7 +86,7 @@ export default function Hero({ content, isEditing, onUpdate }: HeroProps) {
 
         {/* Subline */}
         <p
-          className="text-muted-foreground max-w-xl mx-auto text-lg leading-relaxed mb-10"
+          className="text-muted-foreground max-w-xl mx-auto text-base leading-relaxed mb-8"
           contentEditable={isEditing}
           suppressContentEditableWarning
           onBlur={e => isEditing && onUpdate("heroDescription", e.currentTarget.textContent || "")}
@@ -82,7 +95,7 @@ export default function Hero({ content, isEditing, onUpdate }: HeroProps) {
         </p>
 
         {/* Platform buttons */}
-        <div className="flex flex-wrap items-center justify-center gap-3">
+        <div className="flex flex-wrap items-center justify-center gap-3 mb-10">
           {PLATFORMS.map(p => (
             <a
               key={p.label}
@@ -108,16 +121,32 @@ export default function Hero({ content, isEditing, onUpdate }: HeroProps) {
           </a>
         </div>
 
-        {/* CMS editing hint */}
-        {isEditing && (
-          <div className="mt-8 p-4 rounded-lg bg-amber/10 border border-amber/30 max-w-sm text-left">
-            <p className="text-xs text-amber font-semibold mb-2">Featured Video URL (YouTube):</p>
-            <input
-              className="w-full text-xs bg-black/40 border border-amber/50 text-foreground rounded px-2 py-1.5 focus:outline-none focus:border-amber"
-              defaultValue={content.featuredVideoUrl}
-              placeholder="https://youtube.com/watch?v=..."
-              onBlur={e => onUpdate("featuredVideoUrl", e.target.value)}
-            />
+        {/* YouTube video player */}
+        {(videoId || isEditing) && (
+          <div className="w-full max-w-3xl mx-auto">
+            {videoId ? (
+              <div className="relative w-full rounded-lg overflow-hidden border border-border" style={{ paddingBottom: "56.25%" }}>
+                <iframe
+                  className="absolute inset-0 w-full h-full"
+                  src={`https://www.youtube.com/embed/${videoId}`}
+                  title="Featured Episode"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                />
+              </div>
+            ) : null}
+
+            {isEditing && (
+              <div className="mt-4 p-4 rounded-lg bg-amber/10 border border-amber/30 text-left">
+                <p className="text-xs text-amber font-semibold mb-2">Featured Video URL (YouTube):</p>
+                <input
+                  className="w-full text-xs bg-black/40 border border-amber/50 text-foreground rounded px-2 py-1.5 focus:outline-none focus:border-amber"
+                  defaultValue={content.featuredVideoUrl}
+                  placeholder="https://youtube.com/watch?v=..."
+                  onBlur={e => onUpdate("featuredVideoUrl", e.target.value)}
+                />
+              </div>
+            )}
           </div>
         )}
       </div>

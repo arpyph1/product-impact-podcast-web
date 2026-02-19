@@ -7,6 +7,7 @@ import Episodes from "@/components/Episodes";
 import About from "@/components/About";
 import Engage from "@/components/Engage";
 import Sponsors from "@/components/Sponsors";
+import Newsletter from "@/components/Newsletter";
 import Footer from "@/components/Footer";
 import ContactModal from "@/components/ContactModal";
 import CMSPanel from "@/components/CMSPanel";
@@ -56,6 +57,12 @@ const Index = () => {
         />
 
         <Sponsors
+          content={content}
+          isEditing={isEditing}
+          onUpdate={update}
+        />
+
+        <Newsletter
           content={content}
           isEditing={isEditing}
           onUpdate={update}
