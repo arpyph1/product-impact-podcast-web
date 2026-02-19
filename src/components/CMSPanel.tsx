@@ -95,6 +95,7 @@ export default function CMSPanel({ content, onUpdate, onReset, onClose }: CMSPan
                 <Field label="Spotify URL" value={content.spotifyUrl} onChange={v => onUpdate("spotifyUrl", v)} />
                 <Field label="Apple Podcasts URL" value={content.appleUrl} onChange={v => onUpdate("appleUrl", v)} />
                 <Field label="YouTube URL" value={content.youtubeUrl} onChange={v => onUpdate("youtubeUrl", v)} />
+                <Field label="YouTube Channel ID" value={content.youtubeChannelId} onChange={v => onUpdate("youtubeChannelId", v)} placeholder="e.g. UCxxxxxxxxxx" />
                 <Field label="LinkedIn URL" value={content.linkedinUrl} onChange={v => onUpdate("linkedinUrl", v)} />
                 <Field label="Twitter/X URL" value={content.twitterUrl} onChange={v => onUpdate("twitterUrl", v)} />
                 <Field label="Substack URL" value={content.substackUrl} onChange={v => onUpdate("substackUrl", v)} />

@@ -37,6 +37,7 @@ export interface CMSContent {
   spotifyUrl: string;
   appleUrl: string;
   youtubeUrl: string;
+  youtubeChannelId: string;
   substackUrl: string;
   linkedinUrl: string;
   twitterUrl: string;
@@ -112,6 +113,7 @@ export const defaultCMS: CMSContent = {
   spotifyUrl: "#",
   appleUrl: "#",
   youtubeUrl: "#",
+  youtubeChannelId: "",
   substackUrl: "",
   linkedinUrl: "",
   twitterUrl: "",
