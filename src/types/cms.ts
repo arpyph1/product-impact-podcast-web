@@ -1,3 +1,5 @@
+import { Sponsor } from "@/components/Sponsors";
+
 export interface CMSContent {
   // Hero
   heroTitle: string;
@@ -49,6 +51,17 @@ export interface CMSContent {
   // Podcast name & logo text
   podcastName: string;
   podcastTagline: string;
+
+  // Nav links (label|href pairs, pipe-separated)
+  navLink1Label: string;
+  navLink1Href: string;
+  navLink2Label: string;
+  navLink2Href: string;
+  navLink3Label: string;
+  navLink3Href: string;
+
+  // Sponsors
+  sponsors: Sponsor[];
 }
 
 export const defaultCMS: CMSContent = {
@@ -94,4 +107,13 @@ export const defaultCMS: CMSContent = {
 
   podcastName: "Product Impact Podcast",
   podcastTagline: "Product stories that actually matter.",
+
+  navLink1Label: "Episodes",
+  navLink1Href: "#episodes",
+  navLink2Label: "About",
+  navLink2Href: "#about",
+  navLink3Label: "Listen",
+  navLink3Href: "#engage",
+
+  sponsors: [],
 };

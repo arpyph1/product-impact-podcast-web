@@ -1,30 +1,31 @@
 import { CMSContent } from "@/types/cms";
 import { Menu, X, ArrowUpRight } from "lucide-react";
 import { useState } from "react";
-import logo from "@/assets/logo.png";
+import logo from "@/assets/logo-new.png";
 
 interface NavbarProps {
   content: CMSContent;
   isEditing: boolean;
   onToggleEdit: () => void;
   onContactClick: () => void;
+  onUpdate: (key: keyof CMSContent, value: any) => void;
 }
 
-const navLinks = [
-  { label: "Episodes", href: "#episodes" },
-  { label: "About", href: "#about" },
-  { label: "Listen", href: "#engage" },
-];
-
-export default function Navbar({ content, isEditing, onToggleEdit, onContactClick }: NavbarProps) {
+export default function Navbar({ content, isEditing, onToggleEdit, onContactClick, onUpdate }: NavbarProps) {
   const [menuOpen, setMenuOpen] = useState(false);
+
+  const navLinks = [
+    { label: content.navLink1Label, href: content.navLink1Href, labelKey: "navLink1Label" as keyof CMSContent, hrefKey: "navLink1Href" as keyof CMSContent },
+    { label: content.navLink2Label, href: content.navLink2Href, labelKey: "navLink2Label" as keyof CMSContent, hrefKey: "navLink2Href" as keyof CMSContent },
+    { label: content.navLink3Label, href: content.navLink3Href, labelKey: "navLink3Label" as keyof CMSContent, hrefKey: "navLink3Href" as keyof CMSContent },
+  ];
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 border-b border-border bg-background/95 backdrop-blur-sm">
       <div className="container mx-auto flex items-center justify-between h-14 px-6">
         {/* Logo mark */}
         <a href="#" className="flex items-center gap-2.5 group">
-          <img src={logo} alt={content.podcastName} className="w-7 h-7 rounded object-cover" />
+          <img src={logo} alt={content.podcastName} className="w-7 h-7 rounded-full object-cover" />
           <span className="font-display font-bold text-sm text-foreground tracking-tight hidden sm:block">
             {content.podcastName}
           </span>
@@ -33,13 +34,23 @@ export default function Navbar({ content, isEditing, onToggleEdit, onContactClic
         {/* Desktop nav */}
         <nav className="hidden md:flex items-center gap-8">
           {navLinks.map(link => (
-            <a
-              key={link.label}
-              href={link.href}
-              className="text-xs font-medium text-muted-foreground hover:text-foreground transition-colors tracking-wide uppercase"
-            >
-              {link.label}
-            </a>
+            isEditing ? (
+              <div key={link.labelKey} className="flex flex-col gap-0.5">
+                <input
+                  className="text-xs font-medium uppercase tracking-wide bg-transparent border-b border-amber/50 text-foreground focus:outline-none w-20"
+                  defaultValue={link.label}
+                  onBlur={e => onUpdate(link.labelKey, e.target.value)}
+                />
+              </div>
+            ) : (
+              <a
+                key={link.labelKey}
+                href={link.href}
+                className="text-xs font-medium text-muted-foreground hover:text-foreground transition-colors tracking-wide uppercase"
+              >
+                {link.label}
+              </a>
+            )
           ))}
         </nav>
 
@@ -72,7 +83,7 @@ export default function Navbar({ content, isEditing, onToggleEdit, onContactClic
       {menuOpen && (
         <div className="md:hidden border-t border-border bg-background px-6 py-5 flex flex-col gap-4">
           {navLinks.map(link => (
-            <a key={link.label} href={link.href} onClick={() => setMenuOpen(false)}
+            <a key={link.labelKey} href={link.href} onClick={() => setMenuOpen(false)}
               className="text-sm font-medium text-muted-foreground hover:text-foreground uppercase tracking-wide">
               {link.label}
             </a>

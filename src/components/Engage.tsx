@@ -1,5 +1,6 @@
 import { CMSContent } from "@/types/cms";
-import { ArrowUpRight } from "lucide-react";
+import { ArrowUpRight, Send } from "lucide-react";
+import { useState } from "react";
 
 interface EngageProps {
   content: CMSContent;
@@ -41,7 +42,40 @@ const PLATFORMS = [
   },
 ];
 
+const ENQUIRY_TYPES = [
+  { value: "questions", label: "Questions" },
+  { value: "guest-suggestions", label: "Guest Suggestions" },
+  { value: "partnerships", label: "Partnerships" },
+  { value: "report-issues", label: "Report Issues" },
+];
+
 export default function Engage({ content, isEditing, onUpdate, onContactClick }: EngageProps) {
+  const [form, setForm] = useState({ name: "", email: "", category: "", message: "" });
+  const [submitted, setSubmitted] = useState(false);
+  const [errors, setErrors] = useState<Record<string, string>>({});
+
+  const validate = () => {
+    const e: Record<string, string> = {};
+    if (!form.name.trim()) e.name = "Name is required";
+    if (!form.email.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) e.email = "Valid email required";
+    if (!form.category) e.category = "Please select a category";
+    if (!form.message.trim() || form.message.length < 10) e.message = "Message must be at least 10 characters";
+    if (form.message.length > 2000) e.message = "Message must be under 2000 characters";
+    return e;
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    const errs = validate();
+    if (Object.keys(errs).length > 0) { setErrors(errs); return; }
+    setErrors({});
+    const subject = encodeURIComponent(`[${ENQUIRY_TYPES.find(t => t.value === form.category)?.label}] ${form.name}`);
+    const body = encodeURIComponent(`Name: ${form.name}\nEmail: ${form.email}\nCategory: ${form.category}\n\n${form.message}`);
+    window.location.href = `mailto:${content.contactEmail}?subject=${subject}&body=${body}`;
+    setSubmitted(true);
+    setForm({ name: "", email: "", category: "", message: "" });
+  };
+
   return (
     <section id="engage" className="bg-background">
       <div className="container mx-auto px-6">
@@ -70,19 +104,6 @@ export default function Engage({ content, isEditing, onUpdate, onContactClick }:
               >
                 {content.engageDescription}
               </p>
-              <button
-                className="flex items-center gap-2 px-6 py-3 rounded-full bg-primary text-primary-foreground font-semibold text-sm hover:brightness-110 transition-all w-fit"
-                onClick={onContactClick}
-              >
-                <span
-                  contentEditable={isEditing}
-                  suppressContentEditableWarning
-                  onBlur={e => isEditing && onUpdate("engageCta", e.currentTarget.textContent || "")}
-                >
-                  {content.engageCta}
-                </span>
-                <ArrowUpRight className="w-4 h-4" />
-              </button>
             </div>
           </div>
         </div>
@@ -108,18 +129,106 @@ export default function Engage({ content, isEditing, onUpdate, onContactClick }:
                 </div>
               </div>
               <ArrowUpRight className="w-4 h-4 text-muted-foreground group-hover:text-primary transition-colors" />
-
-              {isEditing && (
-                <input
-                  className="absolute text-xs bg-muted border border-amber/50 text-foreground rounded px-2 py-1 focus:outline-none focus:border-amber opacity-0"
-                  defaultValue={content[p.urlKey] as string}
-                  placeholder={`${p.name} URL`}
-                  onBlur={e => onUpdate(p.urlKey, e.target.value)}
-                  onClick={e => { e.preventDefault(); (e.target as HTMLInputElement).style.opacity = "1"; }}
-                />
-              )}
             </a>
           ))}
+        </div>
+
+        {/* Enquiry form */}
+        <div className="py-16 border-b border-border">
+          <div className="grid md:grid-cols-2 gap-12 items-start">
+            <div>
+              <p className="text-xs text-primary font-semibold uppercase tracking-widest mb-4">Get in Touch</p>
+              <h3 className="font-display font-extrabold leading-none tracking-tight text-foreground mb-4"
+                style={{ fontSize: "clamp(2rem, 4vw, 3.5rem)" }}>
+                Send us a<br />message
+              </h3>
+              <p className="text-muted-foreground text-sm leading-relaxed max-w-sm">
+                Whether you have a burning question, know someone perfect for the show, or want to explore a partnership — we'd love to hear from you.
+              </p>
+            </div>
+
+            <div>
+              {submitted ? (
+                <div className="flex flex-col items-center justify-center py-16 gap-4 text-center">
+                  <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">
+                    <Send className="w-5 h-5 text-primary" />
+                  </div>
+                  <p className="font-display font-bold text-foreground text-xl">Message sent!</p>
+                  <p className="text-muted-foreground text-sm">We'll get back to you soon.</p>
+                  <button onClick={() => setSubmitted(false)} className="text-xs text-primary underline mt-2">Send another</button>
+                </div>
+              ) : (
+                <form onSubmit={handleSubmit} className="space-y-4" noValidate>
+                  {/* Category dropdown */}
+                  <div>
+                    <label className="text-xs text-muted-foreground uppercase tracking-wider block mb-1.5">Category *</label>
+                    <select
+                      value={form.category}
+                      onChange={e => setForm(f => ({ ...f, category: e.target.value }))}
+                      className="w-full bg-card border border-border rounded-lg px-3 py-2.5 text-sm text-foreground focus:outline-none focus:border-primary appearance-none cursor-pointer"
+                    >
+                      <option value="" disabled>Select a category…</option>
+                      {ENQUIRY_TYPES.map(t => (
+                        <option key={t.value} value={t.value}>{t.label}</option>
+                      ))}
+                    </select>
+                    {errors.category && <p className="text-xs text-coral mt-1">{errors.category}</p>}
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <label className="text-xs text-muted-foreground uppercase tracking-wider block mb-1.5">Name *</label>
+                      <input
+                        type="text"
+                        maxLength={100}
+                        value={form.name}
+                        onChange={e => setForm(f => ({ ...f, name: e.target.value }))}
+                        placeholder="Your name"
+                        className="w-full bg-card border border-border rounded-lg px-3 py-2.5 text-sm text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:border-primary"
+                      />
+                      {errors.name && <p className="text-xs text-coral mt-1">{errors.name}</p>}
+                    </div>
+                    <div>
+                      <label className="text-xs text-muted-foreground uppercase tracking-wider block mb-1.5">Email *</label>
+                      <input
+                        type="email"
+                        maxLength={255}
+                        value={form.email}
+                        onChange={e => setForm(f => ({ ...f, email: e.target.value }))}
+                        placeholder="you@example.com"
+                        className="w-full bg-card border border-border rounded-lg px-3 py-2.5 text-sm text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:border-primary"
+                      />
+                      {errors.email && <p className="text-xs text-coral mt-1">{errors.email}</p>}
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="text-xs text-muted-foreground uppercase tracking-wider block mb-1.5">Message *</label>
+                    <textarea
+                      rows={5}
+                      maxLength={2000}
+                      value={form.message}
+                      onChange={e => setForm(f => ({ ...f, message: e.target.value }))}
+                      placeholder="Tell us more…"
+                      className="w-full bg-card border border-border rounded-lg px-3 py-2.5 text-sm text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:border-primary resize-none"
+                    />
+                    <div className="flex justify-between mt-1">
+                      {errors.message ? <p className="text-xs text-coral">{errors.message}</p> : <span />}
+                      <p className="text-xs text-muted-foreground">{form.message.length}/2000</p>
+                    </div>
+                  </div>
+
+                  <button
+                    type="submit"
+                    className="w-full flex items-center justify-center gap-2 py-3 rounded-full bg-primary text-primary-foreground font-semibold text-sm hover:brightness-110 transition-all"
+                  >
+                    Send Message
+                    <Send className="w-3.5 h-3.5" />
+                  </button>
+                </form>
+              )}
+            </div>
+          </div>
         </div>
 
       </div>

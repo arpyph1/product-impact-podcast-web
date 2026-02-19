@@ -1,5 +1,5 @@
 import { CMSContent } from "@/types/cms";
-import logo from "@/assets/logo.png";
+import logo from "@/assets/logo-new.png";
 import { ArrowUpRight } from "lucide-react";
 
 interface HeroProps {
