@@ -6,6 +6,7 @@ import Hero from "@/components/Hero";
 import Episodes from "@/components/Episodes";
 import About from "@/components/About";
 import Hosts from "@/components/Hosts";
+import Stats from "@/components/Stats";
 import Sponsors from "@/components/Sponsors";
 import Newsletter from "@/components/Newsletter";
 import Footer from "@/components/Footer";
@@ -96,6 +97,7 @@ const Index = () => {
         return (
           <div key="sponsors">
             {controls}
+            <Stats />
             <Sponsors content={content} isEditing={isEditing} onUpdate={update} />
           </div>
         );

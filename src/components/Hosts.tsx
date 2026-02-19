@@ -123,7 +123,7 @@ export default function Hosts({ content, isEditing, onUpdate }: HostsProps) {
         <div className="py-14 border-b border-border">
           {/* Stepped vertical layout like hero video cards */}
           <div className="max-w-2xl mx-auto">
-            <div className="grid md:grid-cols-2 gap-4 items-start">
+            <div className="grid md:grid-cols-2 gap-9 items-start">
               <div className="mt-0">
                 <HostCard {...hosts[0]} isEditing={isEditing} onUpdate={onUpdate} />
               </div>
