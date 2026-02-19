@@ -12,6 +12,13 @@ export interface CMSContent {
   heroCardBg: string;
   heroImageUrl: string;
   featuredVideoUrl: string;
+  // Three hero video cards
+  heroVideo1Url: string;
+  heroVideo1Label: string;
+  heroVideo2Url: string;
+  heroVideo2Label: string;
+  heroVideo3Url: string;
+  heroVideo3Label: string;
 
   // Podcast / About section
   aboutTitle: string;
@@ -78,6 +85,12 @@ export const defaultCMS: CMSContent = {
   heroCardBg: "coral",
   heroImageUrl: "",
   featuredVideoUrl: "https://www.youtube.com/watch?v=B4EPW7JUMTM",
+  heroVideo1Url: "https://www.youtube.com/watch?v=B4EPW7JUMTM",
+  heroVideo1Label: "Latest Episode",
+  heroVideo2Url: "",
+  heroVideo2Label: "Featured Talk",
+  heroVideo3Url: "",
+  heroVideo3Label: "Top Episode",
 
   aboutTitle: "About the Show",
   aboutDescription: "We go deep with product leaders, founders, and innovators to unpack the decisions, frameworks, and mindsets behind impactful products.",
