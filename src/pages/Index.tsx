@@ -22,6 +22,7 @@ const Index = () => {
   const { content, update, updateMany, reset, isEditing, setIsEditing } = useCMS();
   const { episodes, loading, error, podcastTitle } = useRSSFeed(content.rssFeedUrl);
   const [contactOpen, setContactOpen] = useState(false);
+  const [contactInquiry, setContactInquiry] = useState("");
 
   const rawOrder = ((content as any).sectionOrder as string[] | undefined) || DEFAULT_ORDER;
   const knownIds = new Set<SectionId>(["acclaim", "episodes", "hosts", "sponsors", "newsletter", "testimonials"]);
@@ -68,11 +69,11 @@ const Index = () => {
       case "hosts":
         return <div key="hosts">{controls}<Hosts content={content} isEditing={isEditing} onUpdate={update} /></div>;
       case "sponsors":
-        return <div key="sponsors">{controls}<Sponsors content={content} isEditing={isEditing} onUpdate={update} /></div>;
+        return <div key="sponsors">{controls}<Sponsors content={content} isEditing={isEditing} onUpdate={update} onContactClick={(t) => { setContactInquiry(t || ""); setContactOpen(true); }} /></div>;
       case "newsletter":
         return <div key="newsletter">{controls}<Newsletter content={content} isEditing={isEditing} onUpdate={update} /></div>;
       case "testimonials":
-        return <div key="testimonials">{controls}<Testimonials content={content} /></div>;
+        return <div key="testimonials">{controls}<Testimonials /></div>;
       default:
         return null;
     }
@@ -80,16 +81,16 @@ const Index = () => {
 
   return (
     <div className={isEditing ? "cms-editing" : ""}>
-      <Navbar content={content} isEditing={isEditing} onToggleEdit={() => setIsEditing(v => !v)} onContactClick={() => setContactOpen(true)} onUpdate={update} />
+      <Navbar content={content} isEditing={isEditing} onToggleEdit={() => setIsEditing(v => !v)} onContactClick={() => { setContactInquiry(""); setContactOpen(true); }} onUpdate={update} />
 
       <main>
         <Hero content={content} isEditing={isEditing} onUpdate={update} latestEpisodeAudio={latestEp?.audioUrl} latestEpisodeTitle={latestEp?.title} latestEpisodeLink={latestEp?.link} episodes={episodes} />
         {sectionOrder.map(id => renderSection(id))}
       </main>
 
-      <Footer content={content} isEditing={isEditing} onUpdate={update} onContactClick={() => setContactOpen(true)} />
+      <Footer content={content} isEditing={isEditing} onUpdate={update} onContactClick={() => { setContactInquiry(""); setContactOpen(true); }} />
 
-      {contactOpen && <ContactModal content={content} isEditing={isEditing} onUpdate={update} onClose={() => setContactOpen(false)} />}
+      {contactOpen && <ContactModal content={content} isEditing={isEditing} onUpdate={update} onClose={() => setContactOpen(false)} defaultInquiryType={contactInquiry} />}
 
       {isEditing && <CMSPanel content={content} onUpdate={update} onReset={reset} onClose={() => setIsEditing(false)} />}
     </div>

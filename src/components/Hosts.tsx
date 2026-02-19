@@ -8,7 +8,7 @@ interface HostsProps {
   onUpdate: (key: keyof CMSContent, value: any) => void;
 }
 
-const MAX_BIO = 250;
+const MAX_BIO = 300;
 
 interface HostCardProps {
   name: string;
