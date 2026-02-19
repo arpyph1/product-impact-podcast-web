@@ -1,5 +1,6 @@
 import { CMSContent } from "@/types/cms";
-import { Mic2, Twitter, Instagram, Youtube, Rss } from "lucide-react";
+import { Twitter, Instagram, Youtube, Rss } from "lucide-react";
+import logo from "@/assets/logo.png";
 
 interface FooterProps {
   content: CMSContent;
@@ -15,10 +16,12 @@ export default function Footer({ content, isEditing, onUpdate, onContactClick }:
         <div className="grid md:grid-cols-3 gap-10 mb-12">
           {/* Brand */}
           <div className="space-y-4">
-            <div className="flex items-center gap-2">
-              <div className="w-9 h-9 rounded-full bg-primary/20 border border-primary/50 flex items-center justify-center">
-                <Mic2 className="w-4 h-4 text-primary" />
-              </div>
+            <div className="flex items-center gap-2.5">
+              <img
+                src={logo}
+                alt={content.podcastName}
+                className="w-10 h-10 rounded-full object-cover"
+              />
               <span className="font-display font-bold text-xl text-foreground">
                 {content.podcastName}
               </span>

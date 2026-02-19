@@ -9,6 +9,7 @@ export interface CMSContent {
   heroCta2Link: string;
   heroCardBg: string;
   heroImageUrl: string;
+  featuredVideoUrl: string;
 
   // Podcast / About section
   aboutTitle: string;
@@ -60,6 +61,7 @@ export const defaultCMS: CMSContent = {
   heroCta2Link: "#engage",
   heroCardBg: "coral",
   heroImageUrl: "",
+  featuredVideoUrl: "",
 
   aboutTitle: "About the Show",
   aboutDescription: "We dive deep into the topics that shape our digital world. Expect candid conversations, bold opinions, and perspectives you won't hear anywhere else.",
