@@ -9,7 +9,7 @@ interface CMSPanelProps {
   onClose: () => void;
 }
 
-type Tab = "general" | "hero" | "about" | "hosts" | "settings";
+type Tab = "general" | "hero" | "about" | "hosts" | "settings" | "typography";
 
 export default function CMSPanel({ content, onUpdate, onReset, onClose }: CMSPanelProps) {
   const [tab, setTab] = useState<Tab>("general");
@@ -21,6 +21,7 @@ export default function CMSPanel({ content, onUpdate, onReset, onClose }: CMSPan
     { key: "about", label: "About" },
     { key: "hosts", label: "Hosts" },
     { key: "settings", label: "Settings" },
+    { key: "typography", label: "Typography" },
   ];
 
   return (
@@ -134,6 +135,14 @@ export default function CMSPanel({ content, onUpdate, onReset, onClose }: CMSPan
             <Field label="About Title" value={content.aboutTitle} onChange={v => onUpdate("aboutTitle", v)} />
             <Field label="About Description" value={content.aboutDescription} onChange={v => onUpdate("aboutDescription", v)} multiline />
             <Field label="About CTA Text" value={content.aboutCta} onChange={v => onUpdate("aboutCta", v)} />
+            <div className="pt-2 border-t border-border">
+              <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-3">Section Titles</p>
+              <div className="space-y-3">
+                <Field label="Episodes Title" value={content.episodesTitle} onChange={v => onUpdate("episodesTitle", v)} />
+                <Field label="Sponsors Title" value={content.sponsorsTitle} onChange={v => onUpdate("sponsorsTitle", v)} />
+                <Field label="Blog Title" value={content.blogTitle} onChange={v => onUpdate("blogTitle", v)} />
+              </div>
+            </div>
             <div>
               <label className="text-xs text-muted-foreground uppercase tracking-wider block mb-1">Tags (comma separated)</label>
               <input
@@ -141,6 +150,50 @@ export default function CMSPanel({ content, onUpdate, onReset, onClose }: CMSPan
                 value={content.tags.join(", ")}
                 onChange={e => onUpdate("tags", e.target.value.split(",").map(t => t.trim()).filter(Boolean))}
               />
+            </div>
+          </>
+        )}
+
+        {tab === "typography" && (
+          <>
+            <p className="text-xs text-muted-foreground uppercase tracking-widest font-semibold">H1 (Hero Title)</p>
+            <Field label="Font Size (CSS)" value={content.h1FontSize} onChange={v => onUpdate("h1FontSize", v)} placeholder="clamp(2.4rem, 6vw, 5.5rem)" />
+            <div>
+              <label className="text-xs text-muted-foreground uppercase tracking-wider block mb-1">Font Weight</label>
+              <select
+                className="w-full bg-muted border border-border rounded-lg px-3 py-2 text-sm text-foreground focus:outline-none focus:border-primary"
+                value={content.h1FontWeight}
+                onChange={e => onUpdate("h1FontWeight", e.target.value)}
+              >
+                <option value="400">400 — Regular</option>
+                <option value="500">500 — Medium</option>
+                <option value="600">600 — Semibold</option>
+                <option value="700">700 — Bold</option>
+                <option value="800">800 — Extrabold</option>
+                <option value="900">900 — Black</option>
+              </select>
+            </div>
+
+            <div className="border-t border-border pt-4">
+              <p className="text-xs text-muted-foreground uppercase tracking-widest font-semibold mb-3">H2 (Section Titles)</p>
+              <div className="space-y-3">
+                <Field label="Font Size (CSS)" value={content.h2FontSize} onChange={v => onUpdate("h2FontSize", v)} placeholder="clamp(1.5rem, 3.5vw, 2.8rem)" />
+                <div>
+                  <label className="text-xs text-muted-foreground uppercase tracking-wider block mb-1">Font Weight</label>
+                  <select
+                    className="w-full bg-muted border border-border rounded-lg px-3 py-2 text-sm text-foreground focus:outline-none focus:border-primary"
+                    value={content.h2FontWeight}
+                    onChange={e => onUpdate("h2FontWeight", e.target.value)}
+                  >
+                    <option value="400">400 — Regular</option>
+                    <option value="500">500 — Medium</option>
+                    <option value="600">600 — Semibold</option>
+                    <option value="700">700 — Bold</option>
+                    <option value="800">800 — Extrabold</option>
+                    <option value="900">900 — Black</option>
+                  </select>
+                </div>
+              </div>
             </div>
           </>
         )}

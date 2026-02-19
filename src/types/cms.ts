@@ -82,6 +82,17 @@ export interface CMSContent {
 
   // Section ordering
   sectionOrder?: string[];
+
+  // Editable section titles
+  episodesTitle: string;
+  sponsorsTitle: string;
+  blogTitle: string;
+
+  // Typography styling
+  h1FontSize: string;
+  h1FontWeight: string;
+  h2FontSize: string;
+  h2FontWeight: string;
 }
 
 
@@ -152,5 +163,14 @@ export const defaultCMS: CMSContent = {
   navLink3Href: "#engage",
 
   sponsors: [],
-  sectionOrder: ["about", "episodes", "hosts", "sponsors", "newsletter"],
+  sectionOrder: ["episodes", "acclaim", "hosts", "sponsors", "newsletter", "testimonials"],
+
+  episodesTitle: "Latest Episodes",
+  sponsorsTitle: "Our Sponsors",
+  blogTitle: "From the Blog",
+
+  h1FontSize: "clamp(2.4rem, 6vw, 5.5rem)",
+  h1FontWeight: "900",
+  h2FontSize: "clamp(1.5rem, 3.5vw, 2.8rem)",
+  h2FontWeight: "800",
 };

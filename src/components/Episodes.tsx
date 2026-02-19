@@ -29,9 +29,13 @@ export default function Episodes({
         {/* Section header row */}
         <div className="flex items-end justify-between py-10 border-b border-border gap-4">
           <div>
-            <h2 className="font-display font-extrabold leading-none tracking-tight text-foreground"
-              style={{ fontSize: "clamp(1.4rem, 3.5vw, 2.8rem)" }}>
-              Latest Episodes
+            <h2 className="font-display font-extrabold uppercase leading-none tracking-tight text-foreground"
+              style={{ fontSize: content.h2FontSize || "clamp(1.5rem, 3.5vw, 2.8rem)", fontWeight: content.h2FontWeight || "800", letterSpacing: "-0.02em" }}
+              contentEditable={isEditing}
+              suppressContentEditableWarning
+              onBlur={e => isEditing && onUpdate("episodesTitle", e.currentTarget.textContent || "")}
+            >
+              {content.episodesTitle || "Latest Episodes"}
             </h2>
           </div>
           <div className="flex items-center gap-3 shrink-0">

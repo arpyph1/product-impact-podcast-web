@@ -224,7 +224,7 @@ export default function Hero({ content, isEditing, onUpdate, episodes = [] }: He
       <div className="container mx-auto px-6 pb-8 text-center">
         <h1
           className={`font-display font-black uppercase leading-[0.92] tracking-tight text-foreground mb-5 mx-auto ${isEditing ? "cursor-text" : ""}`}
-          style={{ fontSize: "clamp(2.4rem, 6vw, 5.5rem)", letterSpacing: "-0.03em", maxWidth: "65%" }}
+          style={{ fontSize: content.h1FontSize || "clamp(2.4rem, 6vw, 5.5rem)", fontWeight: content.h1FontWeight || "900", letterSpacing: "-0.03em", maxWidth: "65%" }}
           contentEditable={isEditing}
           suppressContentEditableWarning
           onBlur={e => isEditing && onUpdate("heroTitle", e.currentTarget.textContent || "")}
