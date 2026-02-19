@@ -8,6 +8,7 @@ interface ContactModalProps {
   isEditing: boolean;
   onUpdate: (key: keyof CMSContent, value: any) => void;
   onClose: () => void;
+  defaultInquiryType?: string;
 }
 
 const INQUIRY_TYPES = [
@@ -20,8 +21,8 @@ const INQUIRY_TYPES = [
   "Other",
 ];
 
-export default function ContactModal({ content, isEditing, onUpdate, onClose }: ContactModalProps) {
-  const [form, setForm] = useState({ name: "", email: "", inquiryType: "", message: "" });
+export default function ContactModal({ content, isEditing, onUpdate, onClose, defaultInquiryType = "" }: ContactModalProps) {
+  const [form, setForm] = useState({ name: "", email: "", inquiryType: defaultInquiryType, message: "" });
   const [sent, setSent] = useState(false);
   const [sending, setSending] = useState(false);
   const [error, setError] = useState<string | null>(null);

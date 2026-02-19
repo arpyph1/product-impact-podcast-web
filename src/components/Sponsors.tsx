@@ -5,6 +5,7 @@ interface SponsorsProps {
   content: CMSContent;
   isEditing: boolean;
   onUpdate: (key: keyof CMSContent, value: any) => void;
+  onContactClick?: (inquiryType?: string) => void;
 }
 
 export interface Sponsor {
@@ -21,7 +22,7 @@ const DEFAULT_SPONSORS: Sponsor[] = [
   { id: "3", name: "Brand Inc.", tagline: "Powering the future of product", url: "#", logoUrl: "" },
 ];
 
-export default function Sponsors({ content, isEditing, onUpdate }: SponsorsProps) {
+export default function Sponsors({ content, isEditing, onUpdate, onContactClick }: SponsorsProps) {
   // In edit mode show defaults so user can fill them in; in display mode only show filled sponsors
   const allSponsors: Sponsor[] = content.sponsors?.length ? content.sponsors : (isEditing ? DEFAULT_SPONSORS : []);
   const sponsors = isEditing
@@ -138,11 +139,13 @@ export default function Sponsors({ content, isEditing, onUpdate }: SponsorsProps
                     {/* Logo or placeholder */}
                     <div className="mb-6">
                       {sponsor.logoUrl ? (
-                        <img
-                          src={sponsor.logoUrl}
-                          alt={sponsor.name}
-                          className="h-10 object-contain opacity-70 group-hover:opacity-100 transition-opacity filter brightness-0 invert"
-                        />
+                        <div className="w-[300px] h-[200px] flex items-center justify-center">
+                          <img
+                            src={sponsor.logoUrl}
+                            alt={sponsor.name}
+                            className="max-w-full max-h-full object-contain opacity-80 group-hover:opacity-100 transition-opacity"
+                          />
+                        </div>
                       ) : (
                         <div className="h-10 flex items-center">
                           <span className="font-display font-extrabold text-xl text-foreground/40 group-hover:text-foreground/70 tracking-tight transition-colors uppercase">
@@ -156,7 +159,7 @@ export default function Sponsors({ content, isEditing, onUpdate }: SponsorsProps
                       <p className="text-sm text-muted-foreground leading-snug max-w-[200px]">
                         {sponsor.tagline}
                       </p>
-                      <ArrowUpRight className="w-4 h-4 text-muted-foreground group-hover:text-primary transition-colors shrink-0" />
+                      <ArrowUpRight className="w-8 h-8 text-coral group-hover:text-coral transition-colors shrink-0" />
                     </div>
                   </a>
                 )}
@@ -171,12 +174,12 @@ export default function Sponsors({ content, isEditing, onUpdate }: SponsorsProps
               <p className="font-display font-bold text-foreground text-lg">Interested in sponsoring?</p>
               <p className="text-muted-foreground text-sm mt-0.5">Reach thousands of engaged product leaders every week.</p>
             </div>
-            <a
-              href={`mailto:${content.contactEmail}?subject=${encodeURIComponent("Sponsorship Inquiry")}`}
+            <button
+              onClick={() => onContactClick?.("Sponsorship / Advertising")}
               className="flex items-center gap-2 px-6 py-2.5 rounded-full bg-primary text-primary-foreground font-semibold text-sm hover:brightness-110 transition-all shrink-0"
             >
               Get in Touch <ArrowUpRight className="w-3.5 h-3.5" />
-            </a>
+            </button>
           </div>
         </div>
       </div>
