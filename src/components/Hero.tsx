@@ -1,6 +1,6 @@
 import { CMSContent } from "@/types/cms";
 import heroPodcast from "@/assets/hero-podcast.jpg";
-import { Play, Headphones } from "lucide-react";
+import { Headphones } from "lucide-react";
 
 interface HeroProps {
   content: CMSContent;
@@ -10,16 +10,24 @@ interface HeroProps {
   latestEpisodeTitle?: string;
 }
 
-const bgColorMap: Record<string, string> = {
-  coral: "bg-coral/20 border-coral/40",
-  teal:  "bg-teal/20 border-teal/40",
-  amber: "bg-amber/20 border-amber/40",
-  purple: "bg-primary/20 border-primary/40",
-};
-
-const BG_OPTIONS = ["coral", "teal", "amber", "purple"];
+function getYouTubeEmbedUrl(url: string): string | null {
+  if (!url) return null;
+  // Already an embed URL
+  if (url.includes("youtube.com/embed/")) return url;
+  // youtu.be short link
+  const shortMatch = url.match(/youtu\.be\/([^?&]+)/);
+  if (shortMatch) return `https://www.youtube.com/embed/${shortMatch[1]}`;
+  // youtube.com/watch?v=
+  const watchMatch = url.match(/[?&]v=([^?&]+)/);
+  if (watchMatch) return `https://www.youtube.com/embed/${watchMatch[1]}`;
+  // Treat as raw embed if it's a URL at all
+  if (url.startsWith("http")) return url;
+  return null;
+}
 
 export default function Hero({ content, isEditing, onUpdate, latestEpisodeAudio, latestEpisodeTitle }: HeroProps) {
+  const embedUrl = getYouTubeEmbedUrl(content.featuredVideoUrl);
+
   return (
     <section
       id="podcast"
@@ -32,7 +40,6 @@ export default function Hero({ content, isEditing, onUpdate, latestEpisodeAudio,
       <div className="container mx-auto px-4 py-20 grid lg:grid-cols-2 gap-12 items-center">
         {/* Left: Text */}
         <div className="space-y-6">
-          {/* Tags */}
           <div className="flex gap-2 flex-wrap">
             {["PODCAST", "DARK", "DEEP"].map(tag => (
               <span
@@ -67,12 +74,10 @@ export default function Hero({ content, isEditing, onUpdate, latestEpisodeAudio,
             {content.heroDescription}
           </p>
 
-          {/* CTA buttons */}
           <div className="flex flex-wrap gap-3 fade-up fade-up-delay-3">
             <a
               href={content.heroCta1Link}
               className="inline-flex items-center gap-2 px-6 py-3 rounded-full border border-foreground/30 text-foreground font-semibold hover:bg-foreground/10 transition-all"
-              data-cms-editable={isEditing ? "heroCta1Text" : undefined}
             >
               <Headphones className="w-4 h-4" />
               <span
@@ -98,100 +103,75 @@ export default function Hero({ content, isEditing, onUpdate, latestEpisodeAudio,
             </a>
           </div>
 
-          {/* Inline audio player for latest episode */}
-          {latestEpisodeAudio && (
-            <div className="mt-6 p-4 rounded-xl bg-card/60 border border-border neon-border space-y-2">
+          {/* Latest episode audio fallback (when no video set) */}
+          {latestEpisodeAudio && !content.featuredVideoUrl && (
+            <div className="mt-4 p-4 rounded-xl bg-card/60 border border-border neon-border space-y-2">
               <div className="flex items-center gap-2 mb-1">
-                <div className="flex gap-1 items-end h-5">
-                  {[1,2,3,4,5].map(i => (
-                    <span
-                      key={i}
-                      className="wave-bar"
-                      style={{ height: `${8 + i * 3}px`, animationDelay: `${i * 0.12}s` }}
-                    />
-                  ))}
-                </div>
-                <span className="text-xs text-muted-foreground font-medium truncate max-w-[240px]">
+                <span className="text-xs text-muted-foreground font-medium truncate max-w-[260px]">
                   Latest: {latestEpisodeTitle}
                 </span>
               </div>
-              <audio controls src={latestEpisodeAudio} preload="none" />
+              <audio controls src={latestEpisodeAudio} preload="none" className="w-full" />
             </div>
           )}
 
-          {/* Platform pills */}
-          <div className="flex gap-3 flex-wrap pt-2">
-            {["The Podcast", "⎕ Navigation", "▶"].map((label, i) => (
-              <span
-                key={i}
-                className="text-sm px-4 py-2 rounded-full bg-primary/80 text-primary-foreground font-medium flex items-center gap-1"
-              >
-                {label}
-              </span>
-            ))}
-          </div>
+          {/* Video URL edit in CMS mode */}
+          {isEditing && (
+            <div className="p-3 rounded-lg bg-amber/10 border border-amber/30 space-y-1">
+              <p className="text-xs text-amber font-semibold">Featured Video URL (YouTube or embed):</p>
+              <input
+                className="w-full text-xs bg-black/40 border border-amber/50 text-foreground rounded px-2 py-1.5 focus:outline-none focus:border-amber"
+                defaultValue={content.featuredVideoUrl}
+                placeholder="https://youtube.com/watch?v=..."
+                onBlur={e => onUpdate("featuredVideoUrl", e.target.value)}
+              />
+            </div>
+          )}
         </div>
 
-        {/* Right: Hero image card */}
+        {/* Right: 16:9 video player or fallback image */}
         <div className="relative flex justify-center lg:justify-end">
-          {/* BG picker (edit mode) */}
-          {isEditing && (
-            <div className="absolute -top-8 left-0 flex gap-2 z-10">
-              <span className="text-xs text-amber mr-1">Card BG:</span>
-              {BG_OPTIONS.map(c => (
-                <button
-                  key={c}
-                  onClick={() => onUpdate("heroCardBg", c)}
-                  className={`w-6 h-6 rounded-full border-2 ${
-                    content.heroCardBg === c ? "border-amber scale-125" : "border-border"
-                  }`}
-                  style={{
-                    background:
-                      c === "coral" ? "hsl(5 80% 60%)" :
-                      c === "teal"  ? "hsl(174 72% 48%)" :
-                      c === "amber" ? "hsl(43 96% 56%)" :
-                      "hsl(265 80% 60%)",
-                  }}
-                  title={c}
+          {embedUrl ? (
+            <div className="w-full max-w-lg">
+              <div className="relative w-full rounded-2xl overflow-hidden border border-border neon-border shadow-2xl" style={{ paddingBottom: "56.25%" }}>
+                <iframe
+                  className="absolute inset-0 w-full h-full"
+                  src={embedUrl}
+                  title="Featured Episode"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
                 />
-              ))}
+              </div>
+              {latestEpisodeTitle && (
+                <p className="mt-3 text-xs text-muted-foreground text-center">
+                  Featured: {latestEpisodeTitle}
+                </p>
+              )}
+            </div>
+          ) : (
+            <div
+              className="relative rounded-2xl overflow-hidden border-2 neon-border bg-dark-surface"
+              style={{ width: 340, height: 400 }}
+            >
+              <img
+                src={content.heroImageUrl || heroPodcast}
+                alt="Podcast"
+                className="w-full h-full object-cover"
+                onError={e => { (e.target as HTMLImageElement).src = heroPodcast; }}
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+              {isEditing && (
+                <div className="absolute bottom-3 left-3 right-3">
+                  <input
+                    className="w-full text-xs bg-black/60 border border-amber/50 text-white rounded px-2 py-1 focus:outline-none focus:border-amber"
+                    defaultValue={content.heroImageUrl}
+                    placeholder="Hero image URL..."
+                    onBlur={e => onUpdate("heroImageUrl", e.target.value)}
+                  />
+                </div>
+              )}
             </div>
           )}
-
-          <div
-            className={`relative rounded-2xl overflow-hidden border-2 neon-border ${bgColorMap[content.heroCardBg] || bgColorMap.coral}`}
-            style={{ width: 340, height: 400 }}
-            data-cms-bg-editable="heroCardBg"
-          >
-            {/* Pill buttons overlay */}
-            <div className="absolute top-3 left-3 right-3 flex gap-2 z-10">
-              <div className="bg-card/80 backdrop-blur rounded-full px-3 py-1 text-xs text-foreground border border-border">
-                Bat Ion
-              </div>
-              <div className="bg-card/80 backdrop-blur rounded-full px-3 py-1 text-xs text-foreground border border-border flex-1 flex justify-between">
-                <span>Episode</span>
-                <span>✕ ⎕</span>
-              </div>
-            </div>
-
-            <img
-              src={content.heroImageUrl || heroPodcast}
-              alt="Podcast host"
-              className="w-full h-full object-cover"
-              onError={e => { (e.target as HTMLImageElement).src = heroPodcast; }}
-            />
-
-            <div
-              className="absolute inset-0 opacity-30"
-              style={{
-                background:
-                  content.heroCardBg === "coral" ? "hsl(5 80% 60%)" :
-                  content.heroCardBg === "teal"  ? "hsl(174 72% 48%)" :
-                  content.heroCardBg === "amber" ? "hsl(43 96% 56%)" :
-                  "hsl(265 80% 60%)",
-              }}
-            />
-          </div>
         </div>
       </div>
     </section>

@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { CMSContent } from "@/types/cms";
-import { Mic2, Menu, X } from "lucide-react";
+import { Menu, X } from "lucide-react";
+import logo from "@/assets/logo.png";
 
 interface NavbarProps {
   content: CMSContent;
@@ -23,10 +24,12 @@ export default function Navbar({ content, isEditing, onToggleEdit, onContactClic
     <header className="fixed top-0 left-0 right-0 z-50 border-b border-border/40 backdrop-blur-md bg-darker-surface/80">
       <div className="container mx-auto flex items-center justify-between h-16 px-4">
         {/* Logo */}
-        <a href="#" className="flex items-center gap-2 group">
-          <div className="w-9 h-9 rounded-full bg-primary/20 border border-primary/50 flex items-center justify-center glow-purple group-hover:glow-purple transition-all">
-            <Mic2 className="w-4 h-4 text-primary" />
-          </div>
+        <a href="#" className="flex items-center gap-2.5 group">
+          <img
+            src={logo}
+            alt={content.podcastName}
+            className="w-9 h-9 rounded-full object-cover"
+          />
           <span className="font-display font-bold text-lg leading-tight text-foreground">
             {content.podcastName}
           </span>

@@ -17,7 +17,7 @@ interface EpisodesProps {
 export default function Episodes({
   content, isEditing, onUpdate, episodes, loading, error, podcastTitle
 }: EpisodesProps) {
-  const [visibleCount, setVisibleCount] = useState(8);
+  const [visibleCount, setVisibleCount] = useState(9);
 
   return (
     <section id="episodes" className="py-24 bg-dark-surface">
@@ -83,7 +83,7 @@ export default function Episodes({
         {/* Grid */}
         {!loading && episodes.length > 0 && (
           <>
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
               {episodes.slice(0, visibleCount).map((ep, i) => (
                 <EpisodeCard key={ep.guid} episode={ep} index={i} />
               ))}

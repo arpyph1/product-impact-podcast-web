@@ -93,7 +93,13 @@ export default function CMSPanel({ content, onUpdate, onReset, onClose }: CMSPan
             <Field label="CTA Button 2 Text" value={content.heroCta2Text} onChange={v => onUpdate("heroCta2Text", v)} />
             <Field label="CTA Button 2 Link" value={content.heroCta2Link} onChange={v => onUpdate("heroCta2Link", v)} />
             <Field
-              label="Hero Image URL"
+              label="Featured Video URL (YouTube)"
+              value={content.featuredVideoUrl}
+              onChange={v => onUpdate("featuredVideoUrl", v)}
+              placeholder="https://youtube.com/watch?v=..."
+            />
+            <Field
+              label="Hero Image URL (fallback)"
               value={content.heroImageUrl}
               onChange={v => onUpdate("heroImageUrl", v)}
               placeholder="https://..."
