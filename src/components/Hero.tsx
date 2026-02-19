@@ -218,13 +218,13 @@ export default function Hero({ content, isEditing, onUpdate, episodes = [] }: He
   return (
     <section id="podcast" className="relative bg-background pt-20">
       {/* Vertical spacer between nav and hero */}
-      <div className="pt-16" />
+      <div style={{ paddingTop: "60px" }} />
 
       {/* Headline + description + platform buttons */}
       <div className="container mx-auto px-6 pb-8 text-center">
         <h1
-          className={`font-display font-black uppercase leading-[0.92] tracking-tight text-foreground mb-5 ${isEditing ? "cursor-text" : ""}`}
-          style={{ fontSize: "clamp(2.4rem, 6vw, 5.5rem)", letterSpacing: "-0.03em" }}
+          className={`font-display font-black uppercase leading-[0.92] tracking-tight text-foreground mb-5 mx-auto ${isEditing ? "cursor-text" : ""}`}
+          style={{ fontSize: "clamp(2.4rem, 6vw, 5.5rem)", letterSpacing: "-0.03em", maxWidth: "65%" }}
           contentEditable={isEditing}
           suppressContentEditableWarning
           onBlur={e => isEditing && onUpdate("heroTitle", e.currentTarget.textContent || "")}
@@ -266,7 +266,7 @@ export default function Hero({ content, isEditing, onUpdate, episodes = [] }: He
       <div className="container mx-auto px-6 pb-20">
         <div className="max-w-2xl mx-auto">
           {/* Desktop: 3-column staircase, each card descends further */}
-          <div className="hidden md:grid md:grid-cols-3 gap-4 items-start">
+          <div className="hidden md:grid md:grid-cols-3 gap-9 items-start">
             <div className="mt-0">
               <VideoCard {...cards[0]} isEditing={isEditing} onUpdate={onUpdate} />
             </div>
