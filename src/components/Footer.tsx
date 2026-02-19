@@ -76,46 +76,40 @@ export default function Footer({ content, isEditing, onUpdate, onContactClick }:
   return (
     <footer className="bg-background">
       <div className="container mx-auto px-6">
-        {/* Platform icons row — 2x size */}
-        <div className="py-10 border-b border-border flex flex-col gap-6">
-          {/* Row 1: Podcast platforms */}
-          <div className="flex items-center gap-6 flex-wrap">
-            <p className="text-[10px] text-muted-foreground uppercase tracking-widest font-semibold w-16 shrink-0">Listen</p>
-            <div className="flex items-center gap-5">
-              {PODCAST_PLATFORMS.map(p => (
-                <a
-                  key={p.name}
-                  href={isEditing ? undefined : (content[p.urlKey] as string) || "#"}
-                  target={!isEditing ? "_blank" : undefined}
-                  rel="noopener noreferrer"
-                  title={p.name}
-                  className="flex items-center justify-center w-14 h-14 rounded-full text-white hover:scale-110 transition-transform shadow-lg"
-                  style={{ background: p.color }}
-                >
-                  {p.svg}
-                </a>
-              ))}
-            </div>
+        {/* Platform & social links */}
+        <div className="py-10 border-b border-border flex flex-col gap-5">
+          {/* Row 1: Podcast platforms — pill buttons matching hero style */}
+          <div className="flex flex-wrap items-center justify-center gap-3">
+            {PODCAST_PLATFORMS.map(p => (
+              <a
+                key={p.name}
+                href={isEditing ? undefined : (content[p.urlKey] as string) || "#"}
+                target={!isEditing ? "_blank" : undefined}
+                rel="noopener noreferrer"
+                className="group flex items-center gap-2.5 px-5 py-2.5 rounded-full border border-border text-sm font-medium text-foreground hover:border-foreground transition-all duration-200"
+              >
+                <span className="w-4 h-4 rounded-full flex items-center justify-center shrink-0 text-white" style={{ background: p.color }}>
+                  <span className="[&>svg]:w-3.5 [&>svg]:h-3.5">{p.svg}</span>
+                </span>
+                {p.name}
+              </a>
+            ))}
           </div>
 
-          {/* Row 2: Social links */}
-          <div className="flex items-center gap-6 flex-wrap">
-            <p className="text-[10px] text-muted-foreground uppercase tracking-widest font-semibold w-16 shrink-0">Follow</p>
-            <div className="flex items-center gap-4">
-              {SOCIAL_LINKS.map(s => (
-                <a
-                  key={s.name}
-                  href={isEditing ? undefined : (content[s.urlKey as keyof CMSContent] as string) || "#"}
-                  target={!isEditing ? "_blank" : undefined}
-                  rel="noopener noreferrer"
-                  title={s.name}
-                  className="flex items-center gap-2 px-4 py-2 rounded-full border border-border text-sm font-medium text-foreground hover:border-foreground hover:text-foreground transition-all group"
-                >
-                  {s.svg}
-                  <span className="text-xs text-muted-foreground group-hover:text-foreground transition-colors">{s.name}</span>
-                </a>
-              ))}
-            </div>
+          {/* Row 2: Social links — same pill style */}
+          <div className="flex flex-wrap items-center justify-center gap-3">
+            {SOCIAL_LINKS.map(s => (
+              <a
+                key={s.name}
+                href={isEditing ? undefined : (content[s.urlKey as keyof CMSContent] as string) || "#"}
+                target={!isEditing ? "_blank" : undefined}
+                rel="noopener noreferrer"
+                className="group flex items-center gap-2.5 px-5 py-2.5 rounded-full border border-border text-sm font-medium text-foreground hover:border-foreground transition-all duration-200"
+              >
+                {s.svg}
+                {s.name}
+              </a>
+            ))}
           </div>
         </div>
 

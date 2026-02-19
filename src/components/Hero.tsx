@@ -151,17 +151,7 @@ function VideoCard({
               </button>
             )}
 
-            {/* Label overlay at bottom */}
-            <div className="absolute bottom-0 left-0 right-0 p-3 bg-gradient-to-t from-black/80 to-transparent">
-              <p
-                className="text-[11px] font-semibold text-white uppercase tracking-wider"
-                contentEditable={isEditing}
-                suppressContentEditableWarning
-                onBlur={e => isEditing && onUpdate(labelKey, e.currentTarget.textContent || "")}
-              >
-                {label}
-              </p>
-            </div>
+            {/* No caption overlay */}
           </>
         )}
       </div>
@@ -227,8 +217,8 @@ export default function Hero({ content, isEditing, onUpdate, episodes = [] }: He
 
   return (
     <section id="podcast" className="relative bg-background pt-20">
-      {/* Small gap between nav and hero content */}
-      <div className="pt-8" />
+      {/* Vertical spacer between nav and hero */}
+      <div className="pt-16" />
 
       {/* Headline + description + platform buttons */}
       <div className="container mx-auto px-6 pb-8 text-center">
@@ -245,7 +235,7 @@ export default function Hero({ content, isEditing, onUpdate, episodes = [] }: He
         {/* Subline — same font style as About body text */}
         <p
           className="text-muted-foreground max-w-xl mx-auto leading-relaxed mb-8"
-          style={{ fontSize: "1.125rem", fontFamily: "'Inter', system-ui, sans-serif", fontWeight: 400 }}
+          style={{ fontSize: "1.5rem", lineHeight: "1.6", fontFamily: "'Inter', system-ui, sans-serif", fontWeight: 400 }}
           contentEditable={isEditing}
           suppressContentEditableWarning
           onBlur={e => isEditing && onUpdate("heroDescription", e.currentTarget.textContent || "")}
@@ -261,7 +251,7 @@ export default function Hero({ content, isEditing, onUpdate, episodes = [] }: He
               href={isEditing ? undefined : (content[p.urlKey] as string) || "#"}
               target={!isEditing ? "_blank" : undefined}
               rel="noopener noreferrer"
-              className="group flex items-center gap-2.5 px-5 py-2.5 rounded-full border border-border text-sm font-medium text-foreground hover:border-foreground transition-all duration-200"
+              className="group flex items-center gap-3 px-7 py-4 rounded-full border border-border text-base font-medium text-foreground hover:border-foreground transition-all duration-200"
             >
               <span className="w-4 h-4 rounded-full flex items-center justify-center shrink-0 text-white" style={{ background: p.color }}>
                 {p.svg}
@@ -272,26 +262,28 @@ export default function Hero({ content, isEditing, onUpdate, episodes = [] }: He
         </div>
       </div>
 
-      {/* Three vertical video cards — descending staircase left to right */}
+      {/* Three vertical video cards — descending staircase, 60% smaller */}
       <div className="container mx-auto px-6 pb-20">
-        {/* Desktop: 3-column staircase, each card descends further */}
-        <div className="hidden md:grid md:grid-cols-3 gap-6 items-start">
-          <div className="mt-0">
-            <VideoCard {...cards[0]} isEditing={isEditing} onUpdate={onUpdate} />
+        <div className="max-w-2xl mx-auto">
+          {/* Desktop: 3-column staircase, each card descends further */}
+          <div className="hidden md:grid md:grid-cols-3 gap-4 items-start">
+            <div className="mt-0">
+              <VideoCard {...cards[0]} isEditing={isEditing} onUpdate={onUpdate} />
+            </div>
+            <div className="mt-12">
+              <VideoCard {...cards[1]} isEditing={isEditing} onUpdate={onUpdate} />
+            </div>
+            <div className="mt-24">
+              <VideoCard {...cards[2]} isEditing={isEditing} onUpdate={onUpdate} />
+            </div>
           </div>
-          <div className="mt-16">
-            <VideoCard {...cards[1]} isEditing={isEditing} onUpdate={onUpdate} />
-          </div>
-          <div className="mt-32">
-            <VideoCard {...cards[2]} isEditing={isEditing} onUpdate={onUpdate} />
-          </div>
-        </div>
 
-        {/* Mobile: single column */}
-        <div className="flex flex-col gap-6 md:hidden">
-          {cards.map((card, i) => (
-            <VideoCard key={i} {...card} isEditing={isEditing} onUpdate={onUpdate} />
-          ))}
+          {/* Mobile: single column */}
+          <div className="flex flex-col gap-4 md:hidden max-w-[200px] mx-auto">
+            {cards.map((card, i) => (
+              <VideoCard key={i} {...card} isEditing={isEditing} onUpdate={onUpdate} />
+            ))}
+          </div>
         </div>
       </div>
 
