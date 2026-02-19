@@ -1,12 +1,16 @@
 import { Sponsor } from "@/components/Sponsors";
 import { FAQItem } from "@/components/FAQ";
 
+export interface NavItem {
+  label: string;
+  href: string;
+}
+
 export interface CMSContent {
   // Hero
   heroTitle: string;
 
   // Three hero video cards — each has a source mode + optional custom URL
-  // mode: "custom" | "latest" | "second"
   heroVideo1Mode: string;
   heroVideo1Url: string;
   heroVideo1Label: string;
@@ -20,7 +24,7 @@ export interface CMSContent {
   // About section
   aboutDescription: string;
 
-  // Hosts — name, role, bio (250 char max), image
+  // Hosts — name, role, bio (400 char max), image
   host1Name: string;
   host1Bio: string;
   host1ImageUrl: string;
@@ -56,7 +60,11 @@ export interface CMSContent {
   // Podcast name & logo text
   podcastName: string;
 
-  // Nav links (label|href pairs, pipe-separated)
+  // Nav links — dynamic arrays for left/right of logo
+  navLeftItems: NavItem[];
+  navRightItems: NavItem[];
+
+  // Legacy nav links (kept for migration compat)
   navLink1Label: string;
   navLink1Href: string;
   navLink2Label: string;
@@ -132,6 +140,15 @@ export const defaultCMS: CMSContent = {
 
   podcastName: "Product Impact Podcast",
 
+  navLeftItems: [
+    { label: "Episodes", href: "#episodes" },
+    { label: "About", href: "#about" },
+  ],
+  navRightItems: [
+    { label: "Listen", href: "#engage" },
+  ],
+
+  // Legacy — kept for backward compat with saved data
   navLink1Label: "Episodes",
   navLink1Href: "#episodes",
   navLink2Label: "About",

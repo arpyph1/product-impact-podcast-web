@@ -117,9 +117,9 @@ export default function Footer({ content, isEditing, onUpdate, onContactClick }:
         <div className="py-16 grid md:grid-cols-2 gap-10 items-start border-b border-border">
           <div className="flex items-start gap-4">
             {/* Transparent logo — same as nav */}
-            <img src={logo} alt={content.podcastName} className="w-16 h-16 object-contain" style={{ mixBlendMode: "normal" }} />
+            <img src={logo} alt={content.podcastName} className="w-32 h-32 object-contain" style={{ mixBlendMode: "normal" }} />
             <div>
-              <p className="font-display font-bold text-xl text-foreground">{content.podcastName}</p>
+              <p className="font-display font-bold text-4xl text-foreground">{content.podcastName}</p>
               <p
                 className="text-sm text-muted-foreground mt-1 max-w-xs"
                 contentEditable={isEditing}
@@ -135,11 +135,11 @@ export default function Footer({ content, isEditing, onUpdate, onContactClick }:
             <div>
               <p className="text-[10px] text-muted-foreground uppercase tracking-widest font-semibold mb-4">Navigate</p>
               <ul className="space-y-2.5">
-                {["Podcast", "Episodes", "About", "Listen"].map(link => (
-                  <li key={link}>
-                    <a href={`#${link.toLowerCase()}`}
+                {[...(content.navLeftItems || []), ...(content.navRightItems || [])].map((item, i) => (
+                  <li key={i}>
+                    <a href={item.href}
                       className="text-sm text-foreground hover:text-primary transition-colors agency-link">
-                      {link}
+                      {item.label}
                     </a>
                   </li>
                 ))}
