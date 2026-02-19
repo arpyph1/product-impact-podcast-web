@@ -1,5 +1,5 @@
+import { useState } from "react";
 import { CMSContent } from "@/types/cms";
-import logo from "@/assets/logo-new.png";
 import { ArrowUpRight, Play } from "lucide-react";
 
 interface HeroProps {
@@ -55,23 +55,24 @@ function getYouTubeThumbnail(url: string): string {
   return id ? `https://img.youtube.com/vi/${id}/hqdefault.jpg` : "";
 }
 
-interface VideoCardProps {
-  url: string;
-  label: string;
-  urlKey: keyof CMSContent;
-  labelKey: keyof CMSContent;
-  isEditing: boolean;
-  onUpdate: (key: keyof CMSContent, value: any) => void;
-}
-
-function VideoCard({ url, label, urlKey, labelKey, isEditing, onUpdate }: VideoCardProps) {
+// Angled video card — like the reference: slight rotation, rounded corners, filter overlay
+function VideoCard({
+  url, label, urlKey, labelKey, isEditing, onUpdate, rotation,
+}: {
+  url: string; label: string; urlKey: keyof CMSContent; labelKey: keyof CMSContent;
+  isEditing: boolean; onUpdate: (key: keyof CMSContent, value: any) => void;
+  rotation: number;
+}) {
   const [playing, setPlaying] = useState(false);
   const videoId = getYouTubeEmbedId(url);
   const thumb = getYouTubeThumbnail(url);
 
   return (
-    <div className="relative flex flex-col gap-2">
-      <div className="relative aspect-video rounded-xl overflow-hidden bg-card border border-border group">
+    <div
+      className="relative flex flex-col gap-2"
+      style={{ transform: `rotate(${rotation}deg)`, transformOrigin: "center center" }}
+    >
+      <div className="relative aspect-video rounded-2xl overflow-hidden bg-card border border-border group shadow-2xl">
         {playing && videoId ? (
           <iframe
             className="absolute inset-0 w-full h-full"
@@ -83,20 +84,22 @@ function VideoCard({ url, label, urlKey, labelKey, isEditing, onUpdate }: VideoC
         ) : (
           <>
             {thumb ? (
-              <img src={thumb} alt={label} className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.03]" />
+              <img src={thumb} alt={label} className="absolute inset-0 w-full h-full object-cover" />
             ) : (
               <div className="absolute inset-0 bg-muted flex items-center justify-center">
                 <span className="text-xs text-muted-foreground">No video URL</span>
               </div>
             )}
-            <div className="absolute inset-0 bg-black/30" />
+            {/* Dark filter overlay — lifts on hover */}
+            <div className="absolute inset-0 bg-black/55 group-hover:bg-black/20 transition-all duration-500" />
+
             {videoId && (
               <button
                 onClick={() => setPlaying(true)}
                 className="absolute inset-0 flex items-center justify-center"
               >
-                <div className="w-14 h-14 rounded-full bg-white/90 flex items-center justify-center shadow-xl hover:scale-105 transition-transform">
-                  <Play className="w-6 h-6 text-black ml-0.5" />
+                <div className="w-12 h-12 rounded-full bg-white/90 flex items-center justify-center shadow-xl hover:scale-110 transition-transform">
+                  <Play className="w-5 h-5 text-black ml-0.5" />
                 </div>
               </button>
             )}
@@ -106,7 +109,7 @@ function VideoCard({ url, label, urlKey, labelKey, isEditing, onUpdate }: VideoC
 
       {/* Label */}
       <p
-        className="text-xs font-semibold text-muted-foreground uppercase tracking-wider"
+        className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wider text-center"
         contentEditable={isEditing}
         suppressContentEditableWarning
         onBlur={e => isEditing && onUpdate(labelKey, e.currentTarget.textContent || "")}
@@ -114,7 +117,6 @@ function VideoCard({ url, label, urlKey, labelKey, isEditing, onUpdate }: VideoC
         {label}
       </p>
 
-      {/* URL input in edit mode */}
       {isEditing && (
         <input
           className="text-xs bg-black/40 border border-amber/50 text-foreground rounded px-2 py-1.5 focus:outline-none focus:border-amber w-full"
@@ -127,33 +129,21 @@ function VideoCard({ url, label, urlKey, labelKey, isEditing, onUpdate }: VideoC
   );
 }
 
-import { useState } from "react";
-
 export default function Hero({ content, isEditing, onUpdate }: HeroProps) {
   const videoCards = [
-    { url: content.heroVideo1Url, label: content.heroVideo1Label, urlKey: "heroVideo1Url" as keyof CMSContent, labelKey: "heroVideo1Label" as keyof CMSContent },
-    { url: content.heroVideo2Url, label: content.heroVideo2Label, urlKey: "heroVideo2Url" as keyof CMSContent, labelKey: "heroVideo2Label" as keyof CMSContent },
-    { url: content.heroVideo3Url, label: content.heroVideo3Label, urlKey: "heroVideo3Url" as keyof CMSContent, labelKey: "heroVideo3Label" as keyof CMSContent },
+    { url: content.heroVideo1Url, label: content.heroVideo1Label, urlKey: "heroVideo1Url" as keyof CMSContent, labelKey: "heroVideo1Label" as keyof CMSContent, rotation: -2.5 },
+    { url: content.heroVideo2Url, label: content.heroVideo2Label, urlKey: "heroVideo2Url" as keyof CMSContent, labelKey: "heroVideo2Label" as keyof CMSContent, rotation: 0 },
+    { url: content.heroVideo3Url, label: content.heroVideo3Label, urlKey: "heroVideo3Url" as keyof CMSContent, labelKey: "heroVideo3Label" as keyof CMSContent, rotation: 2.5 },
   ];
 
   return (
     <section id="podcast" className="relative bg-background pt-16">
-      {/* Top: logo + title + description + platform buttons */}
-      <div className="container mx-auto px-6 pt-12 pb-8 text-center">
-        {/* Logo */}
-        <div className="flex justify-center mb-6">
-          <img
-            src={logo}
-            alt={content.podcastName}
-            className="w-[min(50vw,188px)] h-[min(50vw,188px)] object-contain select-none"
-            draggable={false}
-          />
-        </div>
-
+      {/* Top: title + description + platform buttons — NO logo */}
+      <div className="container mx-auto px-6 pt-14 pb-6 text-center">
         {/* Headline */}
         <h1
           className={`font-display font-black uppercase leading-[0.92] tracking-tight text-foreground mb-4 ${isEditing ? "cursor-text" : ""}`}
-          style={{ fontSize: "clamp(2.1rem, 5.5vw, 5rem)", letterSpacing: "-0.02em" }}
+          style={{ fontSize: "clamp(2.4rem, 6vw, 5.5rem)", letterSpacing: "-0.03em" }}
           contentEditable={isEditing}
           suppressContentEditableWarning
           onBlur={e => isEditing && onUpdate("heroTitle", e.currentTarget.textContent || "")}
@@ -172,7 +162,7 @@ export default function Hero({ content, isEditing, onUpdate }: HeroProps) {
         </p>
 
         {/* Platform buttons */}
-        <div className="flex flex-wrap items-center justify-center gap-3 mb-10">
+        <div className="flex flex-wrap items-center justify-center gap-3 mb-12">
           {PLATFORMS.map(p => (
             <a
               key={p.label}
@@ -191,9 +181,9 @@ export default function Hero({ content, isEditing, onUpdate }: HeroProps) {
         </div>
       </div>
 
-      {/* Three video cards */}
-      <div className="container mx-auto px-6 pb-14">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+      {/* Three angled video cards — stacked like the reference */}
+      <div className="container mx-auto px-6 pb-20">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-6 items-end">
           {videoCards.map((card, i) => (
             <VideoCard
               key={i}
@@ -203,6 +193,7 @@ export default function Hero({ content, isEditing, onUpdate }: HeroProps) {
               labelKey={card.labelKey}
               isEditing={isEditing}
               onUpdate={onUpdate}
+              rotation={card.rotation}
             />
           ))}
         </div>

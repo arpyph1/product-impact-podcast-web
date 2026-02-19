@@ -11,6 +11,7 @@ interface AboutProps {
 
 const MAX_BIO = 250;
 
+// Angled, rounded, filtered host image — like video cards in hero
 function HostCard({
   name, bio, imageUrl, role,
   nameKey, bioKey, imageKey, roleKey,
@@ -23,34 +24,45 @@ function HostCard({
   index: number;
 }) {
   const [bioVal, setBioVal] = useState(bio);
+  // Alternate rotation direction per host
+  const rotation = index % 2 === 0 ? -2 : 2;
 
   return (
     <div className="border-t border-border pt-8">
-      <div className="grid md:grid-cols-2 gap-8 items-start">
-        {/* Photo */}
-        <div className="relative aspect-[4/5] bg-muted rounded-sm overflow-hidden group max-w-xs">
-          {imageUrl ? (
-            <img
-              src={imageUrl}
-              alt={name}
-              className="host-card-img w-full h-full object-cover"
-              onError={e => { (e.target as HTMLImageElement).style.display = "none"; }}
-            />
-          ) : (
-            <div className="w-full h-full flex flex-col items-center justify-center gap-3 bg-card">
-              <User className="w-16 h-16 opacity-10 text-foreground" />
-              {isEditing && (
-                <p className="text-xs text-muted-foreground px-4 text-center">Paste a photo URL below</p>
-              )}
-            </div>
-          )}
-          {/* Number badge */}
-          <span className="absolute top-4 left-4 font-display font-extrabold text-5xl leading-none text-white/10 select-none">
-            0{index + 1}
-          </span>
+      <div className="grid md:grid-cols-2 gap-10 items-start">
+        {/* Photo — angled with filter overlay like hero video cards */}
+        <div
+          className="relative aspect-[4/5] max-w-xs group"
+          style={{ transform: `rotate(${rotation}deg)`, transformOrigin: "center center" }}
+        >
+          <div className="relative w-full h-full rounded-2xl overflow-hidden shadow-2xl">
+            {imageUrl ? (
+              <>
+                <img
+                  src={imageUrl}
+                  alt={name}
+                  className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.04]"
+                  onError={e => { (e.target as HTMLImageElement).style.display = "none"; }}
+                />
+                {/* Same dark filter overlay as video cards */}
+                <div className="absolute inset-0 bg-black/45 group-hover:bg-black/10 transition-all duration-500" />
+              </>
+            ) : (
+              <div className="w-full h-full flex flex-col items-center justify-center gap-3 bg-card rounded-2xl border border-border">
+                <User className="w-16 h-16 opacity-10 text-foreground" />
+                {isEditing && (
+                  <p className="text-xs text-muted-foreground px-4 text-center">Paste a photo URL below</p>
+                )}
+              </div>
+            )}
+            {/* Number badge */}
+            <span className="absolute top-4 left-4 font-display font-extrabold text-5xl leading-none text-white/10 select-none">
+              0{index + 1}
+            </span>
+          </div>
 
           {isEditing && (
-            <div className="absolute bottom-0 left-0 right-0 p-3 bg-black/80">
+            <div className="absolute bottom-0 left-0 right-0 p-3 bg-black/80 rounded-b-2xl">
               <input
                 className="w-full text-xs bg-transparent border-b border-amber/50 text-white focus:outline-none focus:border-amber pb-0.5"
                 defaultValue={imageUrl}
@@ -63,7 +75,6 @@ function HostCard({
 
         {/* Text */}
         <div className="flex flex-col gap-4">
-          {/* Role chip */}
           <span
             className="text-xs font-semibold uppercase tracking-widest text-primary"
             contentEditable={isEditing}
@@ -73,10 +84,9 @@ function HostCard({
             {role}
           </span>
 
-          {/* Name — editorial large */}
           <h3
             className="font-display font-extrabold leading-none tracking-tight text-foreground"
-            style={{ fontSize: "clamp(2.5rem, 5vw, 4rem)" }}
+            style={{ fontSize: "clamp(1.8rem, 3.5vw, 2.8rem)" }}
             contentEditable={isEditing}
             suppressContentEditableWarning
             onBlur={e => isEditing && onUpdate(nameKey, e.currentTarget.textContent || "")}
@@ -84,7 +94,7 @@ function HostCard({
             {name}
           </h3>
 
-          {/* Bio — 250 char max, large body */}
+          {/* Bio — 250 char max, 50% larger body text */}
           <div className="space-y-1">
             {isEditing ? (
               <>
@@ -99,7 +109,7 @@ function HostCard({
                 <p className="text-xs text-muted-foreground text-right">{bioVal.length}/{MAX_BIO}</p>
               </>
             ) : (
-              <p className="text-foreground/70 text-lg leading-relaxed max-w-sm">
+              <p className="text-foreground/70 leading-relaxed max-w-sm" style={{ fontSize: "1.125rem" }}>
                 {bio}
               </p>
             )}
@@ -115,7 +125,7 @@ export default function About({ content, isEditing, onUpdate }: AboutProps) {
     <section id="about" className="bg-background">
       <div className="container mx-auto px-6">
 
-        {/* Editorial "About Us" row — label left, big text right (like reference) */}
+        {/* Editorial "About Us" row — label left, big text right */}
         <div className="grid md:grid-cols-[200px_1fr] gap-12 py-16 border-b border-border items-start">
           <div className="pt-1">
             <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground border border-border rounded-full px-3 py-1 inline-block">
@@ -125,15 +135,17 @@ export default function About({ content, isEditing, onUpdate }: AboutProps) {
           <div>
             <h2
               className="font-display font-extrabold leading-[1.0] tracking-tight text-foreground mb-6"
-              style={{ fontSize: "clamp(2rem, 5vw, 4.5rem)" }}
+              style={{ fontSize: "clamp(1.5rem, 3.5vw, 3rem)" }}
               contentEditable={isEditing}
               suppressContentEditableWarning
               onBlur={e => isEditing && onUpdate("aboutTitle", e.currentTarget.textContent || "")}
             >
               {content.aboutTitle}
             </h2>
+            {/* Body text 50% larger than base (base ~1rem → 1.5rem) */}
             <p
-              className="text-muted-foreground leading-relaxed text-lg max-w-2xl mb-8"
+              className="text-muted-foreground leading-relaxed max-w-2xl mb-8"
+              style={{ fontSize: "1.5rem", lineHeight: "1.6" }}
               contentEditable={isEditing}
               suppressContentEditableWarning
               onBlur={e => isEditing && onUpdate("aboutDescription", e.currentTarget.textContent || "")}
@@ -198,25 +210,6 @@ export default function About({ content, isEditing, onUpdate }: AboutProps) {
             </a>
           </div>
         </div>
-
-        {/* Newsletter signup row */}
-        <div className="border-t border-border py-10 flex flex-col md:flex-row items-start md:items-center gap-6 justify-between">
-          <div>
-            <p className="font-display font-bold text-xl text-foreground">Stay in the loop.</p>
-            <p className="text-sm text-muted-foreground mt-1">New episodes, guest announcements, and no spam.</p>
-          </div>
-          <div className="flex gap-0 w-full max-w-sm border border-border rounded-full overflow-hidden focus-within:border-primary transition-colors">
-            <input
-              type="email"
-              placeholder="your@email.com"
-              className="flex-1 bg-transparent px-5 py-2.5 text-sm text-foreground focus:outline-none"
-            />
-            <button className="px-5 py-2.5 bg-primary text-primary-foreground text-sm font-semibold hover:brightness-110 transition-all whitespace-nowrap">
-              Subscribe
-            </button>
-          </div>
-        </div>
-
       </div>
       <div className="section-divider" />
     </section>

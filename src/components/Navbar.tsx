@@ -1,6 +1,6 @@
 import { CMSContent } from "@/types/cms";
 import { Menu, X, ArrowUpRight } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import logo from "@/assets/logo-new.png";
 
 interface NavbarProps {
@@ -13,6 +13,13 @@ interface NavbarProps {
 
 export default function Navbar({ content, isEditing, onToggleEdit, onContactClick, onUpdate }: NavbarProps) {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 60);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
 
   const leftLinks = [
     { label: content.navLink1Label, href: content.navLink1Href, labelKey: "navLink1Label" as keyof CMSContent, hrefKey: "navLink1Href" as keyof CMSContent },
@@ -27,7 +34,7 @@ export default function Navbar({ content, isEditing, onToggleEdit, onContactClic
     isEditing ? (
       <div key={link.labelKey} className="flex flex-col gap-0.5">
         <input
-          className="text-xs font-medium uppercase tracking-wide bg-transparent border-b border-amber/50 text-foreground focus:outline-none w-20"
+          className="text-xs font-medium uppercase tracking-wide bg-transparent border-b border-amber/50 text-foreground focus:outline-none w-24"
           defaultValue={link.label}
           onBlur={e => onUpdate(link.labelKey, e.target.value)}
         />
@@ -44,27 +51,32 @@ export default function Navbar({ content, isEditing, onToggleEdit, onContactClic
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 border-b border-border bg-background/95 backdrop-blur-sm">
-      <div className="container mx-auto h-14 px-6 grid grid-cols-3 items-center">
+      <div className="container mx-auto px-6 flex items-center justify-between" style={{ height: scrolled ? "52px" : "68px", transition: "height 0.3s ease" }}>
 
         {/* Left nav links */}
-        <nav className="hidden md:flex items-center gap-8">
+        <nav className="hidden md:flex items-center gap-8 flex-1">
           {leftLinks.map(renderLink)}
         </nav>
 
-        {/* Center logo */}
-        <div className="flex items-center justify-center">
-          <a href="#" className="flex items-center gap-2 group">
-            <img src={logo} alt={content.podcastName} className="w-9 h-9 object-contain" />
-            <span className="font-display font-black text-xs text-foreground uppercase tracking-tight hidden sm:block">
-              {content.podcastName}
-            </span>
+        {/* Center logo — shrinks on scroll */}
+        <div className="flex items-center justify-center flex-shrink-0">
+          <a href="#" className="flex items-center justify-center">
+            <img
+              src={logo}
+              alt={content.podcastName}
+              style={{
+                width: scrolled ? "40px" : "56px",
+                height: scrolled ? "40px" : "56px",
+                transition: "width 0.3s ease, height 0.3s ease",
+              }}
+              className="object-contain"
+            />
           </a>
         </div>
 
         {/* Right nav + actions */}
-        <div className="hidden md:flex items-center justify-end gap-6">
+        <div className="hidden md:flex items-center justify-end gap-6 flex-1">
           {rightLinks.map(renderLink)}
-
           <button
             onClick={onToggleEdit}
             className={`text-xs font-medium px-3 py-1.5 rounded border transition-all ${
@@ -84,7 +96,7 @@ export default function Navbar({ content, isEditing, onToggleEdit, onContactClic
         </div>
 
         {/* Mobile hamburger */}
-        <div className="md:hidden flex justify-end col-span-2">
+        <div className="md:hidden flex justify-end">
           <button className="p-2 text-muted-foreground" onClick={() => setMenuOpen(v => !v)}>
             {menuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
           </button>

@@ -12,12 +12,100 @@ import Footer from "@/components/Footer";
 import ContactModal from "@/components/ContactModal";
 import CMSPanel from "@/components/CMSPanel";
 
+// Section ordering — defined order is what the user can reorder via CMS
+type SectionId = "about" | "episodes" | "sponsors" | "newsletter" | "engage";
+
+const DEFAULT_ORDER: SectionId[] = ["about", "episodes", "sponsors", "newsletter", "engage"];
+
 const Index = () => {
   const { content, update, updateMany, reset, isEditing, setIsEditing } = useCMS();
-  const { episodes, loading, error, podcastTitle, podcastImage } = useRSSFeed(content.rssFeedUrl);
+  const { episodes, loading, error, podcastTitle } = useRSSFeed(content.rssFeedUrl);
   const [contactOpen, setContactOpen] = useState(false);
 
+  // Section order — stored in CMS if available, else default
+  const sectionOrder: SectionId[] =
+    ((content as any).sectionOrder as SectionId[] | undefined) || DEFAULT_ORDER;
+
+  const moveSectionUp = (id: SectionId) => {
+    const idx = sectionOrder.indexOf(id);
+    if (idx <= 0) return;
+    const next = [...sectionOrder];
+    [next[idx - 1], next[idx]] = [next[idx], next[idx - 1]];
+    update("sectionOrder" as keyof typeof content, next);
+  };
+
+  const moveSectionDown = (id: SectionId) => {
+    const idx = sectionOrder.indexOf(id);
+    if (idx < 0 || idx >= sectionOrder.length - 1) return;
+    const next = [...sectionOrder];
+    [next[idx], next[idx + 1]] = [next[idx + 1], next[idx]];
+    update("sectionOrder" as keyof typeof content, next);
+  };
+
   const latestEp = episodes[0];
+
+  const renderSection = (id: SectionId) => {
+    const controls = isEditing ? (
+      <div className="flex items-center justify-end gap-2 px-6 py-1 bg-amber/10 border-b border-amber/20">
+        <span className="text-[10px] uppercase tracking-widest text-amber/60 mr-auto font-semibold">{id}</span>
+        <button
+          onClick={() => moveSectionUp(id)}
+          className="text-[10px] px-2 py-0.5 rounded border border-amber/30 text-amber hover:bg-amber/20 transition-colors"
+        >
+          ↑ Move Up
+        </button>
+        <button
+          onClick={() => moveSectionDown(id)}
+          className="text-[10px] px-2 py-0.5 rounded border border-amber/30 text-amber hover:bg-amber/20 transition-colors"
+        >
+          ↓ Move Down
+        </button>
+      </div>
+    ) : null;
+
+    switch (id) {
+      case "about":
+        return (
+          <div key="about">
+            {controls}
+            <About content={content} isEditing={isEditing} onUpdate={update} episodes={episodes.slice(0, 4)} />
+          </div>
+        );
+      case "episodes":
+        return (
+          <div key="episodes">
+            {controls}
+            <Episodes
+              content={content} isEditing={isEditing} onUpdate={update}
+              episodes={episodes} loading={loading} error={error} podcastTitle={podcastTitle}
+            />
+          </div>
+        );
+      case "sponsors":
+        return (
+          <div key="sponsors">
+            {controls}
+            <Sponsors content={content} isEditing={isEditing} onUpdate={update} />
+          </div>
+        );
+      case "newsletter":
+        return (
+          <div key="newsletter">
+            {controls}
+            <Newsletter content={content} isEditing={isEditing} onUpdate={update} />
+          </div>
+        );
+      case "engage":
+        return (
+          <div key="engage">
+            {controls}
+            <Engage content={content} isEditing={isEditing} onUpdate={update} onContactClick={() => setContactOpen(true)} />
+          </div>
+        );
+      default:
+        return null;
+    }
+  };
 
   return (
     <div className={isEditing ? "cms-editing" : ""}>
@@ -39,41 +127,7 @@ const Index = () => {
           latestEpisodeLink={latestEp?.link}
         />
 
-        <Episodes
-          content={content}
-          isEditing={isEditing}
-          onUpdate={update}
-          episodes={episodes}
-          loading={loading}
-          error={error}
-          podcastTitle={podcastTitle}
-        />
-
-        <About
-          content={content}
-          isEditing={isEditing}
-          onUpdate={update}
-          episodes={episodes.slice(0, 4)}
-        />
-
-        <Sponsors
-          content={content}
-          isEditing={isEditing}
-          onUpdate={update}
-        />
-
-        <Newsletter
-          content={content}
-          isEditing={isEditing}
-          onUpdate={update}
-        />
-
-        <Engage
-          content={content}
-          isEditing={isEditing}
-          onUpdate={update}
-          onContactClick={() => setContactOpen(true)}
-        />
+        {sectionOrder.map(id => renderSection(id))}
       </main>
 
       <Footer
