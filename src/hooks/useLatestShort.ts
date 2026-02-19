@@ -10,12 +10,14 @@ export interface ShortResult {
 
 export function useLatestShorts(channelId: string | undefined) {
   const [shorts, setShorts] = useState<ShortResult[]>([]);
+  const [mostWatched, setMostWatched] = useState<ShortResult | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     if (!channelId) {
       setShorts([]);
+      setMostWatched(null);
       setError(null);
       return;
     }
@@ -31,11 +33,14 @@ export function useLatestShorts(channelId: string | undefined) {
         if (fnErr) {
           setError(fnErr.message);
           setShorts([]);
+          setMostWatched(null);
         } else if (res?.error) {
           setError(res.error);
           setShorts(res.shorts || []);
+          setMostWatched(res.mostWatched || null);
         } else {
           setShorts(res.shorts || []);
+          setMostWatched(res.mostWatched || null);
         }
       })
       .catch((e) => {
@@ -48,5 +53,5 @@ export function useLatestShorts(channelId: string | undefined) {
     return () => { cancelled = true; };
   }, [channelId]);
 
-  return { shorts, loading, error };
+  return { shorts, mostWatched, loading, error };
 }
