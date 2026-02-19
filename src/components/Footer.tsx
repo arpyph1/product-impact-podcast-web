@@ -74,7 +74,7 @@ const SOCIAL_LINKS = [
 
 export default function Footer({ content, isEditing, onUpdate, onContactClick }: FooterProps) {
   return (
-    <footer className="bg-background">
+    <footer className="bg-background" role="contentinfo">
       <div className="container mx-auto px-6">
         {/* Platform & social links */}
         <div className="py-10 border-b border-border flex flex-col gap-5">

@@ -51,7 +51,7 @@ export default function FAQ({ content, isEditing, onUpdate }: FAQProps) {
   if (!isEditing && faqs.length === 0) return null;
 
   return (
-    <section id="faq" className="bg-background">
+    <section id="faq" className="bg-background" aria-label="Frequently asked questions">
       <div className="container mx-auto px-6">
         <div className="py-16 border-b border-border">
           {/* Two-column layout: title left, accordion right */}

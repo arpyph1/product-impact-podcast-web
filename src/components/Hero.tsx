@@ -144,7 +144,7 @@ function VideoCard({
         ) : (
           <>
             {thumbnail ? (
-              <img src={thumbnail} alt={label} className="absolute inset-0 w-full h-full object-cover" />
+              <img src={thumbnail} alt={title || label} className="absolute inset-0 w-full h-full object-cover" loading="lazy" />
             ) : (
               <div className="absolute inset-0 bg-muted flex items-center justify-center">
                 <span className="text-xs text-muted-foreground text-center px-3">
@@ -230,7 +230,7 @@ export default function Hero({ content, isEditing, onUpdate, episodes = [] }: He
   ];
 
   return (
-    <section id="podcast" className="relative bg-background pt-20">
+    <section id="podcast" className="relative bg-background pt-20" aria-label="Podcast hero">
       <div style={{ paddingTop: "120px" }} />
 
       {/* Headline + platform buttons */}

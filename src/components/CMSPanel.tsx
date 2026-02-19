@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { CMSContent, NavItem } from "@/types/cms";
-import { X, RotateCcw, Settings2, Info } from "lucide-react";
+import { X, RotateCcw, Settings2, Info, Minimize2, Maximize2, PanelLeft, PanelRight } from "lucide-react";
 
 interface CMSPanelProps {
   content: CMSContent;
@@ -14,6 +14,8 @@ type Tab = "general" | "hero" | "about" | "hosts" | "settings" | "typography";
 export default function CMSPanel({ content, onUpdate, onReset, onClose }: CMSPanelProps) {
   const [tab, setTab] = useState<Tab>("general");
   const [resetConfirm, setResetConfirm] = useState(false);
+  const [minimized, setMinimized] = useState(false);
+  const [side, setSide] = useState<"right" | "left">("right");
 
   const tabs: { key: Tab; label: string }[] = [
     { key: "general", label: "General" },
@@ -24,17 +26,52 @@ export default function CMSPanel({ content, onUpdate, onReset, onClose }: CMSPan
     { key: "typography", label: "Typography" },
   ];
 
+  // Minimized state — small floating pill
+  if (minimized) {
+    return (
+      <button
+        onClick={() => setMinimized(false)}
+        className={`fixed bottom-6 z-50 flex items-center gap-2 px-4 py-2.5 rounded-full bg-card border border-border shadow-2xl text-xs font-semibold text-foreground hover:border-primary transition-all ${
+          side === "right" ? "right-6" : "left-6"
+        }`}
+      >
+        <Settings2 className="w-4 h-4 text-primary" />
+        CMS Editor
+        <Maximize2 className="w-3.5 h-3.5 text-muted-foreground" />
+      </button>
+    );
+  }
+
+  const positionClasses = side === "right"
+    ? "right-0 border-l"
+    : "left-0 border-r";
+
   return (
-    <div className="fixed top-16 right-0 bottom-0 z-50 w-80 bg-card border-l border-border shadow-2xl flex flex-col">
-      {/* Header */}
+    <div className={`fixed top-16 bottom-0 z-50 w-80 bg-card ${positionClasses} border-border shadow-2xl flex flex-col transition-all`}>
       <div className="flex items-center justify-between px-4 py-3 border-b border-border">
         <div className="flex items-center gap-2">
           <Settings2 className="w-4 h-4 text-primary" />
           <span className="font-display font-bold text-sm text-foreground">CMS Editor</span>
         </div>
-        <button onClick={onClose} className="text-muted-foreground hover:text-foreground">
-          <X className="w-4 h-4" />
-        </button>
+        <div className="flex items-center gap-1">
+          <button
+            onClick={() => setSide(s => s === "right" ? "left" : "right")}
+            className="p-1.5 text-muted-foreground hover:text-foreground rounded transition-colors"
+            title={`Move to ${side === "right" ? "left" : "right"}`}
+          >
+            {side === "right" ? <PanelLeft className="w-4 h-4" /> : <PanelRight className="w-4 h-4" />}
+          </button>
+          <button
+            onClick={() => setMinimized(true)}
+            className="p-1.5 text-muted-foreground hover:text-foreground rounded transition-colors"
+            title="Minimize"
+          >
+            <Minimize2 className="w-4 h-4" />
+          </button>
+          <button onClick={onClose} className="p-1.5 text-muted-foreground hover:text-foreground rounded transition-colors">
+            <X className="w-4 h-4" />
+          </button>
+        </div>
       </div>
 
       {/* Hint */}

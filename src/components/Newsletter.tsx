@@ -108,7 +108,7 @@ export default function Newsletter({ content, isEditing, onUpdate }: NewsletterP
   }, [substackUrl]);
 
   return (
-    <section id="newsletter" className="bg-background">
+    <section id="newsletter" className="bg-background" aria-label="Newsletter and blog posts">
       <div className="container mx-auto px-6">
         {/* Header */}
         <div className="flex items-end justify-between py-10 border-b border-border gap-4 flex-wrap">

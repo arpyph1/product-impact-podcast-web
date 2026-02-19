@@ -18,7 +18,7 @@ export default function Testimonials() {
   }, []);
 
   return (
-    <section className="bg-background">
+    <section className="bg-background" aria-label="Listener testimonials">
       <div className="container mx-auto px-6">
         <div className="py-20 border-b border-border">
           <div className="max-w-3xl mx-auto text-center">

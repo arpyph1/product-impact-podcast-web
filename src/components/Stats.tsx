@@ -6,7 +6,7 @@ export default function Stats() {
   ];
 
   return (
-    <section className="bg-background">
+    <section className="bg-background" aria-label="Podcast statistics">
       <div className="container mx-auto px-6">
         <div className="py-20 border-b border-border">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-12 text-center">
