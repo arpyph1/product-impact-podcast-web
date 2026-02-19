@@ -13,7 +13,7 @@ export default function About({ content, isEditing, onUpdate }: AboutProps) {
         {/* Editorial layout: [About Us] label left, big text right — NO title, NO tags */}
         <div className="grid md:grid-cols-[200px_1fr] gap-12 py-16 items-start">
           <div className="pt-1">
-            <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground border border-border rounded-full px-3 py-1 inline-block">
+            <p className="text-xs font-semibold uppercase tracking-widest text-primary border border-primary/30 rounded-full px-3 py-1 inline-block">
               [About Us]
             </p>
           </div>

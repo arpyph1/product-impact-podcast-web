@@ -27,9 +27,9 @@ function HostCard({ name, bio, imageUrl, role, nameKey, bioKey, imageKey, roleKe
   const [bioVal, setBioVal] = useState(bio);
 
   return (
-    <div className="flex flex-col gap-5">
-      {/* Large photo — rounded, filter overlay */}
-      <div className="relative w-full aspect-[4/3] rounded-2xl overflow-hidden bg-card border border-border group shadow-xl">
+    <div className="flex flex-col gap-4">
+      {/* Vertical photo — 9:16 like hero video cards */}
+      <div className="relative w-full rounded-xl overflow-hidden bg-card border border-border group shadow-xl" style={{ aspectRatio: "9/16" }}>
         {imageUrl ? (
           <>
             <img
@@ -102,25 +102,35 @@ function HostCard({ name, bio, imageUrl, role, nameKey, bioKey, imageKey, roleKe
 }
 
 export default function Hosts({ content, isEditing, onUpdate }: HostsProps) {
+  const hosts = [
+    {
+      name: content.host1Name, bio: content.host1Bio,
+      imageUrl: content.host1ImageUrl, role: content.host1Role,
+      nameKey: "host1Name" as keyof CMSContent, bioKey: "host1Bio" as keyof CMSContent,
+      imageKey: "host1ImageUrl" as keyof CMSContent, roleKey: "host1Role" as keyof CMSContent,
+    },
+    {
+      name: content.host2Name, bio: content.host2Bio,
+      imageUrl: content.host2ImageUrl, role: content.host2Role,
+      nameKey: "host2Name" as keyof CMSContent, bioKey: "host2Bio" as keyof CMSContent,
+      imageKey: "host2ImageUrl" as keyof CMSContent, roleKey: "host2Role" as keyof CMSContent,
+    },
+  ];
+
   return (
     <section id="hosts" className="bg-background">
       <div className="container mx-auto px-6">
         <div className="py-14 border-b border-border">
-          <div className="grid md:grid-cols-2 gap-10">
-            <HostCard
-              name={content.host1Name} bio={content.host1Bio}
-              imageUrl={content.host1ImageUrl} role={content.host1Role}
-              nameKey="host1Name" bioKey="host1Bio"
-              imageKey="host1ImageUrl" roleKey="host1Role"
-              isEditing={isEditing} onUpdate={onUpdate}
-            />
-            <HostCard
-              name={content.host2Name} bio={content.host2Bio}
-              imageUrl={content.host2ImageUrl} role={content.host2Role}
-              nameKey="host2Name" bioKey="host2Bio"
-              imageKey="host2ImageUrl" roleKey="host2Role"
-              isEditing={isEditing} onUpdate={onUpdate}
-            />
+          {/* Stepped vertical layout like hero video cards */}
+          <div className="max-w-2xl mx-auto">
+            <div className="grid md:grid-cols-2 gap-4 items-start">
+              <div className="mt-0">
+                <HostCard {...hosts[0]} isEditing={isEditing} onUpdate={onUpdate} />
+              </div>
+              <div className="mt-12">
+                <HostCard {...hosts[1]} isEditing={isEditing} onUpdate={onUpdate} />
+              </div>
+            </div>
           </div>
         </div>
       </div>

@@ -97,6 +97,8 @@
 .section-divider {
   height: 1px;
   background: hsl(var(--border));
+  margin-top: 2rem;
+  margin-bottom: 2rem;
 }
 
 /* ── Glow effects — subtle, not neon ── */
