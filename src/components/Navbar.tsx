@@ -49,14 +49,14 @@ export default function Navbar({ content, isEditing, onToggleEdit, onContactClic
       </a>
     );
 
-  // Logo: 84px default → 56px scrolled (50% larger than before: was 56→40)
-  const logoSize = scrolled ? 56 : 84;
+  // Logo: 113px default (84 * 1.35) → 76px scrolled (56 * 1.35)
+  const logoSize = scrolled ? 76 : 113;
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 border-b border-border bg-background/95 backdrop-blur-sm">
       <div
         className="container mx-auto px-6 flex items-center justify-between"
-        style={{ height: scrolled ? "64px" : "88px", transition: "height 0.3s ease" }}
+        style={{ height: scrolled ? "80px" : "112px", transition: "height 0.3s ease" }}
       >
         {/* Left nav links */}
         <nav className="hidden md:flex items-center gap-8 flex-1">

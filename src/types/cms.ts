@@ -12,11 +12,16 @@ export interface CMSContent {
   heroCardBg: string;
   heroImageUrl: string;
   featuredVideoUrl: string;
-  // Three hero video cards
+
+  // Three hero video cards — each has a source mode + optional custom URL
+  // mode: "custom" | "latest" | "second"
+  heroVideo1Mode: string;
   heroVideo1Url: string;
   heroVideo1Label: string;
+  heroVideo2Mode: string;
   heroVideo2Url: string;
   heroVideo2Label: string;
+  heroVideo3Mode: string;
   heroVideo3Url: string;
   heroVideo3Label: string;
 
@@ -44,6 +49,9 @@ export interface CMSContent {
   spotifyUrl: string;
   appleUrl: string;
   youtubeUrl: string;
+  substackUrl: string;
+  linkedinUrl: string;
+  twitterUrl: string;
 
   // Contact
   contactEmail: string;
@@ -54,9 +62,6 @@ export interface CMSContent {
 
   // RSS
   rssFeedUrl: string;
-
-  // Newsletter (Substack)
-  substackUrl: string;
 
   // Podcast name & logo text
   podcastName: string;
@@ -89,11 +94,15 @@ export const defaultCMS: CMSContent = {
   heroCardBg: "coral",
   heroImageUrl: "",
   featuredVideoUrl: "https://www.youtube.com/watch?v=B4EPW7JUMTM",
-  heroVideo1Url: "https://www.youtube.com/watch?v=B4EPW7JUMTM",
+
+  heroVideo1Mode: "latest",
+  heroVideo1Url: "",
   heroVideo1Label: "Latest Episode",
+  heroVideo2Mode: "second",
   heroVideo2Url: "",
-  heroVideo2Label: "Featured Talk",
-  heroVideo3Url: "",
+  heroVideo2Label: "Featured",
+  heroVideo3Mode: "custom",
+  heroVideo3Url: "https://www.youtube.com/watch?v=B4EPW7JUMTM",
   heroVideo3Label: "Top Episode",
 
   aboutTitle: "About the Show",
@@ -117,6 +126,9 @@ export const defaultCMS: CMSContent = {
   spotifyUrl: "#",
   appleUrl: "#",
   youtubeUrl: "#",
+  substackUrl: "",
+  linkedinUrl: "",
+  twitterUrl: "",
 
   contactEmail: "hello@productimpactpodcast.com",
   contactSubject: "Podcast Inquiry",
@@ -124,7 +136,6 @@ export const defaultCMS: CMSContent = {
   footerTagline: "Product stories that actually matter.",
 
   rssFeedUrl: "https://feeds.megaphone.fm/darknet-diaries",
-  substackUrl: "",
 
   podcastName: "Product Impact Podcast",
   podcastTagline: "Product stories that actually matter.",
@@ -137,5 +148,5 @@ export const defaultCMS: CMSContent = {
   navLink3Href: "#engage",
 
   sponsors: [],
-  sectionOrder: ["about", "episodes", "hosts", "platforms", "sponsors", "newsletter"],
+  sectionOrder: ["about", "episodes", "hosts", "sponsors", "newsletter"],
 };

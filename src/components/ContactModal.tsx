@@ -9,15 +9,26 @@ interface ContactModalProps {
   onClose: () => void;
 }
 
+const INQUIRY_TYPES = [
+  "General Inquiry",
+  "Guest Appearance",
+  "Sponsorship / Advertising",
+  "Media & Press",
+  "Partnership",
+  "Feedback",
+  "Other",
+];
+
 export default function ContactModal({ content, isEditing, onUpdate, onClose }: ContactModalProps) {
-  const [form, setForm] = useState({ name: "", email: "", message: "" });
+  const [form, setForm] = useState({ name: "", email: "", inquiryType: "", message: "" });
   const [sent, setSent] = useState(false);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    const mailto = `mailto:${content.contactEmail}?subject=${encodeURIComponent(content.contactSubject)}&body=${encodeURIComponent(
-      `Name: ${form.name}\nEmail: ${form.email}\n\n${form.message}`
-    )}`;
+    const body = `Name: ${form.name}\nEmail: ${form.email}\nInquiry Type: ${form.inquiryType}\n\n${form.message}`;
+    const mailto = `mailto:${content.contactEmail}?subject=${encodeURIComponent(
+      form.inquiryType ? `[${form.inquiryType}] ${content.contactSubject}` : content.contactSubject
+    )}&body=${encodeURIComponent(body)}`;
     window.location.href = mailto;
     setSent(true);
   };
@@ -93,6 +104,21 @@ export default function ContactModal({ content, isEditing, onUpdate, onClose }: 
             </div>
 
             <div>
+              <label className="text-xs text-muted-foreground uppercase tracking-wider mb-1 block">Inquiry Type</label>
+              <select
+                required
+                value={form.inquiryType}
+                onChange={e => setForm(f => ({ ...f, inquiryType: e.target.value }))}
+                className="w-full bg-muted border border-border rounded-lg px-4 py-3 text-sm text-foreground focus:outline-none focus:border-primary transition-colors appearance-none"
+              >
+                <option value="" disabled>Select a type…</option>
+                {INQUIRY_TYPES.map(t => (
+                  <option key={t} value={t}>{t}</option>
+                ))}
+              </select>
+            </div>
+
+            <div>
               <label className="text-xs text-muted-foreground uppercase tracking-wider mb-1 block">Message</label>
               <textarea
                 required
@@ -106,7 +132,7 @@ export default function ContactModal({ content, isEditing, onUpdate, onClose }: 
 
             <button
               type="submit"
-              className="w-full flex items-center justify-center gap-2 py-3 rounded-full bg-primary text-primary-foreground font-semibold hover:bg-primary/80 transition-all glow-purple"
+              className="w-full flex items-center justify-center gap-2 py-3 rounded-full bg-primary text-primary-foreground font-semibold hover:bg-primary/80 transition-all"
             >
               <Send className="w-4 h-4" />
               Send Message
