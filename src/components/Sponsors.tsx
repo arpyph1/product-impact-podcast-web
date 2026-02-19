@@ -57,10 +57,13 @@ export default function Sponsors({ content, isEditing, onUpdate }: SponsorsProps
           <div className="flex items-end justify-between mb-12">
             <div>
               <h2
-                className="font-display font-extrabold leading-none tracking-tight text-foreground"
-                style={{ fontSize: "clamp(2rem, 5vw, 4rem)" }}
+                className="font-display font-extrabold uppercase leading-none tracking-tight text-foreground"
+                style={{ fontSize: content.h2FontSize || "clamp(1.5rem, 3.5vw, 2.8rem)", fontWeight: content.h2FontWeight || "800", letterSpacing: "-0.02em" }}
+                contentEditable={isEditing}
+                suppressContentEditableWarning
+                onBlur={e => isEditing && onUpdate("sponsorsTitle", e.currentTarget.textContent || "")}
               >
-                Our Sponsors
+                {content.sponsorsTitle || "Our Sponsors"}
               </h2>
             </div>
             {isEditing && (
