@@ -52,9 +52,9 @@ export interface CMSContent {
 }
 
 export const defaultCMS: CMSContent = {
-  heroTitle: "Dark Mode",
+  heroTitle: "Product Impact Podcast",
   heroSubtitle: "The Podcast",
-  heroDescription: "Conversations at the intersection of technology, creativity, and culture. We go deep so you don't have to.",
+  heroDescription: "Conversations at the intersection of product, people, and purpose. Real stories from product leaders who are building what's next.",
   heroCta1Text: "Listen Now",
   heroCta1Link: "#episodes",
   heroCta2Text: "Subscribe",
@@ -64,34 +64,34 @@ export const defaultCMS: CMSContent = {
   featuredVideoUrl: "",
 
   aboutTitle: "About the Show",
-  aboutDescription: "We dive deep into the topics that shape our digital world. Expect candid conversations, bold opinions, and perspectives you won't hear anywhere else.",
+  aboutDescription: "We go deep with product leaders, founders, and innovators to unpack the decisions, frameworks, and mindsets behind impactful products.",
   aboutCta: "All Episodes",
   aboutCardBg: "teal",
-  tags: ["Tech", "Design", "Culture", "Future"],
+  tags: ["Product", "Strategy", "Leadership", "Innovation"],
 
-  host1Name: "Alex Rivera",
-  host1Bio: "Tech journalist & digital culture writer with a decade covering Silicon Valley.",
+  host1Name: "Host Name",
+  host1Bio: "Product leader and podcast host.",
   host1ImageUrl: "",
-  host1Role: "Co-Host",
-  host2Name: "Sam Chen",
-  host2Bio: "Product designer & researcher obsessed with how technology shapes human behavior.",
+  host1Role: "Host",
+  host2Name: "Co-Host Name",
+  host2Bio: "Product strategist and speaker.",
   host2ImageUrl: "",
   host2Role: "Co-Host",
 
   engageTitle: "Join the Community",
-  engageDescription: "Get exclusive behind-the-scenes content, early access to episodes, and connect with fellow listeners from around the world.",
+  engageDescription: "Get exclusive behind-the-scenes content, early access to episodes, and connect with fellow product leaders from around the world.",
   engageCta: "Get in Touch",
   spotifyUrl: "#",
   appleUrl: "#",
   youtubeUrl: "#",
 
-  contactEmail: "hello@darkmodepodcast.com",
+  contactEmail: "hello@productimpactpodcast.com",
   contactSubject: "Podcast Inquiry",
 
-  footerTagline: "Broadcasting from the dark side.",
+  footerTagline: "Product stories that actually matter.",
 
   rssFeedUrl: "https://feeds.megaphone.fm/darknet-diaries",
 
-  podcastName: "Dark Mode",
-  podcastTagline: "Go deep or go home.",
+  podcastName: "Product Impact Podcast",
+  podcastTagline: "Product stories that actually matter.",
 };

@@ -33,6 +33,7 @@ const Index = () => {
           onUpdate={update}
           latestEpisodeAudio={latestEp?.audioUrl}
           latestEpisodeTitle={latestEp?.title}
+          latestEpisodeLink={latestEp?.link}
         />
 
         <Episodes

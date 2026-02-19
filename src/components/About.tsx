@@ -8,13 +8,6 @@ interface AboutProps {
   episodes: { title: string; imageUrl: string; pubDate: string; duration: string }[];
 }
 
-const bgColorMap: Record<string, string> = {
-  coral:  "bg-coral/30",
-  teal:   "bg-teal/30",
-  amber:  "bg-amber/30",
-  purple: "bg-primary/30",
-};
-
 function HostCard({
   name, bio, imageUrl, role, nameKey, bioKey, imageKey,
   isEditing, onUpdate,
@@ -24,24 +17,28 @@ function HostCard({
   isEditing: boolean; onUpdate: (k: keyof CMSContent, v: any) => void;
 }) {
   return (
-    <div className="space-y-2">
-      <div className={`aspect-square rounded-xl overflow-hidden relative bg-dark-surface border border-border group`}>
+    <div className="space-y-3">
+      <div className="aspect-square rounded-xl overflow-hidden relative bg-dark-surface border border-border group">
         {imageUrl ? (
           <img
             src={imageUrl}
             alt={name}
-            className="w-full h-full object-cover mix-blend-luminosity opacity-90"
+            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
             onError={e => { (e.target as HTMLImageElement).style.display = "none"; }}
           />
         ) : (
-          <div className="w-full h-full flex items-center justify-center">
-            <User className="w-12 h-12 opacity-20 text-foreground" />
+          <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-primary/20 to-accent/20">
+            <User className="w-12 h-12 opacity-30 text-foreground" />
           </div>
         )}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+        <div className="absolute bottom-0 left-0 right-0 p-3">
+          <p className="font-display font-bold text-sm text-white leading-tight">{name}</p>
+          <p className="text-xs text-white/60">{role}</p>
+        </div>
 
-        {/* Edit image overlay */}
         {isEditing && (
-          <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center gap-2 p-3">
+          <div className="absolute inset-0 bg-black/70 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center gap-2 p-3">
             <p className="text-xs text-white/70">Photo URL:</p>
             <input
               className="w-full text-xs bg-black/80 border border-amber/50 text-white rounded px-2 py-1 focus:outline-none focus:border-amber"
@@ -53,28 +50,31 @@ function HostCard({
         )}
       </div>
 
-      <p
-        className="font-display font-bold text-sm text-foreground line-clamp-1"
-        contentEditable={isEditing}
-        suppressContentEditableWarning
-        onBlur={e => isEditing && onUpdate(nameKey, e.currentTarget.textContent || "")}
-      >
-        {name}
-      </p>
-      <p className="text-xs text-muted-foreground">{role}</p>
+      {isEditing && (
+        <p
+          className="font-display font-bold text-sm text-foreground"
+          contentEditable
+          suppressContentEditableWarning
+          onBlur={e => onUpdate(nameKey, e.currentTarget.textContent || "")}
+        >
+          {name}
+        </p>
+      )}
     </div>
   );
 }
 
 export default function About({ content, isEditing, onUpdate }: AboutProps) {
   return (
-    <section id="about" className="py-6 px-4 bg-background">
+    <section id="about" className="py-4 px-4 bg-background">
       <div className="container mx-auto">
-        {/* Reference: split panel — left=hosts, right=info */}
         <div className="rounded-2xl border border-border/50 overflow-hidden grid lg:grid-cols-2">
 
           {/* LEFT: Host cards */}
-          <div className="bg-dark-surface p-8 border-b lg:border-b-0 lg:border-r border-border/50">
+          <div className="bg-dark-surface p-6 lg:p-8 border-b lg:border-b-0 lg:border-r border-border/50">
+            {/* Accent top line */}
+            <div className="h-0.5 w-12 bg-primary rounded-full mb-5" />
+            <p className="text-xs text-muted-foreground uppercase tracking-widest font-semibold mb-5">Your Hosts</p>
             <div className="grid grid-cols-2 gap-4">
               <HostCard
                 name={content.host1Name} bio={content.host1Bio}
@@ -89,23 +89,21 @@ export default function About({ content, isEditing, onUpdate }: AboutProps) {
                 isEditing={isEditing} onUpdate={onUpdate}
               />
             </div>
-
-            {/* Editing hint */}
             {isEditing && (
-              <p className="mt-4 text-xs text-amber/70 flex items-center gap-1">
-                🖱 Hover host cards to update photo URLs
-              </p>
+              <p className="mt-4 text-xs text-amber/70">🖱 Hover host cards to update photo URLs</p>
             )}
           </div>
 
           {/* RIGHT: About info */}
-          <div className="bg-background p-8 flex flex-col justify-center space-y-5">
+          <div className="bg-background p-6 lg:p-8 flex flex-col justify-center space-y-5">
+            <div className="h-0.5 w-12 bg-accent rounded-full" />
+
             {/* Tags */}
             <div className="flex gap-2 flex-wrap">
               {content.tags.map((tag, idx) => (
                 <span
                   key={tag}
-                  className="text-xs font-bold px-3 py-1 rounded-full bg-amber text-black"
+                  className="text-xs font-bold px-3 py-1 rounded-full border border-primary/40 text-primary bg-primary/10"
                   contentEditable={isEditing}
                   suppressContentEditableWarning
                   onBlur={e => {
@@ -140,7 +138,7 @@ export default function About({ content, isEditing, onUpdate }: AboutProps) {
 
             <a
               href="#episodes"
-              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-primary text-primary-foreground font-semibold text-sm hover:bg-primary/80 transition-all glow-purple w-fit"
+              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-primary text-primary-foreground font-semibold text-sm hover:brightness-110 transition-all glow-orange w-fit"
             >
               <span
                 contentEditable={isEditing}
@@ -161,7 +159,7 @@ export default function About({ content, isEditing, onUpdate }: AboutProps) {
                   placeholder="your@email.com"
                   className="flex-1 bg-muted border border-border rounded-lg px-3 py-2 text-sm text-foreground focus:outline-none focus:border-primary"
                 />
-                <button className="px-4 py-2 rounded-lg bg-primary text-primary-foreground text-sm font-semibold hover:bg-primary/80 transition-all">
+                <button className="px-4 py-2 rounded-lg bg-primary text-primary-foreground text-sm font-semibold hover:brightness-110 transition-all">
                   Join
                 </button>
               </div>
