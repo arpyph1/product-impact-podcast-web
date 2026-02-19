@@ -192,16 +192,16 @@ export default function CMSPanel({ content, onUpdate, onReset, onClose }: CMSPan
   );
 }
 
-function Field({
-  label, value, onChange, type = "text", multiline = false, placeholder,
-}: {
+interface FieldProps {
   label: string;
   value: string;
   onChange: (v: string) => void;
   type?: string;
   multiline?: boolean;
   placeholder?: string;
-}) {
+}
+
+function Field({ label, value, onChange, type = "text", multiline = false, placeholder }: FieldProps) {
   return (
     <div>
       <label className="text-xs text-muted-foreground uppercase tracking-wider block mb-1">{label}</label>
