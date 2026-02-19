@@ -12,7 +12,7 @@ serve(async (req) => {
   }
 
   try {
-    const { channelId } = await req.json();
+    const { channelId, count = 2 } = await req.json();
     if (!channelId) {
       return new Response(
         JSON.stringify({ error: "channelId is required" }),
@@ -28,8 +28,8 @@ serve(async (req) => {
       );
     }
 
-    // Fetch latest 10 videos from channel
-    const searchUrl = `https://www.googleapis.com/youtube/v3/search?part=snippet&channelId=${encodeURIComponent(channelId)}&type=video&order=date&maxResults=10&key=${apiKey}`;
+    // Fetch latest 20 videos from channel to have enough candidates
+    const searchUrl = `https://www.googleapis.com/youtube/v3/search?part=snippet&channelId=${encodeURIComponent(channelId)}&type=video&order=date&maxResults=20&key=${apiKey}`;
     const searchRes = await fetch(searchUrl);
     const searchData = await searchRes.json();
 
@@ -41,38 +41,47 @@ serve(async (req) => {
     }
 
     const items = searchData.items || [];
+    const shorts: Array<{
+      videoId: string;
+      title: string;
+      thumbnail: string;
+      publishedAt: string;
+    }> = [];
 
     // Check each video to see if it's a Short
     for (const item of items) {
+      if (shorts.length >= count) break;
       const videoId = item.id?.videoId;
       if (!videoId) continue;
 
       try {
-        // A YouTube Short URL returns 200; a regular video redirects
         const checkRes = await fetch(`https://www.youtube.com/shorts/${videoId}`, {
           redirect: "manual",
         });
 
         if (checkRes.status === 200) {
-          return new Response(
-            JSON.stringify({
-              videoId,
-              title: item.snippet?.title || "",
-              thumbnail: item.snippet?.thumbnails?.high?.url || "",
-              publishedAt: item.snippet?.publishedAt || "",
-            }),
-            { headers: { ...corsHeaders, "Content-Type": "application/json" } }
-          );
+          shorts.push({
+            videoId,
+            title: item.snippet?.title || "",
+            thumbnail: item.snippet?.thumbnails?.high?.url || "",
+            publishedAt: item.snippet?.publishedAt || "",
+          });
         }
-        // If redirect (301/302) or other, skip — it's not a Short
       } catch {
         // Network error checking this video, skip
       }
     }
 
+    if (shorts.length === 0) {
+      return new Response(
+        JSON.stringify({ error: "No Shorts found in the last 20 uploads", shorts: [] }),
+        { status: 404, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
+
     return new Response(
-      JSON.stringify({ error: "No Shorts found in the last 10 uploads" }),
-      { status: 404, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      JSON.stringify({ shorts }),
+      { headers: { ...corsHeaders, "Content-Type": "application/json" } }
     );
   } catch (err) {
     return new Response(
