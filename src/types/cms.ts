@@ -100,26 +100,26 @@ export const defaultCMS: CMSContent = {
   heroVideo3Url: "https://www.youtube.com/watch?v=B4EPW7JUMTM",
   heroVideo3Label: "Top Episode",
 
-  aboutDescription: "We go deep with product leaders, founders, and innovators to unpack the decisions, frameworks, and mindsets behind impactful products.",
+  aboutDescription: "Deep insights about how to improve the impact of your product. We focus on how to measure AI product success, scale impact, and ensure positive outcomes to teams, businesses, and communities.",
 
-  host1Name: "Host Name",
-  host1Bio: "Former VP of Product at a Fortune 500 company turned podcast host. A decade building products at the intersection of design, data, and human behaviour.",
+  host1Name: "Arpy Dragffy Guerrero",
+  host1Bio: "",
   host1ImageUrl: "",
   host1Role: "Host",
-  host2Name: "Co-Host Name",
-  host2Bio: "Product strategist, speaker, and advisor. Has helped scale teams at three unicorn startups and writes about product culture for leading industry publications.",
+  host2Name: "Brittany Hobbs",
+  host2Bio: "",
   host2ImageUrl: "",
   host2Role: "Co-Host",
-  host1LinkedinUrl: "",
-  host2LinkedinUrl: "",
+  host1LinkedinUrl: "https://www.linkedin.com/in/adragffy/",
+  host2LinkedinUrl: "https://www.linkedin.com/in/brittanyhobbs/",
 
   engageTitle: "Join the Community",
   engageDescription: "Get exclusive behind-the-scenes content, early access to episodes, and connect with fellow product leaders from around the world.",
   spotifyUrl: "#",
   appleUrl: "#",
   youtubeUrl: "#",
-  youtubeChannelId: "",
-  substackUrl: "",
+  youtubeChannelId: "UCb1nY02YcJYZZ_XtvcIBcrw",
+  substackUrl: "https://designofai.substack.com",
   linkedinUrl: "",
   twitterUrl: "",
 
@@ -128,7 +128,7 @@ export const defaultCMS: CMSContent = {
 
   footerTagline: "Product stories that actually matter.",
 
-  rssFeedUrl: "https://feeds.megaphone.fm/darknet-diaries",
+  rssFeedUrl: "https://anchor.fm/s/f32cce5c/podcast/rss",
 
   podcastName: "Product Impact Podcast",
 
@@ -140,7 +140,7 @@ export const defaultCMS: CMSContent = {
   navLink3Href: "#engage",
 
   sponsors: [],
-  sectionOrder: ["episodes", "acclaim", "hosts", "sponsors", "newsletter", "testimonials"],
+  sectionOrder: ["episodes", "acclaim", "hosts", "sponsors", "newsletter", "testimonials", "faq"],
 
   episodesTitle: "Latest Episodes",
   sponsorsTitle: "Our Sponsors",
