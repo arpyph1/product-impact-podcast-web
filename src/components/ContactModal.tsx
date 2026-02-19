@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { CMSContent } from "@/types/cms";
 import { X, Send, Mic2 } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
 
 interface ContactModalProps {
   content: CMSContent;
@@ -22,15 +23,46 @@ const INQUIRY_TYPES = [
 export default function ContactModal({ content, isEditing, onUpdate, onClose }: ContactModalProps) {
   const [form, setForm] = useState({ name: "", email: "", inquiryType: "", message: "" });
   const [sent, setSent] = useState(false);
+  const [sending, setSending] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const body = `Name: ${form.name}\nEmail: ${form.email}\nInquiry Type: ${form.inquiryType}\n\n${form.message}`;
-    const mailto = `mailto:${content.contactEmail}?subject=${encodeURIComponent(
-      form.inquiryType ? `[${form.inquiryType}] ${content.contactSubject}` : content.contactSubject
-    )}&body=${encodeURIComponent(body)}`;
-    window.location.href = mailto;
-    setSent(true);
+    setSending(true);
+    setError(null);
+
+    try {
+      const { data, error: fnErr } = await supabase.functions.invoke("send-contact-form", {
+        body: {
+          name: form.name,
+          email: form.email,
+          inquiryType: form.inquiryType,
+          message: form.message,
+          toEmail: content.contactEmail,
+        },
+      });
+
+      if (fnErr || data?.error) {
+        // Fallback to mailto if edge function fails
+        const body = `Name: ${form.name}\nEmail: ${form.email}\nInquiry Type: ${form.inquiryType}\n\n${form.message}`;
+        const mailto = `mailto:${content.contactEmail}?subject=${encodeURIComponent(
+          form.inquiryType ? `[${form.inquiryType}] ${content.contactSubject}` : content.contactSubject
+        )}&body=${encodeURIComponent(body)}`;
+        window.location.href = mailto;
+      }
+
+      setSent(true);
+    } catch {
+      // Fallback to mailto
+      const body = `Name: ${form.name}\nEmail: ${form.email}\nInquiry Type: ${form.inquiryType}\n\n${form.message}`;
+      const mailto = `mailto:${content.contactEmail}?subject=${encodeURIComponent(
+        form.inquiryType ? `[${form.inquiryType}] ${content.contactSubject}` : content.contactSubject
+      )}&body=${encodeURIComponent(body)}`;
+      window.location.href = mailto;
+      setSent(true);
+    } finally {
+      setSending(false);
+    }
   };
 
   return (
@@ -132,10 +164,11 @@ export default function ContactModal({ content, isEditing, onUpdate, onClose }: 
 
             <button
               type="submit"
-              className="w-full flex items-center justify-center gap-2 py-3 rounded-full bg-primary text-primary-foreground font-semibold hover:bg-primary/80 transition-all"
+              disabled={sending}
+              className="w-full flex items-center justify-center gap-2 py-3 rounded-full bg-primary text-primary-foreground font-semibold hover:bg-primary/80 transition-all disabled:opacity-50"
             >
               <Send className="w-4 h-4" />
-              Send Message
+              {sending ? "Sending…" : "Send Message"}
             </button>
           </form>
         )}

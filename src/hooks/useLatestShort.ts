@@ -1,21 +1,21 @@
 import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 
-interface LatestShortResult {
+export interface ShortResult {
   videoId: string;
   title: string;
   thumbnail: string;
   publishedAt: string;
 }
 
-export function useLatestShort(channelId: string | undefined) {
-  const [data, setData] = useState<LatestShortResult | null>(null);
+export function useLatestShorts(channelId: string | undefined) {
+  const [shorts, setShorts] = useState<ShortResult[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     if (!channelId) {
-      setData(null);
+      setShorts([]);
       setError(null);
       return;
     }
@@ -25,17 +25,17 @@ export function useLatestShort(channelId: string | undefined) {
     setError(null);
 
     supabase.functions
-      .invoke("get-latest-short", { body: { channelId } })
+      .invoke("get-latest-short", { body: { channelId, count: 2 } })
       .then(({ data: res, error: fnErr }) => {
         if (cancelled) return;
         if (fnErr) {
           setError(fnErr.message);
-          setData(null);
+          setShorts([]);
         } else if (res?.error) {
           setError(res.error);
-          setData(null);
+          setShorts(res.shorts || []);
         } else {
-          setData(res as LatestShortResult);
+          setShorts(res.shorts || []);
         }
       })
       .catch((e) => {
@@ -48,5 +48,5 @@ export function useLatestShort(channelId: string | undefined) {
     return () => { cancelled = true; };
   }, [channelId]);
 
-  return { data, loading, error };
+  return { shorts, loading, error };
 }

@@ -85,12 +85,12 @@ export interface CMSContent {
 export const defaultCMS: CMSContent = {
   heroTitle: "Product Impact Podcast",
 
-  heroVideo1Mode: "latest",
+  heroVideo1Mode: "latest_short",
   heroVideo1Url: "",
-  heroVideo1Label: "Latest Episode",
-  heroVideo2Mode: "second",
+  heroVideo1Label: "Latest Short",
+  heroVideo2Mode: "second_short",
   heroVideo2Url: "",
-  heroVideo2Label: "Featured",
+  heroVideo2Label: "2nd Latest Short",
   heroVideo3Mode: "custom",
   heroVideo3Url: "https://www.youtube.com/watch?v=B4EPW7JUMTM",
   heroVideo3Label: "Top Episode",

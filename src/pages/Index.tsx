@@ -72,7 +72,7 @@ const Index = () => {
       case "newsletter":
         return <div key="newsletter">{controls}<Newsletter content={content} isEditing={isEditing} onUpdate={update} /></div>;
       case "testimonials":
-        return <div key="testimonials">{controls}<Testimonials /></div>;
+        return <div key="testimonials">{controls}<Testimonials content={content} /></div>;
       default:
         return null;
     }
