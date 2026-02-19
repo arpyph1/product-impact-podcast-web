@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { CMSContent } from "@/types/cms";
 import { Play, Loader2, AlertCircle } from "lucide-react";
 import { PodcastEpisode } from "@/hooks/useRSSFeed";
@@ -284,28 +284,34 @@ export default function Hero({ content, isEditing, onUpdate, episodes = [] }: He
             })}
           </div>
 
-          {/* Mobile: single column */}
-          <div className="flex flex-col gap-4 md:hidden max-w-[200px] mx-auto">
-            {cards.map((card, i) => {
-              const resolved = resolveCard(card.mode, card.customUrl, shorts);
-              return (
-                <VideoCard
-                  key={i}
-                  videoId={resolved.videoId}
-                  thumbnail={resolved.thumbnail}
-                  title={resolved.title}
-                  label={card.label}
-                  modeKey={card.modeKey}
-                  urlKey={card.urlKey}
-                  mode={card.mode}
-                  customUrl={card.customUrl}
-                  isEditing={isEditing}
-                  onUpdate={onUpdate}
-                  shortsLoading={shortsLoading}
-                  shortsError={shortsError}
-                />
-              );
-            })}
+          {/* Mobile: horizontal swipeable carousel */}
+          <div className="md:hidden">
+            <div
+              className="flex gap-4 overflow-x-auto snap-x snap-mandatory scrollbar-hide pb-4 -mx-6 px-6"
+              style={{ scrollbarWidth: "none", msOverflowStyle: "none", WebkitOverflowScrolling: "touch" }}
+            >
+              {cards.map((card, i) => {
+                const resolved = resolveCard(card.mode, card.customUrl, shorts);
+                return (
+                  <div key={i} className="snap-center shrink-0" style={{ width: "55vw", maxWidth: "220px" }}>
+                    <VideoCard
+                      videoId={resolved.videoId}
+                      thumbnail={resolved.thumbnail}
+                      title={resolved.title}
+                      label={card.label}
+                      modeKey={card.modeKey}
+                      urlKey={card.urlKey}
+                      mode={card.mode}
+                      customUrl={card.customUrl}
+                      isEditing={isEditing}
+                      onUpdate={onUpdate}
+                      shortsLoading={shortsLoading}
+                      shortsError={shortsError}
+                    />
+                  </div>
+                );
+              })}
+            </div>
           </div>
         </div>
       </div>

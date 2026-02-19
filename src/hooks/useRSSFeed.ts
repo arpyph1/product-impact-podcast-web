@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { supabase } from "@/integrations/supabase/client";
 
 export interface PodcastEpisode {
   title: string;
@@ -12,16 +13,14 @@ export interface PodcastEpisode {
   guid: string;
 }
 
-// rss2json free tier only returns ~10 items, so we prefer raw XML for full feeds
-const PROXY_ALLORIGINS = "https://api.allorigins.win/get?url=";
-const PROXY_RSS2JSON = "https://api.rss2json.com/v1/api.json?rss_url=";
+// Client-side fallback proxies
+const RSS2JSON = "https://api.rss2json.com/v1/api.json?rss_url=";
 
 function parseRSSXML(xml: string): { episodes: PodcastEpisode[]; title: string; image: string } {
   const parser = new DOMParser();
   const doc = parser.parseFromString(xml, "text/xml");
 
   const channelTitle = doc.querySelector("channel > title")?.textContent || "";
-
   const channelImage =
     doc.querySelector("channel > image > url")?.textContent ||
     doc.getElementsByTagNameNS("http://www.itunes.com/dtds/podcast-1.0.dtd", "image")[0]?.getAttribute("href") ||
@@ -118,21 +117,22 @@ function parseRss2JsonItems(feed: any, items: any[]): { episodes: PodcastEpisode
 }
 
 async function fetchFeed(feedUrl: string): Promise<{ episodes: PodcastEpisode[]; title: string; image: string }> {
-  // 1. Try allorigins first — returns full XML with ALL episodes
+  // 1. Try server-side proxy (edge function) — no CORS, returns ALL episodes
   try {
-    const r = await fetch(`${PROXY_ALLORIGINS}${encodeURIComponent(feedUrl)}`, { signal: AbortSignal.timeout(10000) });
-    const data = await r.json();
-    if (data.contents && data.contents.length > 100) {
-      const result = parseRSSXML(data.contents);
+    const { data, error } = await supabase.functions.invoke("rss-proxy", {
+      body: { feedUrl },
+    });
+    if (!error && data?.xml) {
+      const result = parseRSSXML(data.xml);
       if (result.episodes.length > 0) return result;
     }
   } catch (e) {
-    console.warn("allorigins failed:", e);
+    console.warn("rss-proxy edge function failed:", e);
   }
 
   // 2. Fallback to rss2json (limited to ~10 items on free tier)
   try {
-    const r2 = await fetch(`${PROXY_RSS2JSON}${encodeURIComponent(feedUrl)}`, { signal: AbortSignal.timeout(10000) });
+    const r2 = await fetch(`${RSS2JSON}${encodeURIComponent(feedUrl)}`, { signal: AbortSignal.timeout(10000) });
     const data2 = await r2.json();
     if (data2.status === "ok" && Array.isArray(data2.items) && data2.items.length > 0) {
       return parseRss2JsonItems(data2.feed, data2.items);
@@ -141,7 +141,7 @@ async function fetchFeed(feedUrl: string): Promise<{ episodes: PodcastEpisode[];
     console.warn("rss2json failed:", e);
   }
 
-  throw new Error("All proxies failed");
+  throw new Error("All feed sources failed");
 }
 
 export function useRSSFeed(feedUrl: string) {
