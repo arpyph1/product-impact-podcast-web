@@ -1,4 +1,5 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
+import { Resend } from "npm:resend@4.0.0";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -21,7 +22,7 @@ serve(async (req) => {
       );
     }
 
-    const apiKey = Deno.env.get("SENDGRID_API_KEY");
+    const apiKey = Deno.env.get("RESEND_API_KEY");
     if (!apiKey) {
       return new Response(
         JSON.stringify({ error: "Email service not configured" }),
@@ -29,40 +30,28 @@ serve(async (req) => {
       );
     }
 
+    const resend = new Resend(apiKey);
     const subject = inquiryType ? `[${inquiryType}] Contact from ${name}` : `Contact from ${name}`;
 
-    const response = await fetch("https://api.sendgrid.com/v3/mail/send", {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${apiKey}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        personalizations: [{ to: [{ email: toEmail }] }],
-        from: { email: toEmail, name: "Contact Form" },
-        reply_to: { email, name },
-        subject,
-        content: [
-          {
-            type: "text/html",
-            value: `
-              <h2>New Contact Form Submission</h2>
-              <p><strong>Name:</strong> ${name}</p>
-              <p><strong>Email:</strong> ${email}</p>
-              <p><strong>Inquiry Type:</strong> ${inquiryType || "N/A"}</p>
-              <hr />
-              <p>${message.replace(/\n/g, "<br />")}</p>
-            `,
-          },
-        ],
-      }),
+    const { error: sendError } = await resend.emails.send({
+      from: `Contact Form <noreply@productimpactpod.com>`,
+      to: [toEmail],
+      replyTo: email,
+      subject,
+      html: `
+        <h2>New Contact Form Submission</h2>
+        <p><strong>Name:</strong> ${name}</p>
+        <p><strong>Email:</strong> ${email}</p>
+        <p><strong>Inquiry Type:</strong> ${inquiryType || "N/A"}</p>
+        <hr />
+        <p>${message.replace(/\n/g, "<br />")}</p>
+      `,
     });
 
-    if (!response.ok) {
-      const errBody = await response.text();
-      console.error("SendGrid error:", response.status, errBody);
+    if (sendError) {
+      console.error("Resend error:", sendError);
       return new Response(
-        JSON.stringify({ error: "Failed to send email", details: errBody }),
+        JSON.stringify({ error: "Failed to send email", details: JSON.stringify(sendError) }),
         { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
