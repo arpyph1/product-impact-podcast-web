@@ -14,6 +14,7 @@ import Testimonials from "@/components/Testimonials";
 import Footer from "@/components/Footer";
 import ContactModal from "@/components/ContactModal";
 import CMSPanel from "@/components/CMSPanel";
+import HeadMeta from "@/components/HeadMeta";
 
 // Section ordering — about is now merged into hero
 type SectionId = "acclaim" | "episodes" | "hosts" | "sponsors" | "newsletter" | "testimonials" | "faq";
@@ -96,6 +97,7 @@ const Index = () => {
 
   return (
     <div className={isEditing ? "cms-editing" : ""}>
+      <HeadMeta content={content} />
       <Navbar
         content={content}
         isEditing={isEditing}

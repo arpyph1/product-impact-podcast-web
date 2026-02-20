@@ -11,7 +11,7 @@ interface CMSPanelProps {
   isAdmin?: boolean;
 }
 
-type Tab = "general" | "hero" | "about" | "hosts" | "settings" | "typography" | "team";
+type Tab = "general" | "hero" | "about" | "hosts" | "settings" | "typography" | "team" | "seo";
 
 export default function CMSPanel({ content, onUpdate, onReset, onClose, isAdmin }: CMSPanelProps) {
   const [tab, setTab] = useState<Tab>("general");
@@ -24,6 +24,7 @@ export default function CMSPanel({ content, onUpdate, onReset, onClose, isAdmin 
     { key: "hero", label: "Hero" },
     { key: "about", label: "About" },
     { key: "hosts", label: "Hosts" },
+    { key: "seo", label: "SEO" },
     { key: "settings", label: "Settings" },
     { key: "typography", label: "Typography" },
     ...(isAdmin ? [{ key: "team" as Tab, label: "Team" }] : []),
@@ -220,6 +221,29 @@ export default function CMSPanel({ content, onUpdate, onReset, onClose, isAdmin 
                 <Field label="Role / Title" value={content.host2Role} onChange={v => onUpdate("host2Role", v)} />
                 <Field label="Bio" value={content.host2Bio} onChange={v => onUpdate("host2Bio", v)} multiline />
                 <Field label="Photo URL" value={content.host2ImageUrl} onChange={v => onUpdate("host2ImageUrl", v)} placeholder="https://..." />
+              </div>
+            </div>
+          </>
+        )}
+
+        {tab === "seo" && (
+          <>
+            <Field label="Meta Description" value={content.metaDescription} onChange={v => onUpdate("metaDescription", v)} multiline placeholder="Page description for search engines (≤160 chars)" />
+            <Field label="Google Search Console ID" value={content.googleSearchConsoleId} onChange={v => onUpdate("googleSearchConsoleId", v)} placeholder="Verification string from GSC" />
+            <div className="border-t border-border pt-4">
+              <p className="text-xs text-muted-foreground uppercase tracking-widest font-semibold mb-3">Open Graph</p>
+              <div className="space-y-3">
+                <Field label="OG Title" value={content.ogTitle} onChange={v => onUpdate("ogTitle", v)} />
+                <Field label="OG Description" value={content.ogDescription} onChange={v => onUpdate("ogDescription", v)} multiline />
+                <Field label="OG Image URL" value={content.ogImage} onChange={v => onUpdate("ogImage", v)} placeholder="https://..." />
+              </div>
+            </div>
+            <div className="border-t border-border pt-4">
+              <p className="text-xs text-muted-foreground uppercase tracking-widest font-semibold mb-3">Twitter / X Card</p>
+              <div className="space-y-3">
+                <Field label="Twitter Title" value={content.twitterTitle} onChange={v => onUpdate("twitterTitle", v)} />
+                <Field label="Twitter Description" value={content.twitterDescription} onChange={v => onUpdate("twitterDescription", v)} multiline />
+                <Field label="Twitter Image URL" value={content.twitterImage} onChange={v => onUpdate("twitterImage", v)} placeholder="https://..." />
               </div>
             </div>
           </>

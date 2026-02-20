@@ -96,6 +96,16 @@ export interface CMSContent {
   // Sponsor CTA
   sponsorCtaTitle: string;
   sponsorCtaDescription: string;
+
+  // SEO / Meta
+  metaDescription: string;
+  googleSearchConsoleId: string;
+  ogTitle: string;
+  ogDescription: string;
+  ogImage: string;
+  twitterTitle: string;
+  twitterDescription: string;
+  twitterImage: string;
 }
 
 
@@ -177,4 +187,13 @@ export const defaultCMS: CMSContent = {
 
   sponsorCtaTitle: "Interested in sponsoring?",
   sponsorCtaDescription: "Reach thousands of engaged product leaders every week.",
+
+  metaDescription: "Uncover the impact of AI on product management, design, GTM. We interview tech leaders to define how AI products create value and scale adoption.",
+  googleSearchConsoleId: "",
+  ogTitle: "Product Impact Podcast | AI Strategy & Value Creation",
+  ogDescription: "Uncover the impact of AI on product management, design, GTM. We interview tech leaders to define how AI products create value and scale adoption.",
+  ogImage: "",
+  twitterTitle: "Product Impact Podcast | AI Strategy & Value Creation",
+  twitterDescription: "Uncover the impact of AI on product management, design, GTM. We interview tech leaders to define how AI products create value and scale adoption.",
+  twitterImage: "",
 };
