@@ -34,7 +34,7 @@ serve(async (req) => {
     const subject = inquiryType ? `[${inquiryType}] Contact from ${name}` : `Contact from ${name}`;
 
     const { error: sendError } = await resend.emails.send({
-      from: `Contact Form <noreply@productimpactpod.com>`,
+      from: `Product Impact Podcast <noreply@ph1.ca>`,
       to: [toEmail],
       replyTo: email,
       subject,
