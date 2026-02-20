@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useCMS } from "@/hooks/useCMS";
 import { useRSSFeed } from "@/hooks/useRSSFeed";
+import { useAuth } from "@/hooks/useAuth";
 import Navbar from "@/components/Navbar";
 import Hero from "@/components/Hero";
 import Episodes from "@/components/Episodes";
@@ -22,6 +23,7 @@ const DEFAULT_ORDER: SectionId[] = ["episodes", "acclaim", "hosts", "sponsors", 
 const Index = () => {
   const { content, update, updateMany, reset, isEditing, setIsEditing } = useCMS();
   const { episodes, loading, error, podcastTitle } = useRSSFeed(content.rssFeedUrl);
+  const { user, canEdit, isAdmin, signInWithGoogle, signOut } = useAuth();
   const [contactOpen, setContactOpen] = useState(false);
   const [contactInquiry, setContactInquiry] = useState("");
 
@@ -82,9 +84,29 @@ const Index = () => {
     }
   };
 
+  const handleToggleEdit = () => {
+    if (!user) {
+      signInWithGoogle();
+      return;
+    }
+    if (canEdit) {
+      setIsEditing(v => !v);
+    }
+  };
+
   return (
     <div className={isEditing ? "cms-editing" : ""}>
-      <Navbar content={content} isEditing={isEditing} onToggleEdit={() => setIsEditing(v => !v)} onContactClick={() => { setContactInquiry(""); setContactOpen(true); }} onUpdate={update} />
+      <Navbar
+        content={content}
+        isEditing={isEditing}
+        onToggleEdit={handleToggleEdit}
+        onContactClick={() => { setContactInquiry(""); setContactOpen(true); }}
+        onUpdate={update}
+        canEdit={canEdit}
+        user={user}
+        onSignIn={signInWithGoogle}
+        onSignOut={signOut}
+      />
 
       <main>
         <Hero content={content} isEditing={isEditing} onUpdate={update} latestEpisodeAudio={latestEp?.audioUrl} latestEpisodeTitle={latestEp?.title} latestEpisodeLink={latestEp?.link} episodes={episodes} />
@@ -95,7 +117,7 @@ const Index = () => {
 
       {contactOpen && <ContactModal content={content} isEditing={isEditing} onUpdate={update} onClose={() => setContactOpen(false)} defaultInquiryType={contactInquiry} />}
 
-      {isEditing && <CMSPanel content={content} onUpdate={update} onReset={reset} onClose={() => setIsEditing(false)} />}
+      {isEditing && canEdit && <CMSPanel content={content} onUpdate={update} onReset={reset} onClose={() => setIsEditing(false)} isAdmin={isAdmin} />}
     </div>
   );
 };

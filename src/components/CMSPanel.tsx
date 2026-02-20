@@ -1,17 +1,19 @@
 import { useState } from "react";
 import { CMSContent, NavItem } from "@/types/cms";
 import { X, RotateCcw, Settings2, Info, Minimize2, Maximize2, PanelLeft, PanelRight } from "lucide-react";
+import EditorManager from "./EditorManager";
 
 interface CMSPanelProps {
   content: CMSContent;
   onUpdate: (key: keyof CMSContent, value: any) => void;
   onReset: () => void;
   onClose: () => void;
+  isAdmin?: boolean;
 }
 
-type Tab = "general" | "hero" | "about" | "hosts" | "settings" | "typography";
+type Tab = "general" | "hero" | "about" | "hosts" | "settings" | "typography" | "team";
 
-export default function CMSPanel({ content, onUpdate, onReset, onClose }: CMSPanelProps) {
+export default function CMSPanel({ content, onUpdate, onReset, onClose, isAdmin }: CMSPanelProps) {
   const [tab, setTab] = useState<Tab>("general");
   const [resetConfirm, setResetConfirm] = useState(false);
   const [minimized, setMinimized] = useState(false);
@@ -24,6 +26,7 @@ export default function CMSPanel({ content, onUpdate, onReset, onClose }: CMSPan
     { key: "hosts", label: "Hosts" },
     { key: "settings", label: "Settings" },
     { key: "typography", label: "Typography" },
+    ...(isAdmin ? [{ key: "team" as Tab, label: "Team" }] : []),
   ];
 
   // Minimized state — small floating pill
@@ -237,6 +240,10 @@ export default function CMSPanel({ content, onUpdate, onReset, onClose }: CMSPan
               </p>
             </div>
           </>
+        )}
+
+        {tab === "team" && isAdmin && (
+          <EditorManager />
         )}
       </div>
 
