@@ -115,7 +115,7 @@ export default function Footer({ content, isEditing, onUpdate, onContactClick }:
 
         {/* Main footer row */}
         <div className="py-16 grid md:grid-cols-2 gap-10 items-start border-b border-border">
-          <div className="flex items-start gap-4">
+          <div className="flex items-center gap-4">
             {/* Transparent logo — same as nav */}
             <img src={logo} alt={content.podcastName} className="w-32 h-32 object-contain" style={{ mixBlendMode: "normal" }} />
             <div>

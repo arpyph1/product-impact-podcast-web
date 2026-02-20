@@ -92,6 +92,10 @@ export interface CMSContent {
   // FAQ
   faqs: FAQItem[];
   faqTitle: string;
+
+  // Sponsor CTA
+  sponsorCtaTitle: string;
+  sponsorCtaDescription: string;
 }
 
 
@@ -170,4 +174,7 @@ export const defaultCMS: CMSContent = {
 
   faqs: [],
   faqTitle: "Frequently Asked Questions",
+
+  sponsorCtaTitle: "Interested in sponsoring?",
+  sponsorCtaDescription: "Reach thousands of engaged product leaders every week.",
 };

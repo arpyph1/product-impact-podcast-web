@@ -172,8 +172,22 @@ export default function Sponsors({ content, isEditing, onUpdate, onContactClick 
           {/* Become a sponsor CTA */}
           <div className="mt-8 flex items-center justify-between py-6 px-8 rounded-xl border border-border bg-card">
             <div>
-              <p className="font-display font-bold text-foreground text-lg">Interested in sponsoring?</p>
-              <p className="text-muted-foreground text-sm mt-0.5">Reach thousands of engaged product leaders every week.</p>
+              <p
+                className="font-display font-bold text-foreground text-lg"
+                contentEditable={isEditing}
+                suppressContentEditableWarning
+                onBlur={e => isEditing && onUpdate("sponsorCtaTitle" as keyof CMSContent, e.currentTarget.textContent || "")}
+              >
+                {(content as any).sponsorCtaTitle || "Interested in sponsoring?"}
+              </p>
+              <p
+                className="text-muted-foreground text-sm mt-0.5"
+                contentEditable={isEditing}
+                suppressContentEditableWarning
+                onBlur={e => isEditing && onUpdate("sponsorCtaDescription" as keyof CMSContent, e.currentTarget.textContent || "")}
+              >
+                {(content as any).sponsorCtaDescription || "Reach thousands of engaged product leaders every week."}
+              </p>
             </div>
             <button
               onClick={() => onContactClick?.("Sponsorship / Advertising")}
