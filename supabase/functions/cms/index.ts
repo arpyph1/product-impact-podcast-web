@@ -18,7 +18,6 @@ serve(async (req) => {
 
   try {
     if (req.method === "GET") {
-      // Read CMS content
       const { data, error } = await supabase
         .from("cms_content")
         .select("data, updated_at")
@@ -33,6 +32,44 @@ serve(async (req) => {
     }
 
     if (req.method === "POST") {
+      // Verify the caller is an admin or editor
+      const authHeader = req.headers.get("authorization");
+      if (!authHeader) {
+        return new Response(JSON.stringify({ error: "Unauthorized" }), {
+          status: 401,
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
+      }
+
+      const anonKey = Deno.env.get("SUPABASE_ANON_KEY")!;
+      const userClient = createClient(supabaseUrl, anonKey, {
+        global: { headers: { Authorization: authHeader } },
+      });
+
+      const { data: { user }, error: authErr } = await userClient.auth.getUser();
+      if (authErr || !user) {
+        return new Response(JSON.stringify({ error: "Unauthorized" }), {
+          status: 401,
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
+      }
+
+      // Check role
+      const { data: roleData } = await supabase
+        .from("user_roles")
+        .select("role")
+        .eq("user_id", user.id)
+        .in("role", ["admin", "editor"])
+        .limit(1)
+        .single();
+
+      if (!roleData) {
+        return new Response(JSON.stringify({ error: "Forbidden: no edit access" }), {
+          status: 403,
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
+      }
+
       const body = await req.json();
       const cmsData = body.data;
 
@@ -43,7 +80,6 @@ serve(async (req) => {
         );
       }
 
-      // Get the existing row id
       const { data: existing, error: fetchErr } = await supabase
         .from("cms_content")
         .select("id")
@@ -52,7 +88,6 @@ serve(async (req) => {
 
       if (fetchErr) throw fetchErr;
 
-      // Update the single row
       const { error: updateErr } = await supabase
         .from("cms_content")
         .update({ data: cmsData, updated_at: new Date().toISOString() })
