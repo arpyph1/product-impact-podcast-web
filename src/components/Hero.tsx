@@ -327,7 +327,7 @@ export default function Hero({ content, isEditing, onUpdate, episodes = [] }: He
       <div className="container mx-auto px-6 pb-16">
         <div className="max-w-3xl mx-auto text-center">
           <h2
-            className="text-muted-foreground leading-relaxed font-light"
+            className="text-secondary-foreground leading-relaxed font-light"
             style={{ fontSize: "1.5rem", lineHeight: "1.7", fontFamily: "'Inter', system-ui, sans-serif" }}
             contentEditable={isEditing}
             suppressContentEditableWarning
