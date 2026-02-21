@@ -57,7 +57,7 @@ export default function Sponsors({ content, isEditing, onUpdate, onContactClick 
           {/* Header */}
           <div className="flex items-end justify-between mb-12">
             <div>
-              <h2
+              <h3
                 className="font-display font-extrabold uppercase leading-none tracking-tight text-foreground"
                 style={{ fontSize: content.h2FontSize || "clamp(1.5rem, 3.5vw, 2.8rem)", fontWeight: content.h2FontWeight || "800", letterSpacing: "-0.02em" }}
                 contentEditable={isEditing}
@@ -65,7 +65,7 @@ export default function Sponsors({ content, isEditing, onUpdate, onContactClick 
                 onBlur={e => isEditing && onUpdate("sponsorsTitle", e.currentTarget.textContent || "")}
               >
                 {content.sponsorsTitle || "Our Sponsors"}
-              </h2>
+              </h3>
             </div>
             {isEditing && (
               <button
