@@ -36,6 +36,9 @@ export interface CMSContent {
   host1LinkedinUrl: string;
   host2LinkedinUrl: string;
 
+  // Hero description (h2)
+  heroDescription: string;
+
   // Engage
   engageTitle: string;
   engageDescription: string;
@@ -46,6 +49,9 @@ export interface CMSContent {
   substackUrl: string;
   linkedinUrl: string;
   twitterUrl: string;
+
+  // Instagram
+  instagramUrl: string;
 
   // Contact
   contactEmail: string;
@@ -93,6 +99,13 @@ export interface CMSContent {
   faqs: FAQItem[];
   faqTitle: string;
 
+  // Testimonials
+  testimonials: string[];
+
+  // Subscribe section
+  subscribeLabel: string;
+  subscribeUrl: string;
+
   // Sponsor CTA
   sponsorCtaTitle: string;
   sponsorCtaDescription: string;
@@ -119,8 +132,10 @@ export const defaultCMS: CMSContent = {
   heroVideo2Url: "",
   heroVideo2Label: "2nd Latest Short",
   heroVideo3Mode: "custom",
-  heroVideo3Url: "https://www.youtube.com/watch?v=B4EPW7JUMTM",
+  heroVideo3Url: "",
   heroVideo3Label: "Top Episode",
+
+  heroDescription: "Prove impact. Improve impact. Scale impact. Follow the Product Impact Podcast to learn frameworks and strategies to ensure your product is delivering impact to users, teams, businesses, and communities. We investigate enterprise adoption and highlight builders/startups disrupting value creation.",
 
   aboutDescription: "Deep insights about how to improve the impact of your product. We focus on how to measure AI product success, scale impact, and ensure positive outcomes to teams, businesses, and communities.",
 
@@ -144,6 +159,7 @@ export const defaultCMS: CMSContent = {
   substackUrl: "https://designofai.substack.com",
   linkedinUrl: "",
   twitterUrl: "",
+  instagramUrl: "",
 
   contactEmail: "hello@productimpactpodcast.com",
   contactSubject: "Podcast Inquiry",
@@ -171,7 +187,7 @@ export const defaultCMS: CMSContent = {
   navLink3Href: "#engage",
 
   sponsors: [],
-  sectionOrder: ["episodes", "acclaim", "hosts", "sponsors", "newsletter", "testimonials", "faq"],
+  sectionOrder: ["episodes", "acclaim", "hosts", "sponsors", "newsletter", "subscribe", "testimonials", "faq"],
 
   episodesTitle: "Latest Episodes",
   sponsorsTitle: "Our Sponsors",
@@ -184,6 +200,15 @@ export const defaultCMS: CMSContent = {
 
   faqs: [],
   faqTitle: "Frequently Asked Questions",
+
+  testimonials: [
+    "Great episode! Thoroughly enjoyed it! Learned a lot and very inspirational! Thank you",
+    "Thank you for the sanity. I am a data scientist and the hype is completely out of control in my field. I have been pushing hard in my professional communities that we need to be more honest about the capabilities and limitations of LLMs",
+    "Great episode. I love the show and always have great takeaways that help me. Big thank you to the team that makes this happen",
+  ],
+
+  subscribeLabel: "Never miss our AI Strategy Resources",
+  subscribeUrl: "https://designofai.substack.com",
 
   sponsorCtaTitle: "Interested in sponsoring?",
   sponsorCtaDescription: "Reach thousands of engaged product leaders every week.",

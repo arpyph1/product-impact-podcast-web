@@ -136,6 +136,7 @@ export default function CMSPanel({ content, onUpdate, onReset, onClose, isAdmin 
                 <Field label="YouTube Channel ID" value={content.youtubeChannelId} onChange={v => onUpdate("youtubeChannelId", v)} placeholder="e.g. UCxxxxxxxxxx" />
                 <Field label="LinkedIn URL" value={content.linkedinUrl} onChange={v => onUpdate("linkedinUrl", v)} />
                 <Field label="Twitter/X URL" value={content.twitterUrl} onChange={v => onUpdate("twitterUrl", v)} />
+                <Field label="Instagram URL" value={content.instagramUrl} onChange={v => onUpdate("instagramUrl", v)} />
                 <Field label="Substack URL" value={content.substackUrl} onChange={v => onUpdate("substackUrl", v)} />
               </div>
             </div>
@@ -145,6 +146,7 @@ export default function CMSPanel({ content, onUpdate, onReset, onClose, isAdmin 
         {tab === "hero" && (
           <>
             <Field label="Hero Title" value={content.heroTitle} onChange={v => onUpdate("heroTitle", v)} />
+            <Field label="Hero Description (supports &lt;br/&gt;)" value={content.heroDescription} onChange={v => onUpdate("heroDescription", v)} multiline />
           </>
         )}
 

@@ -11,15 +11,16 @@ import Sponsors from "@/components/Sponsors";
 import FAQ from "@/components/FAQ";
 import Newsletter from "@/components/Newsletter";
 import Testimonials from "@/components/Testimonials";
+import Subscribe from "@/components/Subscribe";
 import Footer from "@/components/Footer";
 import ContactModal from "@/components/ContactModal";
 import CMSPanel from "@/components/CMSPanel";
 import HeadMeta from "@/components/HeadMeta";
 
 // Section ordering — about is now merged into hero
-type SectionId = "acclaim" | "episodes" | "hosts" | "sponsors" | "newsletter" | "testimonials" | "faq";
+type SectionId = "acclaim" | "episodes" | "hosts" | "sponsors" | "newsletter" | "subscribe" | "testimonials" | "faq";
 
-const DEFAULT_ORDER: SectionId[] = ["episodes", "acclaim", "hosts", "sponsors", "newsletter", "testimonials", "faq"];
+const DEFAULT_ORDER: SectionId[] = ["episodes", "acclaim", "hosts", "sponsors", "newsletter", "subscribe", "testimonials", "faq"];
 
 const Index = () => {
   const { content, update, updateMany, reset, isEditing, setIsEditing } = useCMS();
@@ -29,7 +30,7 @@ const Index = () => {
   const [contactInquiry, setContactInquiry] = useState("");
 
   const rawOrder = ((content as any).sectionOrder as string[] | undefined) || DEFAULT_ORDER;
-  const knownIds = new Set<SectionId>(["acclaim", "episodes", "hosts", "sponsors", "newsletter", "testimonials", "faq"]);
+  const knownIds = new Set<SectionId>(["acclaim", "episodes", "hosts", "sponsors", "newsletter", "subscribe", "testimonials", "faq"]);
   const sectionOrder: SectionId[] = rawOrder.filter(id => knownIds.has(id as SectionId)) as SectionId[];
   DEFAULT_ORDER.forEach(id => { if (!sectionOrder.includes(id)) sectionOrder.push(id); });
 
@@ -77,7 +78,9 @@ const Index = () => {
       case "newsletter":
         return <div key="newsletter">{controls}<Newsletter content={content} isEditing={isEditing} onUpdate={update} /></div>;
       case "testimonials":
-        return <div key="testimonials">{controls}<Testimonials /></div>;
+        return <div key="testimonials">{controls}<Testimonials content={content} isEditing={isEditing} onUpdate={update} /></div>;
+      case "subscribe":
+        return <div key="subscribe">{controls}<Subscribe content={content} isEditing={isEditing} onUpdate={update} /></div>;
       case "faq":
         return <div key="faq">{controls}<FAQ content={content} isEditing={isEditing} onUpdate={update} /></div>;
       default:
