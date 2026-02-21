@@ -323,18 +323,23 @@ export default function Hero({ content, isEditing, onUpdate, episodes = [] }: He
         </div>
       </div>
 
-      {/* About description */}
+      {/* Hero description — h2 for SEO */}
       <div className="container mx-auto px-6 pb-16">
         <div className="max-w-3xl mx-auto text-center">
-          <p
+          <h2
             className="text-muted-foreground leading-relaxed"
             style={{ fontSize: "1.5rem", lineHeight: "1.6" }}
             contentEditable={isEditing}
             suppressContentEditableWarning
-            onBlur={e => isEditing && onUpdate("aboutDescription", e.currentTarget.textContent || "")}
-          >
-            {content.aboutDescription}
-          </p>
+            onBlur={e => {
+              if (isEditing) {
+                // Preserve <br> tags from the HTML
+                const html = e.currentTarget.innerHTML || "";
+                onUpdate("heroDescription", html);
+              }
+            }}
+            dangerouslySetInnerHTML={{ __html: content.heroDescription || content.aboutDescription }}
+          />
         </div>
       </div>
 

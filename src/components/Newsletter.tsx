@@ -170,7 +170,7 @@ export default function Newsletter({ content, isEditing, onUpdate }: NewsletterP
                 href={post.link}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="group flex items-start justify-between gap-6 py-6 hover:bg-card/40 transition-colors px-4 -mx-1 rounded max-w-[60%] mx-auto"
+                className="group flex items-start justify-between gap-6 py-6 hover:bg-card/40 transition-colors px-4 -mx-1 rounded md:max-w-[60%] md:mx-auto"
               >
                 <div className="flex-1 min-w-0">
                   {post.pubDate && (
