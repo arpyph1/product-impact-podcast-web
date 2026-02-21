@@ -170,7 +170,7 @@ export default function Sponsors({ content, isEditing, onUpdate, onContactClick 
           )}
 
           {/* Become a sponsor CTA */}
-          <div className="mt-8 flex items-center justify-between py-6 px-8 rounded-xl border border-border bg-card">
+          <div className="mt-8 flex flex-col md:flex-row md:items-center md:justify-between gap-4 py-6 px-8 rounded-xl border border-border bg-card">
             <div>
               <p
                 className="font-display font-bold text-foreground text-lg"
@@ -191,7 +191,7 @@ export default function Sponsors({ content, isEditing, onUpdate, onContactClick 
             </div>
             <button
               onClick={() => onContactClick?.("Sponsorship / Advertising")}
-              className="flex items-center gap-2 px-6 py-2.5 rounded-full bg-primary text-primary-foreground font-semibold text-sm hover:brightness-110 transition-all shrink-0"
+              className="flex items-center gap-2 px-6 py-2.5 rounded-full bg-primary text-primary-foreground font-semibold text-sm hover:brightness-110 transition-all shrink-0 w-full md:w-auto justify-center"
             >
               Get in Touch <ArrowUpRight className="w-3.5 h-3.5" />
             </button>
