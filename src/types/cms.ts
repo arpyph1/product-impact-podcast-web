@@ -95,6 +95,9 @@ export interface CMSContent {
   h2FontSize: string;
   h2FontWeight: string;
 
+  // Acclaim / Stats
+  acclaimStats: { value: string; label: string }[];
+
   // FAQ
   faqs: FAQItem[];
   faqTitle: string;
@@ -187,7 +190,7 @@ export const defaultCMS: CMSContent = {
   navLink3Href: "#engage",
 
   sponsors: [],
-  sectionOrder: ["episodes", "acclaim", "hosts", "sponsors", "newsletter", "subscribe", "testimonials", "faq"],
+  sectionOrder: ["episodes", "acclaim", "subscribe", "hosts", "sponsors", "newsletter", "testimonials", "faq"],
 
   episodesTitle: "Latest Episodes",
   sponsorsTitle: "Our Sponsors",
@@ -197,6 +200,12 @@ export const defaultCMS: CMSContent = {
   h1FontWeight: "900",
   h2FontSize: "clamp(1.5rem, 3.5vw, 2.8rem)",
   h2FontWeight: "800",
+
+  acclaimStats: [
+    { value: "Top 2%", label: "Most Shared Podcasts" },
+    { value: "#1", label: "AI Strategy Podcast" },
+    { value: "10,000+", label: "Followers" },
+  ],
 
   faqs: [],
   faqTitle: "Frequently Asked Questions",
