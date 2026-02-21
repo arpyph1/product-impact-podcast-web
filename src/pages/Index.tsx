@@ -20,7 +20,7 @@ import HeadMeta from "@/components/HeadMeta";
 // Section ordering — about is now merged into hero
 type SectionId = "acclaim" | "episodes" | "hosts" | "sponsors" | "newsletter" | "subscribe" | "testimonials" | "faq";
 
-const DEFAULT_ORDER: SectionId[] = ["episodes", "acclaim", "hosts", "sponsors", "newsletter", "subscribe", "testimonials", "faq"];
+const DEFAULT_ORDER: SectionId[] = ["episodes", "acclaim", "subscribe", "hosts", "sponsors", "newsletter", "testimonials", "faq"];
 
 const Index = () => {
   const { content, update, updateMany, reset, isEditing, setIsEditing } = useCMS();
@@ -63,7 +63,7 @@ const Index = () => {
 
     switch (id) {
       case "acclaim":
-        return <div key="acclaim">{controls}<Stats /></div>;
+        return <div key="acclaim">{controls}<Stats content={content} isEditing={isEditing} onUpdate={update} /></div>;
       case "episodes":
         return (
           <div key="episodes">
