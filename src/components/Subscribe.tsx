@@ -1,5 +1,4 @@
 import { CMSContent } from "@/types/cms";
-import { ArrowUpRight } from "lucide-react";
 import { useState } from "react";
 
 interface SubscribeProps {
@@ -11,20 +10,26 @@ interface SubscribeProps {
 export default function Subscribe({ content, isEditing, onUpdate }: SubscribeProps) {
   const subscribeUrl = content.subscribeUrl || "https://designofai.substack.com";
   const label = content.subscribeLabel || "Never miss our AI Strategy Resources";
+  const [email, setEmail] = useState("");
 
-  // Substack's official iframe embed
   const substackBase = subscribeUrl.replace(/\/$/, "");
-  const embedSrc = `${substackBase}/embed`;
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!email) return;
+    // Open Substack subscribe with prefilled email
+    window.open(`${substackBase}/subscribe?email=${encodeURIComponent(email)}`, "_blank");
+    setEmail("");
+  };
 
   return (
     <section id="subscribe" className="bg-background" aria-label="Subscribe">
       <div className="container mx-auto px-6">
-        <div className="py-20 border-b border-border">
-          <div className="max-w-xl mx-auto text-center">
+        <div className="py-16 border-b border-border">
+          <div className="max-w-md mx-auto text-center">
             {/* Terracotta label */}
             <span
-              className="inline-block text-xs font-semibold uppercase tracking-widest mb-6"
-              style={{ color: "hsl(14, 60%, 55%)" }}
+              className="inline-block text-xs font-semibold uppercase tracking-widest text-primary mb-6"
               contentEditable={isEditing}
               suppressContentEditableWarning
               onBlur={e => isEditing && onUpdate("subscribeLabel", e.currentTarget.textContent || "")}
@@ -43,16 +48,23 @@ export default function Subscribe({ content, isEditing, onUpdate }: SubscribePro
               </div>
             )}
 
-            {/* Substack official embed iframe */}
-            <iframe
-              src={embedSrc}
-              width="100%"
-              height="150"
-              style={{ border: "none", background: "transparent" }}
-              frameBorder="0"
-              scrolling="no"
-              title="Subscribe to newsletter"
-            />
+            {/* Email input + Subscribe button — matching Substack sidebar style */}
+            <form onSubmit={handleSubmit} className="flex items-stretch gap-0">
+              <input
+                type="email"
+                value={email}
+                onChange={e => setEmail(e.target.value)}
+                placeholder="Type your email…"
+                required
+                className="flex-1 px-4 py-3 bg-card border border-border rounded-l-md text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-primary transition-colors"
+              />
+              <button
+                type="submit"
+                className="px-6 py-3 bg-primary text-primary-foreground text-sm font-semibold rounded-r-md hover:brightness-110 transition-all shrink-0"
+              >
+                Subscribe
+              </button>
+            </form>
           </div>
         </div>
       </div>
