@@ -113,7 +113,7 @@ export default function Newsletter({ content, isEditing, onUpdate }: NewsletterP
         {/* Header */}
         <div className="flex items-end justify-between py-10 border-b border-border gap-4 flex-wrap">
           <div>
-            <h2
+            <h3
               className="font-display font-extrabold uppercase leading-none tracking-tight text-foreground"
               style={{ fontSize: content.h2FontSize || "clamp(1.5rem, 3.5vw, 2.8rem)", fontWeight: content.h2FontWeight || "800", letterSpacing: "-0.02em" }}
               contentEditable={isEditing}
@@ -121,7 +121,7 @@ export default function Newsletter({ content, isEditing, onUpdate }: NewsletterP
               onBlur={e => isEditing && onUpdate("blogTitle", e.currentTarget.textContent || "")}
             >
               {content.blogTitle || "From the Blog"}
-            </h2>
+            </h3>
           </div>
           <div className="flex items-center gap-3 shrink-0">
             {isEditing && (

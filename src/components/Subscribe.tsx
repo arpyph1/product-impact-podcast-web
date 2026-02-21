@@ -1,6 +1,6 @@
 import { CMSContent } from "@/types/cms";
 import { ArrowUpRight } from "lucide-react";
-import { useState, useRef } from "react";
+import { useState } from "react";
 
 interface SubscribeProps {
   content: CMSContent;
@@ -9,25 +9,12 @@ interface SubscribeProps {
 }
 
 export default function Subscribe({ content, isEditing, onUpdate }: SubscribeProps) {
-  const [email, setEmail] = useState("");
-  const [submitted, setSubmitted] = useState(false);
-  const formRef = useRef<HTMLFormElement>(null);
-
   const subscribeUrl = content.subscribeUrl || "https://designofai.substack.com";
   const label = content.subscribeLabel || "Never miss our AI Strategy Resources";
 
-  // Build the Substack subscribe URL
+  // Substack's official iframe embed
   const substackBase = subscribeUrl.replace(/\/$/, "");
-  const actionUrl = `${substackBase}/api/v1/free?nojs=true`;
-
-  const handleSubmit = (e: React.FormEvent) => {
-    if (!email.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-      e.preventDefault();
-      return;
-    }
-    // Let the form submit naturally to Substack
-    setSubmitted(true);
-  };
+  const embedSrc = `${substackBase}/embed`;
 
   return (
     <section id="subscribe" className="bg-background" aria-label="Subscribe">
@@ -56,40 +43,16 @@ export default function Subscribe({ content, isEditing, onUpdate }: SubscribePro
               </div>
             )}
 
-            {submitted ? (
-              <div className="py-8">
-                <p className="font-display font-bold text-foreground text-xl mb-2">You're subscribed!</p>
-                <p className="text-muted-foreground text-sm">Check your inbox to confirm.</p>
-                <button onClick={() => { setSubmitted(false); setEmail(""); }} className="text-xs text-primary underline mt-4">Subscribe another email</button>
-              </div>
-            ) : (
-              <form
-                ref={formRef}
-                action={actionUrl}
-                method="POST"
-                target="_blank"
-                onSubmit={handleSubmit}
-                className="flex flex-col sm:flex-row items-center gap-3"
-              >
-                <input
-                  type="email"
-                  name="email"
-                  required
-                  value={email}
-                  onChange={e => setEmail(e.target.value)}
-                  placeholder="your@email.com"
-                  className="flex-1 w-full bg-card border border-border rounded-full px-5 py-3.5 text-sm text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:border-primary"
-                />
-                <input type="hidden" name="first_url" value={substackBase} />
-                <button
-                  type="submit"
-                  className="flex items-center gap-2 px-8 py-3.5 rounded-full bg-primary text-primary-foreground text-sm font-semibold hover:brightness-110 transition-all shrink-0"
-                >
-                  Subscribe
-                  <ArrowUpRight className="w-3.5 h-3.5" />
-                </button>
-              </form>
-            )}
+            {/* Substack official embed iframe */}
+            <iframe
+              src={embedSrc}
+              width="100%"
+              height="150"
+              style={{ border: "none", background: "transparent" }}
+              frameBorder="0"
+              scrolling="no"
+              title="Subscribe to newsletter"
+            />
           </div>
         </div>
       </div>
