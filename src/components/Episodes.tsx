@@ -79,7 +79,7 @@ export default function Episodes({
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-px bg-border" style={{ fontSize: "0.75rem" }}>
               {episodes.slice(0, visibleCount).map((ep, i) => (
                 <div key={ep.guid} className="bg-background p-3">
-                  <EpisodeCard episode={ep} index={i} />
+                  <EpisodeCard episode={ep} index={i} episodes={episodes} />
                 </div>
               ))}
             </div>
