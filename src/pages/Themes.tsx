@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useCMS } from "@/hooks/useCMS";
@@ -8,12 +8,72 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import HeadMeta from "@/components/HeadMeta";
 import { useAuth } from "@/hooks/useAuth";
-import { Loader2, Filter, X } from "lucide-react";
+import { Loader2, Filter, X, ChevronDown } from "lucide-react";
 
 interface EpisodeTag {
   episode_guid: string;
   themes: string[];
   focus: string[];
+}
+
+function MultiSelectDropdown({
+  label,
+  options,
+  selected,
+  onToggle,
+}: {
+  label: string;
+  options: string[];
+  selected: string[];
+  onToggle: (value: string) => void;
+}) {
+  const [open, setOpen] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handler = (e: MouseEvent) => {
+      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
+    };
+    document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
+  }, []);
+
+  return (
+    <div ref={ref} className="relative">
+      <button
+        onClick={() => setOpen(v => !v)}
+        className="w-full flex items-center justify-between px-4 py-3 rounded-lg border border-border bg-card text-sm font-medium text-foreground"
+      >
+        <span>
+          {label}
+          {selected.length > 0 && (
+            <span className="ml-2 text-xs text-muted-foreground">({selected.length})</span>
+          )}
+        </span>
+        <ChevronDown className={`w-4 h-4 text-muted-foreground transition-transform ${open ? "rotate-180" : ""}`} />
+      </button>
+      {open && (
+        <div className="absolute z-50 mt-1 w-full rounded-lg border border-border bg-card shadow-lg py-1">
+          {options.map(opt => {
+            const active = selected.includes(opt);
+            return (
+              <button
+                key={opt}
+                onClick={() => onToggle(opt)}
+                className={`w-full text-left px-4 py-2.5 text-sm transition-colors ${
+                  active
+                    ? "bg-foreground/5 text-foreground font-medium"
+                    : "text-foreground hover:bg-muted"
+                }`}
+              >
+                {opt}
+              </button>
+            );
+          })}
+        </div>
+      )}
+    </div>
+  );
 }
 
 export default function Themes() {
@@ -124,56 +184,78 @@ export default function Themes() {
           </div>
 
           {/* Filters */}
-          <div className="py-8 space-y-6">
-            {/* Themes row */}
-            {allThemes.length > 0 && (
-              <div>
-                <span className="text-xs font-bold uppercase tracking-widest text-muted-foreground mb-3 block">Themes</span>
-                <div className="flex flex-wrap gap-3">
-                  {allThemes.map(theme => {
-                    const active = selectedThemes.includes(theme);
-                    return (
-                      <button
-                        key={theme}
-                        onClick={() => toggleTheme(theme)}
-                        className={`flex items-center gap-2 px-7 py-4 rounded-full text-base font-medium transition-all duration-200 border ${
-                          active
-                            ? "border-foreground text-foreground bg-foreground/5"
-                            : "border-border text-foreground hover:border-foreground"
-                        }`}
-                      >
-                        {theme}
-                      </button>
-                    );
-                  })}
-                </div>
-              </div>
-            )}
+          <div className="py-6 space-y-4">
 
-            {/* Focus row */}
-            {allFocus.length > 0 && (
-              <div>
-                <span className="text-xs font-bold uppercase tracking-widest text-muted-foreground mb-3 block">Focus</span>
-                <div className="flex flex-wrap gap-3">
-                  {allFocus.map(focus => {
-                    const active = selectedFocus.includes(focus);
-                    return (
-                      <button
-                        key={focus}
-                        onClick={() => toggleFocus(focus)}
-                        className={`flex items-center gap-2 px-7 py-4 rounded-full text-base font-medium transition-all duration-200 border ${
-                          active
-                            ? "border-foreground text-foreground bg-foreground/5"
-                            : "border-border text-foreground hover:border-foreground"
-                        }`}
-                      >
-                        {focus}
-                      </button>
-                    );
-                  })}
+            {/* Mobile: dropdowns */}
+            <div className="flex flex-col gap-3 md:hidden">
+              {allThemes.length > 0 && (
+                <MultiSelectDropdown
+                  label="Themes"
+                  options={allThemes}
+                  selected={selectedThemes}
+                  onToggle={toggleTheme}
+                />
+              )}
+              {allFocus.length > 0 && (
+                <MultiSelectDropdown
+                  label="Focus"
+                  options={allFocus}
+                  selected={selectedFocus}
+                  onToggle={toggleFocus}
+                />
+              )}
+            </div>
+
+            {/* Desktop: pill buttons */}
+            <div className="hidden md:block space-y-4">
+              {allThemes.length > 0 && (
+                <div>
+                  <span className="text-xs font-bold uppercase tracking-widest text-muted-foreground mb-2 block">Themes</span>
+                  <div className="flex flex-wrap gap-2">
+                    {allThemes.map(theme => {
+                      const active = selectedThemes.includes(theme);
+                      return (
+                        <button
+                          key={theme}
+                          onClick={() => toggleTheme(theme)}
+                          className={`px-4 py-2 rounded-full text-xs font-medium transition-all duration-200 border ${
+                            active
+                              ? "border-foreground text-foreground bg-foreground/5"
+                              : "border-border text-foreground hover:border-foreground"
+                          }`}
+                        >
+                          {theme}
+                        </button>
+                      );
+                    })}
+                  </div>
                 </div>
-              </div>
-            )}
+              )}
+
+              {allFocus.length > 0 && (
+                <div>
+                  <span className="text-xs font-bold uppercase tracking-widest text-muted-foreground mb-2 block">Focus</span>
+                  <div className="flex flex-wrap gap-2">
+                    {allFocus.map(focus => {
+                      const active = selectedFocus.includes(focus);
+                      return (
+                        <button
+                          key={focus}
+                          onClick={() => toggleFocus(focus)}
+                          className={`px-4 py-2 rounded-full text-xs font-medium transition-all duration-200 border ${
+                            active
+                              ? "border-foreground text-foreground bg-foreground/5"
+                              : "border-border text-foreground hover:border-foreground"
+                          }`}
+                        >
+                          {focus}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
+            </div>
 
             {/* Active filters summary */}
             {hasFilters && (
