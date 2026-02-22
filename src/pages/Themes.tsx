@@ -127,28 +127,34 @@ export default function Themes() {
           </div>
 
           {/* Filters */}
-          <div className="py-6 space-y-4">
-            {/* Themes */}
+          <div className="py-8 space-y-8">
+            {/* Themes row */}
             {allThemes.length > 0 && (
               <div>
-                <div className="flex items-center gap-2 mb-2">
-                  <Filter className="w-3.5 h-3.5 text-muted-foreground" />
-                  <span className="text-xs font-bold uppercase tracking-widest text-muted-foreground">Themes</span>
-                </div>
-                <div className="flex flex-wrap gap-2">
+                <span className="text-xs font-bold uppercase tracking-widest text-muted-foreground mb-3 block">Themes</span>
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
                   {allThemes.map(theme => {
                     const active = selectedThemes.includes(theme);
+                    const count = tags.filter(t => t.themes?.includes(theme)).length;
                     return (
                       <button
                         key={theme}
                         onClick={() => toggleTheme(theme)}
-                        className={`px-3 py-1.5 rounded-full text-xs font-medium transition-all border ${
+                        className={`relative px-4 py-4 rounded-lg text-left font-display font-bold text-sm leading-tight transition-all border-2 ${
                           active
-                            ? "bg-primary text-primary-foreground border-primary"
-                            : "bg-card text-muted-foreground border-border hover:border-foreground/30 hover:text-foreground"
+                            ? "bg-primary/15 text-primary border-primary shadow-[0_0_20px_hsl(var(--primary)/0.15)]"
+                            : "bg-card text-foreground border-border hover:border-primary/40 hover:bg-card/80"
                         }`}
                       >
-                        {theme}
+                        <span className="block">{theme}</span>
+                        <span className={`text-[11px] font-normal mt-1 block ${active ? "text-primary/70" : "text-muted-foreground"}`}>
+                          {count} episode{count !== 1 ? "s" : ""}
+                        </span>
+                        {active && (
+                          <div className="absolute top-2 right-2 w-5 h-5 rounded-full bg-primary text-primary-foreground flex items-center justify-center">
+                            <span className="text-[10px] font-bold">✓</span>
+                          </div>
+                        )}
                       </button>
                     );
                   })}
@@ -156,27 +162,33 @@ export default function Themes() {
               </div>
             )}
 
-            {/* Focus */}
+            {/* Focus row */}
             {allFocus.length > 0 && (
               <div>
-                <div className="flex items-center gap-2 mb-2">
-                  <Filter className="w-3.5 h-3.5 text-muted-foreground" />
-                  <span className="text-xs font-bold uppercase tracking-widest text-muted-foreground">Focus</span>
-                </div>
-                <div className="flex flex-wrap gap-2">
+                <span className="text-xs font-bold uppercase tracking-widest text-muted-foreground mb-3 block">Focus</span>
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
                   {allFocus.map(focus => {
                     const active = selectedFocus.includes(focus);
+                    const count = tags.filter(t => t.focus?.includes(focus)).length;
                     return (
                       <button
                         key={focus}
                         onClick={() => toggleFocus(focus)}
-                        className={`px-3 py-1.5 rounded-full text-xs font-medium transition-all border ${
+                        className={`relative px-4 py-4 rounded-lg text-left font-display font-bold text-sm leading-tight transition-all border-2 ${
                           active
-                            ? "bg-accent text-accent-foreground border-accent"
-                            : "bg-card text-muted-foreground border-border hover:border-foreground/30 hover:text-foreground"
+                            ? "bg-accent/15 text-accent border-accent shadow-[0_0_20px_hsl(var(--accent)/0.15)]"
+                            : "bg-card text-foreground border-border hover:border-accent/40 hover:bg-card/80"
                         }`}
                       >
-                        {focus}
+                        <span className="block">{focus}</span>
+                        <span className={`text-[11px] font-normal mt-1 block ${active ? "text-accent/70" : "text-muted-foreground"}`}>
+                          {count} episode{count !== 1 ? "s" : ""}
+                        </span>
+                        {active && (
+                          <div className="absolute top-2 right-2 w-5 h-5 rounded-full bg-accent text-accent-foreground flex items-center justify-center">
+                            <span className="text-[10px] font-bold">✓</span>
+                          </div>
+                        )}
                       </button>
                     );
                   })}
@@ -186,16 +198,16 @@ export default function Themes() {
 
             {/* Active filters summary */}
             {hasFilters && (
-              <div className="flex items-center gap-2 pt-2">
-                <span className="text-xs text-muted-foreground">
-                  {filteredEpisodes.length} episode{filteredEpisodes.length !== 1 ? "s" : ""} found
+              <div className="flex items-center gap-2 pt-2 border-t border-border">
+                <span className="text-sm text-foreground font-medium">
+                  {filteredEpisodes.length} episode{filteredEpisodes.length !== 1 ? "s" : ""}
                 </span>
                 <button
                   onClick={clearAll}
-                  className="inline-flex items-center gap-1 text-xs text-primary hover:text-primary/80 transition-colors"
+                  className="inline-flex items-center gap-1 text-xs text-primary hover:text-primary/80 transition-colors ml-auto"
                 >
                   <X className="w-3 h-3" />
-                  Clear filters
+                  Clear all filters
                 </button>
               </div>
             )}
