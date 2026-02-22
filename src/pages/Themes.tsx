@@ -121,40 +121,28 @@ export default function Themes() {
             >
               Browse by Theme
             </h1>
-            <p className="text-muted-foreground mt-2 text-sm max-w-xl">
-              Filter episodes by topic themes and focus areas to find exactly what you're looking for.
-            </p>
           </div>
 
           {/* Filters */}
-          <div className="py-8 space-y-8">
+          <div className="py-8 space-y-6">
             {/* Themes row */}
             {allThemes.length > 0 && (
               <div>
                 <span className="text-xs font-bold uppercase tracking-widest text-muted-foreground mb-3 block">Themes</span>
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                <div className="flex flex-wrap gap-3">
                   {allThemes.map(theme => {
                     const active = selectedThemes.includes(theme);
-                    const count = tags.filter(t => t.themes?.includes(theme)).length;
                     return (
                       <button
                         key={theme}
                         onClick={() => toggleTheme(theme)}
-                        className={`relative px-4 py-4 rounded-lg text-left font-display font-bold text-sm leading-tight transition-all border-2 ${
+                        className={`flex items-center gap-2 px-7 py-4 rounded-full text-base font-medium transition-all duration-200 border ${
                           active
-                            ? "bg-primary/15 text-primary border-primary shadow-[0_0_20px_hsl(var(--primary)/0.15)]"
-                            : "bg-card text-foreground border-border hover:border-primary/40 hover:bg-card/80"
+                            ? "border-foreground text-foreground bg-foreground/5"
+                            : "border-border text-foreground hover:border-foreground"
                         }`}
                       >
-                        <span className="block">{theme}</span>
-                        <span className={`text-[11px] font-normal mt-1 block ${active ? "text-primary/70" : "text-muted-foreground"}`}>
-                          {count} episode{count !== 1 ? "s" : ""}
-                        </span>
-                        {active && (
-                          <div className="absolute top-2 right-2 w-5 h-5 rounded-full bg-primary text-primary-foreground flex items-center justify-center">
-                            <span className="text-[10px] font-bold">✓</span>
-                          </div>
-                        )}
+                        {theme}
                       </button>
                     );
                   })}
@@ -166,29 +154,20 @@ export default function Themes() {
             {allFocus.length > 0 && (
               <div>
                 <span className="text-xs font-bold uppercase tracking-widest text-muted-foreground mb-3 block">Focus</span>
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                <div className="flex flex-wrap gap-3">
                   {allFocus.map(focus => {
                     const active = selectedFocus.includes(focus);
-                    const count = tags.filter(t => t.focus?.includes(focus)).length;
                     return (
                       <button
                         key={focus}
                         onClick={() => toggleFocus(focus)}
-                        className={`relative px-4 py-4 rounded-lg text-left font-display font-bold text-sm leading-tight transition-all border-2 ${
+                        className={`flex items-center gap-2 px-7 py-4 rounded-full text-base font-medium transition-all duration-200 border ${
                           active
-                            ? "bg-accent/15 text-accent border-accent shadow-[0_0_20px_hsl(var(--accent)/0.15)]"
-                            : "bg-card text-foreground border-border hover:border-accent/40 hover:bg-card/80"
+                            ? "border-foreground text-foreground bg-foreground/5"
+                            : "border-border text-foreground hover:border-foreground"
                         }`}
                       >
-                        <span className="block">{focus}</span>
-                        <span className={`text-[11px] font-normal mt-1 block ${active ? "text-accent/70" : "text-muted-foreground"}`}>
-                          {count} episode{count !== 1 ? "s" : ""}
-                        </span>
-                        {active && (
-                          <div className="absolute top-2 right-2 w-5 h-5 rounded-full bg-accent text-accent-foreground flex items-center justify-center">
-                            <span className="text-[10px] font-bold">✓</span>
-                          </div>
-                        )}
+                        {focus}
                       </button>
                     );
                   })}
