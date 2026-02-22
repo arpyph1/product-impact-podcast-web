@@ -6,12 +6,14 @@ import EpisodeModal from "./EpisodeModal";
 interface EpisodeCardProps {
   episode: PodcastEpisode;
   index: number;
+  episodes: PodcastEpisode[];
 }
 
-export default function EpisodeCard({ episode, index }: EpisodeCardProps) {
+export default function EpisodeCard({ episode, index, episodes }: EpisodeCardProps) {
   const [playing, setPlaying] = useState(false);
   const [showPlayer, setShowPlayer] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
+  const [modalIndex, setModalIndex] = useState(index);
   const audioRef = useRef<HTMLAudioElement>(null);
 
   const togglePlay = (e: React.MouseEvent) => {
@@ -29,8 +31,11 @@ export default function EpisodeCard({ episode, index }: EpisodeCardProps) {
   };
 
   const openModal = () => {
+    setModalIndex(index);
     setModalOpen(true);
   };
+
+  const currentModalEpisode = episodes[modalIndex] || episode;
 
   return (
     <>
@@ -117,7 +122,15 @@ export default function EpisodeCard({ episode, index }: EpisodeCardProps) {
         )}
       </article>
 
-      <EpisodeModal episode={episode} open={modalOpen} onOpenChange={setModalOpen} />
+      <EpisodeModal
+        episode={currentModalEpisode}
+        open={modalOpen}
+        onOpenChange={setModalOpen}
+        hasPrev={modalIndex > 0}
+        hasNext={modalIndex < episodes.length - 1}
+        onPrev={() => setModalIndex(i => Math.max(0, i - 1))}
+        onNext={() => setModalIndex(i => Math.min(episodes.length - 1, i + 1))}
+      />
     </>
   );
 }
