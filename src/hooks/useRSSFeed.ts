@@ -80,7 +80,14 @@ function parseRSSXML(xml: string): { episodes: PodcastEpisode[]; title: string; 
       item.querySelector("itunes\\:episode");
     const episodeNumber = epNumEl?.textContent || String(items.length - idx);
 
-    return { title, description: "", pubDate, audioUrl, imageUrl, duration, episodeNumber, link, guid };
+    // Extract description from content:encoded or description
+    const contentEncoded = item.getElementsByTagNameNS("http://purl.org/rss/1.0/modules/content/", "encoded")[0]?.textContent || "";
+    const descriptionEl = item.querySelector("description")?.textContent || "";
+    const itunesSummary =
+      item.getElementsByTagNameNS("http://www.itunes.com/dtds/podcast-1.0.dtd", "summary")[0]?.textContent || "";
+    const description = contentEncoded || descriptionEl || itunesSummary;
+
+    return { title, description, pubDate, audioUrl, imageUrl, duration, episodeNumber, link, guid };
   });
 
   return { episodes, title: channelTitle, image: channelImage };
@@ -102,7 +109,7 @@ function parseRss2JsonItems(feed: any, items: any[]): { episodes: PodcastEpisode
 
     return {
       title: item.title || `Episode ${idx + 1}`,
-      description: "",
+      description: item.content || item.description || "",
       pubDate,
       audioUrl,
       imageUrl,
