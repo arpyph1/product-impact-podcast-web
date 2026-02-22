@@ -67,7 +67,7 @@ export default function Navbar({ content, isEditing, onToggleEdit, onContactClic
 
         {/* Center logo */}
         <div className="flex items-center justify-center flex-shrink-0">
-          <a href="#" className="flex items-center justify-center">
+          <a href="/" className="flex items-center justify-center">
             <img
               src={logo}
               alt={content.podcastName}

@@ -179,7 +179,7 @@ export default function Themes() {
             <h1 className="font-display font-extrabold text-foreground uppercase tracking-tight"
               style={{ fontSize: "clamp(1.8rem, 4vw, 3rem)", letterSpacing: "-0.02em" }}
             >
-              Browse by Theme
+              AI Product Strategy & Enterprise AI Adoption Podcast
             </h1>
           </div>
 
