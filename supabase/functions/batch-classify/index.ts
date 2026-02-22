@@ -120,22 +120,42 @@ Deno.serve(async (req) => {
     const serviceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
     const supabase = createClient(supabaseUrl, serviceKey);
 
-    const { feed_url } = await req.json();
-    if (!feed_url) return new Response(JSON.stringify({ error: "feed_url required" }), { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } });
+    // Accept feed_url from body or fall back to CMS content
+    let feed_url: string | undefined;
+    try {
+      const body = await req.json();
+      feed_url = body.feed_url;
+    } catch { /* no body — auto mode */ }
+
+    if (!feed_url) {
+      const { data: cms } = await supabase.from("cms_content").select("data").limit(1).single();
+      feed_url = (cms?.data as any)?.rssFeedUrl;
+    }
+
+    if (!feed_url) return new Response(JSON.stringify({ error: "No feed_url found" }), { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } });
 
     // Fetch RSS
     const rssRes = await fetch(feed_url, { signal: AbortSignal.timeout(15000) });
     const xml = await rssRes.text();
     const episodes = parseEpisodes(xml);
 
+    // Get already-classified guids to skip them
+    const { data: existing } = await supabase.from("episode_tags").select("episode_guid");
+    const existingGuids = new Set((existing || []).map((r: any) => r.episode_guid));
+    const newEpisodes = episodes.filter(ep => !existingGuids.has(ep.guid));
+
+    if (newEpisodes.length === 0) {
+      return new Response(JSON.stringify({ classified: 0, message: "All episodes already classified" }), { headers: { ...corsHeaders, "Content-Type": "application/json" } });
+    }
+
     // Get rules
     const { data: rulesRow } = await supabase.from("tagging_rules").select("config").limit(1).single();
     if (!rulesRow) return new Response(JSON.stringify({ error: "No tagging rules" }), { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } });
     const config = rulesRow.config as RulesConfig;
 
-    // Classify and upsert
+    // Classify and upsert only new episodes
     const results: any[] = [];
-    for (const ep of episodes) {
+    for (const ep of newEpisodes) {
       const titleNorm = normalize(ep.title);
       const descNorm = normalize(ep.description);
       const fullNorm = `${titleNorm} ${descNorm}`;
@@ -158,7 +178,7 @@ Deno.serve(async (req) => {
       results.push({ guid: ep.guid, title: ep.title, themes, focus, error: error?.message });
     }
 
-    return new Response(JSON.stringify({ classified: results.length, results }), { headers: { ...corsHeaders, "Content-Type": "application/json" } });
+    return new Response(JSON.stringify({ classified: results.length, skipped: existingGuids.size, results }), { headers: { ...corsHeaders, "Content-Type": "application/json" } });
   } catch (err) {
     return new Response(JSON.stringify({ error: err.message }), { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } });
   }
