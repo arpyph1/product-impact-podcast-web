@@ -41,22 +41,17 @@ export default function EpisodeModal({ episode, open, onOpenChange }: EpisodeMod
             </div>
           )}
           <div className="absolute inset-0 bg-gradient-to-t from-card via-transparent to-transparent" />
-
-          {/* Play button overlay */}
-          {episode.audioUrl && (
-            <button
-              onClick={togglePlay}
-              className="absolute bottom-4 left-4 flex items-center gap-2 px-4 py-2 rounded-full bg-primary text-primary-foreground font-display font-bold text-sm hover:bg-primary/90 transition-colors shadow-lg"
-            >
-              {playing ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4" />}
-              {playing ? "Pause" : "Play Episode"}
-            </button>
-          )}
         </div>
 
         {/* Content */}
         <div className="p-6 space-y-4">
-          <DialogHeader className="space-y-2">
+          {/* Episode title as H2 at top of body */}
+          <DialogHeader className="space-y-3">
+            <DialogTitle asChild>
+              <h2 className="font-display font-extrabold text-2xl leading-tight text-foreground">
+                {episode.title}
+              </h2>
+            </DialogTitle>
             <div className="flex items-center gap-3 text-xs text-muted-foreground">
               {episode.episodeNumber && (
                 <span className="font-display font-bold text-primary uppercase tracking-wider">
@@ -76,24 +71,39 @@ export default function EpisodeModal({ episode, open, onOpenChange }: EpisodeMod
                 </span>
               )}
             </div>
-            <DialogTitle className="font-display font-extrabold text-xl leading-tight text-foreground">
-              {episode.title}
-            </DialogTitle>
           </DialogHeader>
 
-          {/* Audio player */}
+          {/* Audio player — styled to be readable */}
           {episode.audioUrl && (
-            <audio
-              ref={audioRef}
-              src={episode.audioUrl}
-              controls
-              onPlay={() => setPlaying(true)}
-              onPause={() => setPlaying(false)}
-              onEnded={() => setPlaying(false)}
-              preload="none"
-              className="w-full"
-              style={{ height: "36px" }}
-            />
+            <div className="rounded-md border border-border bg-secondary p-3 space-y-2">
+              <div className="flex items-center gap-3">
+                <button
+                  onClick={togglePlay}
+                  className="shrink-0 w-10 h-10 rounded-full bg-primary text-primary-foreground flex items-center justify-center hover:bg-primary/90 transition-colors"
+                >
+                  {playing ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4 ml-0.5" />}
+                </button>
+                <div className="flex-1 min-w-0">
+                  <p className="text-xs font-medium text-foreground truncate">{episode.title}</p>
+                  {episode.duration && (
+                    <p className="text-[11px] text-muted-foreground flex items-center gap-1">
+                      <Clock className="w-3 h-3" /> {episode.duration}
+                    </p>
+                  )}
+                </div>
+              </div>
+              <audio
+                ref={audioRef}
+                src={episode.audioUrl}
+                controls
+                onPlay={() => setPlaying(true)}
+                onPause={() => setPlaying(false)}
+                onEnded={() => setPlaying(false)}
+                preload="none"
+                className="w-full [&::-webkit-media-controls-panel]:bg-secondary"
+                style={{ height: "32px" }}
+              />
+            </div>
           )}
 
           {/* Description with clickable links */}
