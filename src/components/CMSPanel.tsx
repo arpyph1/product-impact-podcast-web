@@ -138,6 +138,7 @@ export default function CMSPanel({ content, onUpdate, onReset, onClose, isAdmin 
                 <Field label="Twitter/X URL" value={content.twitterUrl} onChange={v => onUpdate("twitterUrl", v)} />
                 <Field label="Instagram URL" value={content.instagramUrl} onChange={v => onUpdate("instagramUrl", v)} />
                 <Field label="Substack URL" value={content.substackUrl} onChange={v => onUpdate("substackUrl", v)} />
+                <Field label="TikTok URL" value={content.tiktokUrl} onChange={v => onUpdate("tiktokUrl", v)} />
               </div>
             </div>
           </>

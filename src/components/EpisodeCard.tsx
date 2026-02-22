@@ -95,15 +95,17 @@ export default function EpisodeCard({ episode, index, episodes }: EpisodeCardPro
 
       </article>
 
-      <EpisodeModal
-        episode={currentModalEpisode}
-        open={modalOpen}
-        onOpenChange={setModalOpen}
-        hasPrev={modalIndex > 0}
-        hasNext={modalIndex < episodes.length - 1}
-        onPrev={() => setModalIndex(i => Math.max(0, i - 1))}
-        onNext={() => setModalIndex(i => Math.min(episodes.length - 1, i + 1))}
-      />
+      {modalOpen && (
+        <EpisodeModal
+          episode={currentModalEpisode}
+          open={modalOpen}
+          onOpenChange={setModalOpen}
+          hasPrev={modalIndex > 0}
+          hasNext={modalIndex < episodes.length - 1}
+          onPrev={() => setModalIndex(i => Math.max(0, i - 1))}
+          onNext={() => setModalIndex(i => Math.min(episodes.length - 1, i + 1))}
+        />
+      )}
     </>
   );
 }

@@ -50,8 +50,9 @@ export interface CMSContent {
   linkedinUrl: string;
   twitterUrl: string;
 
-  // Instagram
+  // Instagram & TikTok
   instagramUrl: string;
+  tiktokUrl: string;
 
   // Contact
   contactEmail: string;
@@ -163,6 +164,7 @@ export const defaultCMS: CMSContent = {
   linkedinUrl: "",
   twitterUrl: "",
   instagramUrl: "",
+  tiktokUrl: "",
 
   contactEmail: "hello@productimpactpodcast.com",
   contactSubject: "Podcast Inquiry",
