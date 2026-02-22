@@ -32,6 +32,51 @@ export type Database = {
         }
         Relationships: []
       }
+      episode_tags: {
+        Row: {
+          classified_at: string
+          description_norm: string
+          episode_guid: string
+          feed_url: string
+          focus: string[]
+          focus_scores: Json
+          full_norm: string
+          id: string
+          theme_scores: Json
+          themes: string[]
+          title: string
+          title_norm: string
+        }
+        Insert: {
+          classified_at?: string
+          description_norm?: string
+          episode_guid: string
+          feed_url?: string
+          focus?: string[]
+          focus_scores?: Json
+          full_norm?: string
+          id?: string
+          theme_scores?: Json
+          themes?: string[]
+          title?: string
+          title_norm?: string
+        }
+        Update: {
+          classified_at?: string
+          description_norm?: string
+          episode_guid?: string
+          feed_url?: string
+          focus?: string[]
+          focus_scores?: Json
+          full_norm?: string
+          id?: string
+          theme_scores?: Json
+          themes?: string[]
+          title?: string
+          title_norm?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           created_at: string
@@ -53,6 +98,27 @@ export type Database = {
           email?: string
           id?: string
           user_id?: string
+        }
+        Relationships: []
+      }
+      tagging_rules: {
+        Row: {
+          config: Json
+          id: string
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          config?: Json
+          id?: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          config?: Json
+          id?: string
+          updated_at?: string
+          updated_by?: string | null
         }
         Relationships: []
       }
