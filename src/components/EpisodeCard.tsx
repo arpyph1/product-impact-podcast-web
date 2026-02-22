@@ -93,33 +93,6 @@ export default function EpisodeCard({ episode, index, episodes }: EpisodeCardPro
           )}
         </div>
 
-        {/* Audio player */}
-        {episode.audioUrl && (
-          <div>
-            {!showPlayer ? (
-              <button
-                onClick={togglePlay}
-                className="w-full flex items-center gap-2 px-3 py-1.5 rounded border border-border text-[11px] font-medium text-muted-foreground hover:text-foreground hover:border-foreground/40 transition-all"
-              >
-                <Play className="w-3 h-3 shrink-0" />
-                Play
-                {episode.duration && <span className="ml-auto opacity-60">{episode.duration}</span>}
-              </button>
-            ) : (
-              <audio
-                ref={audioRef}
-                src={episode.audioUrl}
-                controls
-                onPlay={() => setPlaying(true)}
-                onPause={() => setPlaying(false)}
-                onEnded={() => setPlaying(false)}
-                preload="none"
-                className="w-full"
-                style={{ height: "28px" }}
-              />
-            )}
-          </div>
-        )}
       </article>
 
       <EpisodeModal
