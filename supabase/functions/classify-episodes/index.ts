@@ -6,12 +6,11 @@ const corsHeaders = {
     "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
 };
 
-/** Normalize text: lowercase, strip HTML, collapse whitespace */
 function normalize(raw: string): string {
   return raw
-    .replace(/<[^>]*>/g, " ")          // strip HTML
-    .replace(/&[a-z]+;/gi, " ")        // strip entities
-    .replace(/[^\w\s'-]/g, " ")        // keep words, hyphens, apostrophes
+    .replace(/<[^>]*>/g, " ")
+    .replace(/&[a-z]+;/gi, " ")
+    .replace(/[^\w\s'-]/g, " ")
     .replace(/\s+/g, " ")
     .trim()
     .toLowerCase();
@@ -23,18 +22,32 @@ interface RuleEntry {
   mode: "word" | "phrase";
 }
 
-interface RulesConfig {
-  themes: Record<string, RuleEntry[]>;
-  focus: Record<string, RuleEntry[]>;
-  settings: {
-    title_multiplier: number;
-    desc_multiplier: number;
-    theme_threshold: number;
-    focus_threshold: number;
-    max_themes: number;
-    max_focus: number;
-    focus_dominance_ratio: number;
+interface BucketRules {
+  include: RuleEntry[];
+  exclude?: RuleEntry[];
+}
+
+interface Settings {
+  title_multiplier: number;
+  desc_multiplier: number;
+  theme_threshold: number;
+  focus_threshold: number;
+  max_themes: number;
+  max_focus: number;
+  focus_dominance_ratio: number;
+  fallback_theme?: string;
+  fallback_focus?: string;
+  global_stopwords?: string[];
+  priority_order?: {
+    themes?: string[];
+    focus?: string[];
   };
+}
+
+interface RulesConfig {
+  themes: Record<string, BucketRules | RuleEntry[]>;
+  focus: Record<string, BucketRules | RuleEntry[]>;
+  settings: Settings;
 }
 
 interface EpisodeInput {
@@ -44,22 +57,31 @@ interface EpisodeInput {
   feed_url?: string;
 }
 
-function scoreText(
-  text: string,
-  rules: RuleEntry[],
-): number {
+function getRules(bucket: BucketRules | RuleEntry[]): { include: RuleEntry[]; exclude: RuleEntry[] } {
+  if (Array.isArray(bucket)) {
+    return { include: bucket, exclude: [] };
+  }
+  return { include: bucket.include || [], exclude: bucket.exclude || [] };
+}
+
+function scoreText(text: string, rules: RuleEntry[]): number {
   let score = 0;
   for (const rule of rules) {
     if (rule.mode === "phrase") {
-      const idx = text.indexOf(rule.phrase.toLowerCase());
-      if (idx !== -1) score += rule.w;
+      if (text.includes(rule.phrase.toLowerCase())) score += rule.w;
     } else {
-      // word mode — match whole word
-      const re = new RegExp(`\\b${rule.phrase.toLowerCase().replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}\\b`);
+      const escaped = rule.phrase.toLowerCase().replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+      const re = new RegExp(`\\b${escaped}\\b`);
       if (re.test(text)) score += rule.w;
     }
   }
   return score;
+}
+
+function removeStopwords(text: string, stopwords: string[]): string {
+  if (!stopwords.length) return text;
+  const re = new RegExp(`\\b(${stopwords.map(w => w.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")).join("|")})\\b`, "gi");
+  return text.replace(re, " ").replace(/\s+/g, " ").trim();
 }
 
 function classify(
@@ -69,44 +91,72 @@ function classify(
   config: RulesConfig,
 ) {
   const s = config.settings;
+  const stopwords = s.global_stopwords || [];
 
-  function scoreBucket(bucketRules: Record<string, RuleEntry[]>) {
+  const titleClean = removeStopwords(titleNorm, stopwords);
+  const descClean = removeStopwords(descNorm, stopwords);
+  const fullClean = removeStopwords(fullNorm, stopwords);
+
+  function scoreBucket(bucketMap: Record<string, BucketRules | RuleEntry[]>) {
     const scores: Record<string, number> = {};
-    for (const [label, rules] of Object.entries(bucketRules)) {
-      const titleScore = scoreText(titleNorm, rules) * s.title_multiplier;
-      const descScore = scoreText(descNorm, rules) * s.desc_multiplier;
-      const fullScore = scoreText(fullNorm, rules);
-      scores[label] = titleScore + descScore + fullScore;
+    const titleMatches: Record<string, number> = {};
+    for (const [label, bucket] of Object.entries(bucketMap)) {
+      const { include, exclude } = getRules(bucket);
+      const titleScore = scoreText(titleClean, include) * s.title_multiplier;
+      const descScore = scoreText(descClean, include) * s.desc_multiplier;
+      const fullScore = scoreText(fullClean, include);
+      const excludeScore = scoreText(fullClean, exclude);
+      scores[label] = titleScore + descScore + fullScore + excludeScore;
+      titleMatches[label] = scoreText(titleClean, include);
     }
-    return scores;
+    return { scores, titleMatches };
   }
 
-  const themeScores = scoreBucket(config.themes);
-  const focusScores = scoreBucket(config.focus);
+  const { scores: themeScores, titleMatches: themeTitleMatches } = scoreBucket(config.themes);
+  const { scores: focusScores, titleMatches: focusTitleMatches } = scoreBucket(config.focus);
 
-  // Pick top themes above threshold
-  const themes = Object.entries(themeScores)
-    .filter(([, v]) => v >= s.theme_threshold)
-    .sort((a, b) => b[1] - a[1])
-    .slice(0, s.max_themes)
-    .map(([k]) => k);
+  const themePriority = s.priority_order?.themes || [];
+  const focusPriority = s.priority_order?.focus || [];
 
-  // Pick top focus above threshold, with dominance check
-  const sortedFocus = Object.entries(focusScores)
-    .filter(([, v]) => v >= s.focus_threshold)
-    .sort((a, b) => b[1] - a[1]);
+  function pickTop(
+    scores: Record<string, number>,
+    titleMatches: Record<string, number>,
+    threshold: number,
+    max: number,
+    priority: string[],
+    dominanceRatio?: number,
+  ): string[] {
+    let candidates = Object.entries(scores)
+      .filter(([, v]) => v >= threshold)
+      .sort((a, b) => {
+        // score desc
+        if (b[1] !== a[1]) return b[1] - a[1];
+        // title match desc
+        const ta = titleMatches[a[0]] || 0;
+        const tb = titleMatches[b[0]] || 0;
+        if (tb !== ta) return tb - ta;
+        // priority order
+        const pa = priority.indexOf(a[0]);
+        const pb = priority.indexOf(b[0]);
+        return (pa === -1 ? 999 : pa) - (pb === -1 ? 999 : pb);
+      });
 
-  const focus: string[] = [];
-  for (let i = 0; i < sortedFocus.length && focus.length < s.max_focus; i++) {
-    if (i === 0) {
-      focus.push(sortedFocus[i][0]);
-    } else {
-      // Only include if within dominance ratio of top
-      if (sortedFocus[0][1] / sortedFocus[i][1] <= s.focus_dominance_ratio) {
-        focus.push(sortedFocus[i][0]);
-      }
+    if (dominanceRatio && candidates.length > 1) {
+      const topScore = candidates[0][1];
+      candidates = candidates.filter(
+        (c, i) => i === 0 || topScore / c[1] <= dominanceRatio,
+      );
     }
+
+    return candidates.slice(0, max).map(([k]) => k);
   }
+
+  let themes = pickTop(themeScores, themeTitleMatches, s.theme_threshold, s.max_themes, themePriority);
+  let focus = pickTop(focusScores, focusTitleMatches, s.focus_threshold, s.max_focus, focusPriority, s.focus_dominance_ratio);
+
+  // Fallbacks
+  if (themes.length === 0 && s.fallback_theme) themes = [s.fallback_theme];
+  if (focus.length === 0 && s.fallback_focus) focus = [s.fallback_focus];
 
   return { themes, focus, themeScores, focusScores };
 }
@@ -132,7 +182,6 @@ Deno.serve(async (req) => {
       });
     }
 
-    // Fetch rule config
     const { data: rulesRow, error: rulesErr } = await supabase
       .from("tagging_rules")
       .select("config")
@@ -154,12 +203,7 @@ Deno.serve(async (req) => {
       const descNorm = normalize(ep.description);
       const fullNorm = `${titleNorm} ${descNorm}`;
 
-      const { themes, focus, themeScores, focusScores } = classify(
-        titleNorm,
-        descNorm,
-        fullNorm,
-        config,
-      );
+      const { themes, focus, themeScores, focusScores } = classify(titleNorm, descNorm, fullNorm, config);
 
       const row = {
         episode_guid: ep.guid,
@@ -175,7 +219,6 @@ Deno.serve(async (req) => {
         classified_at: new Date().toISOString(),
       };
 
-      // Upsert by episode_guid
       const { error: upsertErr } = await supabase
         .from("episode_tags")
         .upsert(row, { onConflict: "episode_guid" });
