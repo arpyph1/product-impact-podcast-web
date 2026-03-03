@@ -266,6 +266,34 @@ export default function CMSPanel({ content, onUpdate, onReset, onClose, isAdmin 
                 Paste any podcast RSS feed URL. Episodes will load automatically.
               </p>
             </div>
+
+            <div className="border-t border-border pt-4">
+              <p className="text-xs text-muted-foreground uppercase tracking-widest font-semibold mb-3">Popup Alert</p>
+              <div className="space-y-3">
+                <div className="flex items-center justify-between">
+                  <label className="text-xs text-muted-foreground uppercase tracking-wider">Enabled</label>
+                  <button
+                    onClick={() => onUpdate("popupEnabled" as any, !content.popupEnabled)}
+                    className={`w-10 h-5 rounded-full transition-colors ${content.popupEnabled ? "bg-primary" : "bg-muted"} relative`}
+                  >
+                    <span className={`block w-4 h-4 rounded-full bg-foreground absolute top-0.5 transition-transform ${content.popupEnabled ? "left-5" : "left-0.5"}`} />
+                  </button>
+                </div>
+                <Field label="Title" value={content.popupTitle || ""} onChange={v => onUpdate("popupTitle" as any, v)} />
+                <Field label="Body (100 char max)" value={content.popupBody || ""} onChange={v => onUpdate("popupBody" as any, v.slice(0, 100))} />
+                <Field label="Button Text" value={content.popupButtonText || ""} onChange={v => onUpdate("popupButtonText" as any, v)} />
+                <Field label="Button URL" value={content.popupButtonUrl || ""} onChange={v => onUpdate("popupButtonUrl" as any, v)} />
+              </div>
+            </div>
+
+            <div className="border-t border-border pt-4">
+              <p className="text-xs text-muted-foreground uppercase tracking-widest font-semibold mb-3">Products Page</p>
+              <div className="space-y-3">
+                <Field label="Heading Text" value={content.productsHeading || ""} onChange={v => onUpdate("productsHeading" as any, v)} />
+                <Field label="Button Text" value={content.productsButtonText || ""} onChange={v => onUpdate("productsButtonText" as any, v)} />
+                <Field label="Button URL" value={content.productsButtonUrl || ""} onChange={v => onUpdate("productsButtonUrl" as any, v)} />
+              </div>
+            </div>
           </>
         )}
 
