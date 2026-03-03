@@ -123,6 +123,18 @@ export interface CMSContent {
   twitterTitle: string;
   twitterDescription: string;
   twitterImage: string;
+
+  // Popup alert
+  popupEnabled: boolean;
+  popupTitle: string;
+  popupBody: string;
+  popupButtonText: string;
+  popupButtonUrl: string;
+
+  // Products page
+  productsHeading: string;
+  productsButtonText: string;
+  productsButtonUrl: string;
 }
 
 
@@ -232,4 +244,16 @@ export const defaultCMS: CMSContent = {
   twitterTitle: "Product Impact Podcast | AI Strategy & Value Creation",
   twitterDescription: "Uncover the impact of AI on product management, design, GTM. We interview tech leaders to define how AI products create value and scale adoption.",
   twitterImage: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/7c8de7ab-b8ed-4cbb-865e-e3d5f35b1f5f/id-preview-f59651d7--a4daec39-ad4a-4b53-a16b-06c30201f864.lovable.app-1771517475528.png",
+
+  // Popup alert
+  popupEnabled: true,
+  popupTitle: "New Episodes Weekly!",
+  popupBody: "Subscribe to never miss our latest insights on AI product strategy and enterprise adoption.",
+  popupButtonText: "Subscribe Now",
+  popupButtonUrl: "https://designofai.substack.com",
+
+  // Products page
+  productsHeading: "Tell us about the AI products you use most",
+  productsButtonText: "Submit Your Favorites",
+  productsButtonUrl: "mailto:hello@productimpactpodcast.com?subject=AI Products I Use",
 };

@@ -16,6 +16,7 @@ import Footer from "@/components/Footer";
 import ContactModal from "@/components/ContactModal";
 import CMSPanel from "@/components/CMSPanel";
 import HeadMeta from "@/components/HeadMeta";
+import PopupAlert from "@/components/PopupAlert";
 
 // Section ordering — about is now merged into hero
 type SectionId = "acclaim" | "episodes" | "hosts" | "sponsors" | "newsletter" | "subscribe" | "testimonials" | "faq";
@@ -121,6 +122,8 @@ const Index = () => {
       <Footer content={content} isEditing={isEditing} onUpdate={update} onContactClick={() => { setContactInquiry(""); setContactOpen(true); }} />
 
       {contactOpen && <ContactModal content={content} isEditing={isEditing} onUpdate={update} onClose={() => setContactOpen(false)} defaultInquiryType={contactInquiry} />}
+
+      <PopupAlert content={content} />
 
       {isEditing && canEdit && <CMSPanel content={content} onUpdate={update} onReset={reset} onClose={() => setIsEditing(false)} isAdmin={isAdmin} />}
     </div>
