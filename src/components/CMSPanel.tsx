@@ -292,6 +292,7 @@ export default function CMSPanel({ content, onUpdate, onReset, onClose, isAdmin 
                 <Field label="Heading Text" value={content.productsHeading || ""} onChange={v => onUpdate("productsHeading" as any, v)} />
                 <Field label="Button Text" value={content.productsButtonText || ""} onChange={v => onUpdate("productsButtonText" as any, v)} />
                 <Field label="Button URL" value={content.productsButtonUrl || ""} onChange={v => onUpdate("productsButtonUrl" as any, v)} />
+                <Field label="Rate Me Link URL" value={content.productsRateUrl || ""} onChange={v => onUpdate("productsRateUrl" as any, v)} />
               </div>
             </div>
           </>
