@@ -135,6 +135,7 @@ export interface CMSContent {
   productsHeading: string;
   productsButtonText: string;
   productsButtonUrl: string;
+  productsRateUrl: string;
 }
 
 
@@ -256,4 +257,5 @@ export const defaultCMS: CMSContent = {
   productsHeading: "Tell us about the AI products you use most",
   productsButtonText: "Submit Your Favorites",
   productsButtonUrl: "mailto:hello@productimpactpodcast.com?subject=AI Products I Use",
+  productsRateUrl: "mailto:hello@productimpactpodcast.com?subject=Product Rating",
 };
