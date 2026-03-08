@@ -8,7 +8,7 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import HeadMeta from "@/components/HeadMeta";
 import { useAuth } from "@/hooks/useAuth";
-import { Loader2, Filter, X, ChevronDown } from "lucide-react";
+import { Loader2, Filter, X, ChevronDown, Search } from "lucide-react";
 
 interface EpisodeTag {
   episode_guid: string;
@@ -85,6 +85,7 @@ export default function Themes() {
   const [tagsLoading, setTagsLoading] = useState(true);
   const [selectedThemes, setSelectedThemes] = useState<string[]>([]);
   const [selectedFocus, setSelectedFocus] = useState<string[]>([]);
+  const [searchQuery, setSearchQuery] = useState("");
 
   // Fetch all episode tags
   useEffect(() => {
@@ -119,9 +120,19 @@ export default function Themes() {
 
   // Filter episodes
   const filteredEpisodes = useMemo(() => {
-    if (selectedThemes.length === 0 && selectedFocus.length === 0) return episodes;
+    const q = searchQuery.toLowerCase().trim();
 
     return episodes.filter(ep => {
+      // Search filter
+      if (q) {
+        const titleMatch = ep.title?.toLowerCase().includes(q);
+        const descMatch = ep.description?.toLowerCase().includes(q);
+        if (!titleMatch && !descMatch) return false;
+      }
+
+      // Tag filters
+      if (selectedThemes.length === 0 && selectedFocus.length === 0) return true;
+
       const t = tagMap.get(ep.guid);
       if (!t) return false;
 
@@ -134,7 +145,7 @@ export default function Themes() {
 
       return themeMatch && focusMatch;
     });
-  }, [episodes, tagMap, selectedThemes, selectedFocus]);
+  }, [episodes, tagMap, selectedThemes, selectedFocus, searchQuery]);
 
   const toggleTheme = (theme: string) =>
     setSelectedThemes(prev =>
@@ -149,9 +160,10 @@ export default function Themes() {
   const clearAll = () => {
     setSelectedThemes([]);
     setSelectedFocus([]);
+    setSearchQuery("");
   };
 
-  const hasFilters = selectedThemes.length > 0 || selectedFocus.length > 0;
+  const hasFilters = selectedThemes.length > 0 || selectedFocus.length > 0 || searchQuery.trim().length > 0;
   const loading = feedLoading || tagsLoading;
 
   return (
@@ -185,6 +197,26 @@ export default function Themes() {
 
           {/* Filters */}
           <div className="py-6 space-y-4">
+
+            {/* Search bar */}
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={e => setSearchQuery(e.target.value)}
+                placeholder="Search episodes by title or description…"
+                className="w-full pl-10 pr-4 py-3 rounded-lg border border-border bg-card text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-colors"
+              />
+              {searchQuery && (
+                <button
+                  onClick={() => setSearchQuery("")}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+                >
+                  <X className="w-4 h-4" />
+                </button>
+              )}
+            </div>
 
             {/* Mobile: dropdowns */}
             <div className="flex flex-col gap-3 md:hidden">
