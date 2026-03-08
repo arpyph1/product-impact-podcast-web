@@ -7,7 +7,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { ArrowUpRight, Star } from "lucide-react";
 import { AI_PRODUCTS } from "@/data/aiProducts";
 
-const ITEMS_PER_PAGE = 25;
+const ITEMS_PER_PAGE = 50;
 
 function StarRating({ rateUrl }: { rateUrl: string }) {
   return (
