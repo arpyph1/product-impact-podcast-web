@@ -117,6 +117,7 @@ export interface CMSContent {
   // SEO / Meta
   metaDescription: string;
   googleSearchConsoleId: string;
+  gaTrackingId: string;
   ogTitle: string;
   ogDescription: string;
   ogImage: string;
