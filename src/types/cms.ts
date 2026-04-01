@@ -243,6 +243,7 @@ export const defaultCMS: CMSContent = {
 
   metaDescription: "Uncover the impact of AI on product management, design, GTM. We interview tech leaders to define how AI products create value and scale adoption.",
   googleSearchConsoleId: "",
+  gaTrackingId: "",
   ogTitle: "Product Impact Podcast | AI Strategy & Value Creation",
   ogDescription: "Uncover the impact of AI on product management, design, GTM. We interview tech leaders to define how AI products create value and scale adoption.",
   ogImage: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/7c8de7ab-b8ed-4cbb-865e-e3d5f35b1f5f/id-preview-f59651d7--a4daec39-ad4a-4b53-a16b-06c30201f864.lovable.app-1771517475528.png",
