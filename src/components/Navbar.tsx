@@ -84,35 +84,6 @@ export default function Navbar({ content, isEditing, onToggleEdit, onContactClic
         {/* Right nav + actions */}
         <div className="hidden md:flex items-center justify-end gap-6 flex-1">
           {rightItems.map((item, i) => renderLink(item, i, "right"))}
-          {canEdit && (
-            <button
-              onClick={onToggleEdit}
-              className={`text-xs font-medium px-3 py-1.5 rounded border transition-all ${
-                isEditing
-                  ? "border-amber/70 text-amber"
-                  : "border-border text-muted-foreground hover:text-foreground hover:border-foreground/40"
-              }`}
-            >
-              {isEditing ? "✓ Done" : "Edit"}
-            </button>
-          )}
-          {!user && onSignIn && (
-            <button
-              onClick={onSignIn}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded border border-border text-xs text-muted-foreground hover:text-foreground hover:border-foreground/40 transition-all"
-            >
-              <LogIn className="w-3 h-3" /> Sign In
-            </button>
-          )}
-          {user && onSignOut && (
-            <button
-              onClick={onSignOut}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded border border-border text-xs text-muted-foreground hover:text-foreground hover:border-foreground/40 transition-all"
-              title={user.email}
-            >
-              <LogOut className="w-3 h-3" /> Sign Out
-            </button>
-          )}
           <button
             onClick={onContactClick}
             className="flex items-center gap-1.5 px-4 py-1.5 rounded-full bg-primary text-primary-foreground text-xs font-semibold hover:brightness-110 transition-all"
