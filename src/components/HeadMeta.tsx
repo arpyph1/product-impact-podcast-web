@@ -116,6 +116,7 @@ export default function HeadMeta({ content }: { content: CMSContent }) {
     content.twitterDescription, content.twitterImage, content.podcastName,
     content.aboutDescription, content.rssFeedUrl, content.host1Name,
     content.host2Name, content.host1LinkedinUrl, content.host2LinkedinUrl,
+    content.faviconUrl,
   ]);
 
   return null;
