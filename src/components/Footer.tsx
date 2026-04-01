@@ -8,6 +8,11 @@ interface FooterProps {
   isEditing: boolean;
   onUpdate: (key: keyof CMSContent, value: any) => void;
   onContactClick: () => void;
+  canEdit?: boolean;
+  user?: User | null;
+  onSignIn?: () => void;
+  onSignOut?: () => void;
+  onToggleEdit?: () => void;
 }
 
 const PODCAST_PLATFORMS = [
