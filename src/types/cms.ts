@@ -124,6 +124,9 @@ export interface CMSContent {
   twitterDescription: string;
   twitterImage: string;
 
+  // Favicon
+  faviconUrl: string;
+
   // Popup alert
   popupEnabled: boolean;
   popupTitle: string;
