@@ -119,7 +119,7 @@ const Index = () => {
         {sectionOrder.map(id => renderSection(id))}
       </main>
 
-      <Footer content={content} isEditing={isEditing} onUpdate={update} onContactClick={() => { setContactInquiry(""); setContactOpen(true); }} />
+      <Footer content={content} isEditing={isEditing} onUpdate={update} onContactClick={() => { setContactInquiry(""); setContactOpen(true); }} canEdit={canEdit} user={user} onSignIn={signInWithGoogle} onSignOut={signOut} onToggleEdit={handleToggleEdit} />
 
       {contactOpen && <ContactModal content={content} isEditing={isEditing} onUpdate={update} onClose={() => setContactOpen(false)} defaultInquiryType={contactInquiry} />}
 

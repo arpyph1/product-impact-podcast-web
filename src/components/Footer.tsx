@@ -1,12 +1,18 @@
 import { CMSContent } from "@/types/cms";
-import { ArrowUpRight } from "lucide-react";
+import { ArrowUpRight, LogIn, LogOut } from "lucide-react";
 import logo from "@/assets/logo-new.png";
+import type { User } from "@supabase/supabase-js";
 
 interface FooterProps {
   content: CMSContent;
   isEditing: boolean;
   onUpdate: (key: keyof CMSContent, value: any) => void;
   onContactClick: () => void;
+  canEdit?: boolean;
+  user?: User | null;
+  onSignIn?: () => void;
+  onSignOut?: () => void;
+  onToggleEdit?: () => void;
 }
 
 const PODCAST_PLATFORMS = [
@@ -90,7 +96,7 @@ const SOCIAL_LINKS = [
   },
 ];
 
-export default function Footer({ content, isEditing, onUpdate, onContactClick }: FooterProps) {
+export default function Footer({ content, isEditing, onUpdate, onContactClick, canEdit, user, onSignIn, onSignOut, onToggleEdit }: FooterProps) {
   return (
     <footer className="bg-background" role="contentinfo">
       <div className="container mx-auto px-6">
@@ -185,7 +191,37 @@ export default function Footer({ content, isEditing, onUpdate, onContactClick }:
         {/* Bottom row */}
         <div className="py-6 flex flex-col md:flex-row items-center justify-between gap-3 text-xs text-muted-foreground">
           <p>© {new Date().getFullYear()} {content.podcastName}. All rights reserved.</p>
-          <p>Powered by RSS</p>
+          <div className="flex items-center gap-3">
+            {canEdit && onToggleEdit && (
+              <button
+                onClick={onToggleEdit}
+                className={`flex items-center gap-1.5 px-3 py-1.5 rounded border transition-all ${
+                  isEditing
+                    ? "border-amber/70 text-amber"
+                    : "border-border text-muted-foreground hover:text-foreground hover:border-foreground/40"
+                }`}
+              >
+                {isEditing ? "✓ Done" : "Edit"}
+              </button>
+            )}
+            {!user && onSignIn && (
+              <button
+                onClick={onSignIn}
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded border border-border text-muted-foreground hover:text-foreground hover:border-foreground/40 transition-all"
+              >
+                <LogIn className="w-3 h-3" /> Sign In
+              </button>
+            )}
+            {user && onSignOut && (
+              <button
+                onClick={onSignOut}
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded border border-border text-muted-foreground hover:text-foreground hover:border-foreground/40 transition-all"
+                title={user.email}
+              >
+                <LogOut className="w-3 h-3" /> Sign Out
+              </button>
+            )}
+          </div>
         </div>
       </div>
     </footer>
