@@ -232,7 +232,8 @@ export default function CMSPanel({ content, onUpdate, onReset, onClose, isAdmin 
         {tab === "seo" && (
           <>
             <Field label="Meta Description" value={content.metaDescription} onChange={v => onUpdate("metaDescription", v)} multiline placeholder="Page description for search engines (≤160 chars)" />
-            <Field label="Google Search Console Verification" value={content.googleSearchConsoleId} onChange={v => onUpdate("googleSearchConsoleId", v)} placeholder="e.g. abc123xyz (not GA tracking ID)" />
+            <Field label="Google Search Console Verification" value={content.googleSearchConsoleId} onChange={v => onUpdate("googleSearchConsoleId", v)} placeholder="e.g. abc123xyz (from HTML tag method)" />
+            <Field label="Google Analytics Tracking ID" value={content.gaTrackingId || ""} onChange={v => onUpdate("gaTrackingId", v)} placeholder="e.g. G-XXXXXXXXXX" />
             <Field label="Favicon URL" value={content.faviconUrl || ""} onChange={v => onUpdate("faviconUrl", v)} placeholder="https://example.com/favicon.png" />
             <div className="border-t border-border pt-4">
               <p className="text-xs text-muted-foreground uppercase tracking-widest font-semibold mb-3">Open Graph</p>
