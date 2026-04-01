@@ -1,6 +1,7 @@
 import { CMSContent } from "@/types/cms";
-import { ArrowUpRight } from "lucide-react";
+import { ArrowUpRight, LogIn, LogOut } from "lucide-react";
 import logo from "@/assets/logo-new.png";
+import type { User } from "@supabase/supabase-js";
 
 interface FooterProps {
   content: CMSContent;
