@@ -46,6 +46,18 @@ export default function HeadMeta({ content }: { content: CMSContent }) {
       setMeta("name", "google-site-verification", content.googleSearchConsoleId);
     }
 
+    // Favicon
+    if (content.faviconUrl) {
+      let el = document.querySelector('link[rel="icon"]') as HTMLLinkElement | null;
+      if (!el) {
+        el = document.createElement("link");
+        el.rel = "icon";
+        document.head.appendChild(el);
+      }
+      el.href = content.faviconUrl;
+      el.type = content.faviconUrl.endsWith(".svg") ? "image/svg+xml" : "image/png";
+    }
+
     // Canonical URL
     setLink("canonical", SITE_URL + "/");
 
