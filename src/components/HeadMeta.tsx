@@ -46,6 +46,24 @@ export default function HeadMeta({ content }: { content: CMSContent }) {
       setMeta("name", "google-site-verification", content.googleSearchConsoleId);
     }
 
+    // Google Analytics (gtag.js)
+    if (content.gaTrackingId) {
+      const gaId = content.gaTrackingId;
+      const scriptId = "ga-gtag-script";
+      if (!document.getElementById(scriptId)) {
+        const script = document.createElement("script");
+        script.id = scriptId;
+        script.async = true;
+        script.src = `https://www.googletagmanager.com/gtag/js?id=${gaId}`;
+        document.head.appendChild(script);
+
+        const inline = document.createElement("script");
+        inline.id = "ga-gtag-inline";
+        inline.textContent = `window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','${gaId}');`;
+        document.head.appendChild(inline);
+      }
+    }
+
     // Favicon
     if (content.faviconUrl) {
       let el = document.querySelector('link[rel="icon"]') as HTMLLinkElement | null;
