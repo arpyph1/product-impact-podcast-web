@@ -112,23 +112,6 @@ export default function Navbar({ content, isEditing, onToggleEdit, onContactClic
             className="w-full px-5 py-2.5 rounded-full bg-primary text-primary-foreground text-sm font-semibold">
             Contact
           </button>
-          {canEdit && (
-            <button onClick={onToggleEdit} className="text-xs text-muted-foreground underline">
-              {isEditing ? "Exit Edit Mode" : "Edit Site"}
-            </button>
-          )}
-          {!user && onSignIn && (
-            <button onClick={() => { onSignIn(); setMenuOpen(false); }}
-              className="w-full px-5 py-2.5 rounded-full border border-border text-sm font-semibold text-foreground">
-              Sign In
-            </button>
-          )}
-          {user && onSignOut && (
-            <button onClick={() => { onSignOut(); setMenuOpen(false); }}
-              className="text-xs text-muted-foreground underline">
-              Sign Out
-            </button>
-          )}
         </div>
       )}
     </header>
