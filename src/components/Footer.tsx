@@ -96,7 +96,7 @@ const SOCIAL_LINKS = [
   },
 ];
 
-export default function Footer({ content, isEditing, onUpdate, onContactClick }: FooterProps) {
+export default function Footer({ content, isEditing, onUpdate, onContactClick, canEdit, user, onSignIn, onSignOut, onToggleEdit }: FooterProps) {
   return (
     <footer className="bg-background" role="contentinfo">
       <div className="container mx-auto px-6">
