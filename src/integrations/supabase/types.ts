@@ -32,6 +32,42 @@ export type Database = {
         }
         Relationships: []
       }
+      episode_shownotes: {
+        Row: {
+          content_html: string
+          created_at: string
+          episode_guid: string
+          id: string
+          links: Json
+          published: boolean
+          title: string
+          updated_at: string
+          video_urls: Json
+        }
+        Insert: {
+          content_html?: string
+          created_at?: string
+          episode_guid: string
+          id?: string
+          links?: Json
+          published?: boolean
+          title?: string
+          updated_at?: string
+          video_urls?: Json
+        }
+        Update: {
+          content_html?: string
+          created_at?: string
+          episode_guid?: string
+          id?: string
+          links?: Json
+          published?: boolean
+          title?: string
+          updated_at?: string
+          video_urls?: Json
+        }
+        Relationships: []
+      }
       episode_tags: {
         Row: {
           classified_at: string

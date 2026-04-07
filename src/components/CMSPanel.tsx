@@ -2,6 +2,7 @@ import { useState } from "react";
 import { CMSContent, NavItem } from "@/types/cms";
 import { X, RotateCcw, Settings2, Info, Minimize2, Maximize2, PanelLeft, PanelRight } from "lucide-react";
 import EditorManager from "./EditorManager";
+import ShownotesEditor from "./ShownotesEditor";
 
 interface CMSPanelProps {
   content: CMSContent;
@@ -11,7 +12,7 @@ interface CMSPanelProps {
   isAdmin?: boolean;
 }
 
-type Tab = "general" | "hero" | "about" | "hosts" | "settings" | "typography" | "team" | "seo";
+type Tab = "general" | "hero" | "about" | "hosts" | "settings" | "typography" | "team" | "seo" | "shownotes";
 
 export default function CMSPanel({ content, onUpdate, onReset, onClose, isAdmin }: CMSPanelProps) {
   const [tab, setTab] = useState<Tab>("general");
@@ -25,6 +26,7 @@ export default function CMSPanel({ content, onUpdate, onReset, onClose, isAdmin 
     { key: "about", label: "About" },
     { key: "hosts", label: "Hosts" },
     { key: "seo", label: "SEO" },
+    { key: "shownotes", label: "Notes" },
     { key: "settings", label: "Settings" },
     { key: "typography", label: "Typography" },
     ...(isAdmin ? [{ key: "team" as Tab, label: "Team" }] : []),
@@ -298,6 +300,10 @@ export default function CMSPanel({ content, onUpdate, onReset, onClose, isAdmin 
               </div>
             </div>
           </>
+        )}
+
+        {tab === "shownotes" && (
+          <ShownotesEditor />
         )}
 
         {tab === "team" && isAdmin && (
