@@ -26,6 +26,7 @@ export default function CMSPanel({ content, onUpdate, onReset, onClose, isAdmin 
     { key: "about", label: "About" },
     { key: "hosts", label: "Hosts" },
     { key: "seo", label: "SEO" },
+    { key: "shownotes", label: "Notes" },
     { key: "settings", label: "Settings" },
     { key: "typography", label: "Typography" },
     ...(isAdmin ? [{ key: "team" as Tab, label: "Team" }] : []),
