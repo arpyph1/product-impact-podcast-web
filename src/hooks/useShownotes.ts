@@ -12,7 +12,6 @@ export interface Shownotes {
   updated_at: string;
 }
 
-// Fetch shownotes for a single episode
 export function useShownotes(episodeGuid: string | null) {
   const [shownotes, setShownotes] = useState<Shownotes | null>(null);
   const [loading, setLoading] = useState(false);
@@ -24,22 +23,9 @@ export function useShownotes(episodeGuid: string | null) {
     }
 
     setLoading(true);
-    supabase.functions
-      .invoke("shownotes", {
-        method: "GET",
-        headers: { "Content-Type": "application/json" },
-        body: undefined,
-      })
-      // The invoke method doesn't support query params well, so we use fetch directly
-      .then(() => {})
-      .catch(() => {});
-
-    // Use direct fetch for GET with query params
     const url = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/shownotes?episode_guid=${encodeURIComponent(episodeGuid)}`;
     fetch(url, {
-      headers: {
-        apikey: import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY,
-      },
+      headers: { apikey: import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY },
     })
       .then(r => r.json())
       .then(result => {
@@ -52,7 +38,6 @@ export function useShownotes(episodeGuid: string | null) {
   return { shownotes, loading };
 }
 
-// Fetch all shownotes (for CMS listing)
 export function useAllShownotes() {
   const [list, setList] = useState<Shownotes[]>([]);
   const [loading, setLoading] = useState(true);
@@ -61,9 +46,7 @@ export function useAllShownotes() {
     setLoading(true);
     const url = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/shownotes`;
     fetch(url, {
-      headers: {
-        apikey: import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY,
-      },
+      headers: { apikey: import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY },
     })
       .then(r => r.json())
       .then(result => {
@@ -78,7 +61,6 @@ export function useAllShownotes() {
   return { list, loading, refresh };
 }
 
-// Save shownotes from CMS (uses auth token)
 export async function saveShownotes(data: {
   episode_guid: string;
   title?: string;

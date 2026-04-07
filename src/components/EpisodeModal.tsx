@@ -1,8 +1,9 @@
 import { useRef, useState, useEffect, useCallback } from "react";
 import { PodcastEpisode } from "@/hooks/useRSSFeed";
+import { useShownotes } from "@/hooks/useShownotes";
 import { Dialog, DialogPortal, DialogOverlay, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import * as DialogPrimitive from "@radix-ui/react-dialog";
-import { Play, Pause, ExternalLink, Clock, Mic2, Calendar, ChevronLeft, ChevronRight, X } from "lucide-react";
+import { Play, Pause, ExternalLink, Clock, Mic2, Calendar, ChevronLeft, ChevronRight, X, FileText } from "lucide-react";
 
 interface EpisodeModalProps {
   episode: PodcastEpisode | null;
@@ -19,11 +20,15 @@ export default function EpisodeModal({ episode, open, onOpenChange, onPrev, onNe
   const [playing, setPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
+  const [showShownotes, setShowShownotes] = useState(false);
+
+  const { shownotes, loading: shownotesLoading } = useShownotes(open && episode ? episode.guid : null);
 
   useEffect(() => {
     setPlaying(false);
     setCurrentTime(0);
     setDuration(0);
+    setShowShownotes(false);
   }, [episode?.guid]);
 
   const togglePlay = () => {
@@ -81,7 +86,6 @@ export default function EpisodeModal({ episode, open, onOpenChange, onPrev, onNe
       <DialogPortal>
         <DialogOverlay />
 
-        {/* Fixed nav arrows — outside the scrollable content */}
         {hasPrev && onPrev && (
           <button
             onClick={(e) => { e.stopPropagation(); onPrev(); }}
@@ -99,7 +103,6 @@ export default function EpisodeModal({ episode, open, onOpenChange, onPrev, onNe
           </button>
         )}
 
-        {/* Fixed close button — outside the scrollable content */}
         <button
           onClick={handleClose}
           className="fixed right-4 top-4 z-[60] w-10 h-10 rounded-full bg-card/90 border border-border backdrop-blur-sm flex items-center justify-center text-foreground hover:bg-card transition-colors shadow-lg"
@@ -107,7 +110,6 @@ export default function EpisodeModal({ episode, open, onOpenChange, onPrev, onNe
           <X className="w-6 h-6" />
         </button>
 
-        {/* Modal content — no built-in close button */}
         <DialogPrimitive.Content
           className="fixed left-[50%] top-[50%] z-50 w-full max-w-2xl max-h-[85vh] translate-x-[-50%] translate-y-[-50%] overflow-y-auto rounded-lg border border-border bg-card shadow-lg duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-top-[48%] data-[state=open]:slide-in-from-left-1/2 data-[state=open]:slide-in-from-top-[48%]"
         >
@@ -125,7 +127,6 @@ export default function EpisodeModal({ episode, open, onOpenChange, onPrev, onNe
 
           {/* Body content */}
           <div className="p-6 space-y-5">
-            {/* Episode title as H2 */}
             <DialogHeader className="space-y-3">
               <DialogTitle asChild>
                 <h2 className="font-display font-extrabold text-2xl leading-tight text-foreground">
@@ -153,7 +154,7 @@ export default function EpisodeModal({ episode, open, onOpenChange, onPrev, onNe
               </div>
             </DialogHeader>
 
-            {/* Custom audio player */}
+            {/* Audio player */}
             {episode.audioUrl && (
               <div className="rounded-lg border border-border bg-secondary p-4 space-y-3">
                 <div className="flex items-center gap-3">
@@ -187,8 +188,79 @@ export default function EpisodeModal({ episode, open, onOpenChange, onPrev, onNe
               </div>
             )}
 
-            {/* Description with clickable links */}
-            {episode.description && (
+            {/* Shownotes toggle */}
+            {shownotes && shownotes.content_html && (
+              <button
+                onClick={() => setShowShownotes(!showShownotes)}
+                className="flex items-center gap-2 text-sm text-primary hover:text-primary/80 transition-colors font-semibold"
+              >
+                <FileText className="w-4 h-4" />
+                {showShownotes ? "Hide Show Notes" : "View Show Notes"}
+              </button>
+            )}
+
+            {/* Shownotes content */}
+            {showShownotes && shownotes?.content_html && (
+              <div className="border-t border-border pt-4">
+                <div
+                  className="prose prose-invert prose-sm max-w-none text-secondary-foreground leading-relaxed
+                             [&_a]:text-primary [&_a]:underline [&_a]:underline-offset-2 hover:[&_a]:text-primary/80
+                             [&_p]:mb-3 [&_ul]:mb-3 [&_ol]:mb-3 [&_li]:mb-1
+                             [&_h1]:text-xl [&_h1]:font-bold [&_h1]:mb-3
+                             [&_h2]:text-lg [&_h2]:font-bold [&_h2]:mb-2
+                             [&_h3]:text-base [&_h3]:font-semibold [&_h3]:mb-2
+                             [&_blockquote]:border-l-2 [&_blockquote]:border-primary [&_blockquote]:pl-4 [&_blockquote]:italic
+                             [&_pre]:bg-muted [&_pre]:p-3 [&_pre]:rounded-lg [&_pre]:overflow-x-auto
+                             [&_img]:rounded-lg [&_img]:max-w-full
+                             [&_iframe]:w-full [&_iframe]:rounded-lg [&_iframe]:aspect-video"
+                  dangerouslySetInnerHTML={{ __html: shownotes.content_html }}
+                />
+
+                {/* Links */}
+                {shownotes.links && shownotes.links.length > 0 && (
+                  <div className="mt-4 pt-3 border-t border-border">
+                    <h4 className="text-sm font-semibold text-foreground mb-2">Resources & Links</h4>
+                    <ul className="space-y-1">
+                      {shownotes.links.map((link: any, i: number) => (
+                        <li key={i}>
+                          <a
+                            href={link.url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-sm text-primary hover:text-primary/80 underline underline-offset-2"
+                          >
+                            {link.label || link.url}
+                          </a>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+
+                {/* Videos */}
+                {shownotes.video_urls && shownotes.video_urls.length > 0 && (
+                  <div className="mt-4 space-y-3">
+                    {shownotes.video_urls.map((url: string, i: number) => (
+                      <div key={i} className="aspect-video rounded-lg overflow-hidden">
+                        <iframe
+                          src={url}
+                          className="w-full h-full"
+                          allowFullScreen
+                          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                        />
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            )}
+
+            {shownotesLoading && (
+              <p className="text-xs text-muted-foreground animate-pulse">Loading show notes...</p>
+            )}
+
+            {/* Description */}
+            {episode.description && !showShownotes && (
               <div
                 className="prose prose-invert prose-sm max-w-none text-secondary-foreground leading-relaxed
                            [&_a]:text-primary [&_a]:underline [&_a]:underline-offset-2 hover:[&_a]:text-primary/80
