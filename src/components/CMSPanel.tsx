@@ -12,7 +12,7 @@ interface CMSPanelProps {
   isAdmin?: boolean;
 }
 
-type Tab = "general" | "hero" | "about" | "hosts" | "settings" | "typography" | "team" | "seo";
+type Tab = "general" | "hero" | "about" | "hosts" | "settings" | "typography" | "team" | "seo" | "shownotes";
 
 export default function CMSPanel({ content, onUpdate, onReset, onClose, isAdmin }: CMSPanelProps) {
   const [tab, setTab] = useState<Tab>("general");
