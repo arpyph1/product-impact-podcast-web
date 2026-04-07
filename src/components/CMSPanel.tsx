@@ -302,6 +302,10 @@ export default function CMSPanel({ content, onUpdate, onReset, onClose, isAdmin 
           </>
         )}
 
+        {tab === "shownotes" && (
+          <ShownotesEditor />
+        )}
+
         {tab === "team" && isAdmin && (
           <EditorManager />
         )}
