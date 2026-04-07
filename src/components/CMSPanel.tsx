@@ -2,6 +2,7 @@ import { useState } from "react";
 import { CMSContent, NavItem } from "@/types/cms";
 import { X, RotateCcw, Settings2, Info, Minimize2, Maximize2, PanelLeft, PanelRight } from "lucide-react";
 import EditorManager from "./EditorManager";
+import ShownotesEditor from "./ShownotesEditor";
 
 interface CMSPanelProps {
   content: CMSContent;
