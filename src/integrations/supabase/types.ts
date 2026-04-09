@@ -14,6 +14,173 @@ export type Database = {
   }
   public: {
     Tables: {
+      article_entities: {
+        Row: {
+          article_id: string
+          entity_id: string
+          relevance: string | null
+        }
+        Insert: {
+          article_id: string
+          entity_id: string
+          relevance?: string | null
+        }
+        Update: {
+          article_id?: string
+          entity_id?: string
+          relevance?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "article_entities_article_id_fkey"
+            columns: ["article_id"]
+            isOneToOne: false
+            referencedRelation: "articles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "article_entities_entity_id_fkey"
+            columns: ["entity_id"]
+            isOneToOne: false
+            referencedRelation: "entities"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      article_faqs: {
+        Row: {
+          answer: string
+          article_id: string
+          id: string
+          position: number | null
+          question: string
+        }
+        Insert: {
+          answer: string
+          article_id: string
+          id?: string
+          position?: number | null
+          question: string
+        }
+        Update: {
+          answer?: string
+          article_id?: string
+          id?: string
+          position?: number | null
+          question?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "article_faqs_article_id_fkey"
+            columns: ["article_id"]
+            isOneToOne: false
+            referencedRelation: "articles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      articles: {
+        Row: {
+          author_slugs: string[]
+          byline_role: string | null
+          canonical_url: string
+          cms_locked_hero: boolean | null
+          cms_locked_meta: boolean | null
+          cms_locked_schema: boolean | null
+          cms_locked_themes: boolean | null
+          content_html: string
+          content_markdown: string
+          created_at: string | null
+          dateline: string | null
+          format: string
+          hero_image_alt: string | null
+          hero_image_credit: string | null
+          hero_image_url: string | null
+          id: string
+          last_updated: string | null
+          lenses: string[]
+          meta_description: string
+          primary_podcast_episode_guid: string | null
+          publish_date: string
+          published: boolean | null
+          read_time_minutes: number | null
+          schema_jsonld: Json | null
+          slug: string
+          subtitle: string | null
+          themes: string[]
+          title: string
+          topics: string[] | null
+          updated_at: string | null
+          word_count: number | null
+        }
+        Insert: {
+          author_slugs?: string[]
+          byline_role?: string | null
+          canonical_url?: string
+          cms_locked_hero?: boolean | null
+          cms_locked_meta?: boolean | null
+          cms_locked_schema?: boolean | null
+          cms_locked_themes?: boolean | null
+          content_html?: string
+          content_markdown?: string
+          created_at?: string | null
+          dateline?: string | null
+          format?: string
+          hero_image_alt?: string | null
+          hero_image_credit?: string | null
+          hero_image_url?: string | null
+          id?: string
+          last_updated?: string | null
+          lenses?: string[]
+          meta_description?: string
+          primary_podcast_episode_guid?: string | null
+          publish_date: string
+          published?: boolean | null
+          read_time_minutes?: number | null
+          schema_jsonld?: Json | null
+          slug: string
+          subtitle?: string | null
+          themes?: string[]
+          title: string
+          topics?: string[] | null
+          updated_at?: string | null
+          word_count?: number | null
+        }
+        Update: {
+          author_slugs?: string[]
+          byline_role?: string | null
+          canonical_url?: string
+          cms_locked_hero?: boolean | null
+          cms_locked_meta?: boolean | null
+          cms_locked_schema?: boolean | null
+          cms_locked_themes?: boolean | null
+          content_html?: string
+          content_markdown?: string
+          created_at?: string | null
+          dateline?: string | null
+          format?: string
+          hero_image_alt?: string | null
+          hero_image_credit?: string | null
+          hero_image_url?: string | null
+          id?: string
+          last_updated?: string | null
+          lenses?: string[]
+          meta_description?: string
+          primary_podcast_episode_guid?: string | null
+          publish_date?: string
+          published?: boolean | null
+          read_time_minutes?: number | null
+          schema_jsonld?: Json | null
+          slug?: string
+          subtitle?: string | null
+          themes?: string[]
+          title?: string
+          topics?: string[] | null
+          updated_at?: string | null
+          word_count?: number | null
+        }
+        Relationships: []
+      }
       cms_content: {
         Row: {
           data: Json
@@ -32,37 +199,189 @@ export type Database = {
         }
         Relationships: []
       }
+      entities: {
+        Row: {
+          aliases: string[] | null
+          canonical_url: string
+          created_at: string | null
+          description: string | null
+          external_links: Json | null
+          id: string
+          lenses: string[] | null
+          long_form: string | null
+          metadata: Json | null
+          name: string
+          schema_jsonld: Json | null
+          slug: string
+          themes: string[] | null
+          type: Database["public"]["Enums"]["entity_type"]
+          updated_at: string | null
+        }
+        Insert: {
+          aliases?: string[] | null
+          canonical_url?: string
+          created_at?: string | null
+          description?: string | null
+          external_links?: Json | null
+          id?: string
+          lenses?: string[] | null
+          long_form?: string | null
+          metadata?: Json | null
+          name: string
+          schema_jsonld?: Json | null
+          slug: string
+          themes?: string[] | null
+          type: Database["public"]["Enums"]["entity_type"]
+          updated_at?: string | null
+        }
+        Update: {
+          aliases?: string[] | null
+          canonical_url?: string
+          created_at?: string | null
+          description?: string | null
+          external_links?: Json | null
+          id?: string
+          lenses?: string[] | null
+          long_form?: string | null
+          metadata?: Json | null
+          name?: string
+          schema_jsonld?: Json | null
+          slug?: string
+          themes?: string[] | null
+          type?: Database["public"]["Enums"]["entity_type"]
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      episode_entities: {
+        Row: {
+          context: string | null
+          entity_id: string
+          episode_guid: string
+          is_first_appearance: boolean | null
+          relevance: string | null
+          speaker: string | null
+          timestamp_text: string | null
+        }
+        Insert: {
+          context?: string | null
+          entity_id: string
+          episode_guid: string
+          is_first_appearance?: boolean | null
+          relevance?: string | null
+          speaker?: string | null
+          timestamp_text?: string | null
+        }
+        Update: {
+          context?: string | null
+          entity_id?: string
+          episode_guid?: string
+          is_first_appearance?: boolean | null
+          relevance?: string | null
+          speaker?: string | null
+          timestamp_text?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "episode_entities_entity_id_fkey"
+            columns: ["entity_id"]
+            isOneToOne: false
+            referencedRelation: "entities"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      episode_faqs: {
+        Row: {
+          answer: string
+          episode_guid: string
+          id: string
+          position: number | null
+          question: string
+        }
+        Insert: {
+          answer: string
+          episode_guid: string
+          id?: string
+          position?: number | null
+          question: string
+        }
+        Update: {
+          answer?: string
+          episode_guid?: string
+          id?: string
+          position?: number | null
+          question?: string
+        }
+        Relationships: []
+      }
       episode_shownotes: {
         Row: {
           content_html: string
           created_at: string
+          duration: string | null
           episode_guid: string
+          episode_number: number | null
+          guests: Json | null
+          hosts: string[] | null
           id: string
+          lenses: string[] | null
           links: Json
+          meta_description: string | null
           published: boolean
+          published_at: string | null
+          schema_jsonld: Json | null
+          season_number: number | null
+          slug: string | null
+          themes: string[] | null
           title: string
+          transcript_markdown: string | null
           updated_at: string
           video_urls: Json
         }
         Insert: {
           content_html?: string
           created_at?: string
+          duration?: string | null
           episode_guid: string
+          episode_number?: number | null
+          guests?: Json | null
+          hosts?: string[] | null
           id?: string
+          lenses?: string[] | null
           links?: Json
+          meta_description?: string | null
           published?: boolean
+          published_at?: string | null
+          schema_jsonld?: Json | null
+          season_number?: number | null
+          slug?: string | null
+          themes?: string[] | null
           title?: string
+          transcript_markdown?: string | null
           updated_at?: string
           video_urls?: Json
         }
         Update: {
           content_html?: string
           created_at?: string
+          duration?: string | null
           episode_guid?: string
+          episode_number?: number | null
+          guests?: Json | null
+          hosts?: string[] | null
           id?: string
+          lenses?: string[] | null
           links?: Json
+          meta_description?: string | null
           published?: boolean
+          published_at?: string | null
+          schema_jsonld?: Json | null
+          season_number?: number | null
+          slug?: string | null
+          themes?: string[] | null
           title?: string
+          transcript_markdown?: string | null
           updated_at?: string
           video_urls?: Json
         }
@@ -113,6 +432,36 @@ export type Database = {
         }
         Relationships: []
       }
+      lenses: {
+        Row: {
+          audience: string | null
+          description: string
+          id: string
+          meta_description: string | null
+          name: string
+          slug: string
+          updated_at: string | null
+        }
+        Insert: {
+          audience?: string | null
+          description?: string
+          id?: string
+          meta_description?: string | null
+          name: string
+          slug: string
+          updated_at?: string | null
+        }
+        Update: {
+          audience?: string | null
+          description?: string
+          id?: string
+          meta_description?: string | null
+          name?: string
+          slug?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           created_at: string
@@ -137,6 +486,54 @@ export type Database = {
         }
         Relationships: []
       }
+      sponsors: {
+        Row: {
+          active: boolean | null
+          created_at: string | null
+          cta_text: string | null
+          description: string | null
+          display_order: number | null
+          id: string
+          logo_url: string | null
+          name: string
+          slug: string
+          tagline: string | null
+          themes: string[] | null
+          tier: string | null
+          website_url: string | null
+        }
+        Insert: {
+          active?: boolean | null
+          created_at?: string | null
+          cta_text?: string | null
+          description?: string | null
+          display_order?: number | null
+          id?: string
+          logo_url?: string | null
+          name: string
+          slug: string
+          tagline?: string | null
+          themes?: string[] | null
+          tier?: string | null
+          website_url?: string | null
+        }
+        Update: {
+          active?: boolean | null
+          created_at?: string | null
+          cta_text?: string | null
+          description?: string | null
+          display_order?: number | null
+          id?: string
+          logo_url?: string | null
+          name?: string
+          slug?: string
+          tagline?: string | null
+          themes?: string[] | null
+          tier?: string | null
+          website_url?: string | null
+        }
+        Relationships: []
+      }
       tagging_rules: {
         Row: {
           config: Json
@@ -155,6 +552,51 @@ export type Database = {
           id?: string
           updated_at?: string
           updated_by?: string | null
+        }
+        Relationships: []
+      }
+      themes: {
+        Row: {
+          description: string
+          hero_image_url: string | null
+          icon: string | null
+          id: string
+          long_form_intro: string | null
+          meta_description: string | null
+          name: string
+          schema_jsonld: Json | null
+          slug: string
+          target_search_queries: string[] | null
+          theme_color: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          description?: string
+          hero_image_url?: string | null
+          icon?: string | null
+          id?: string
+          long_form_intro?: string | null
+          meta_description?: string | null
+          name: string
+          schema_jsonld?: Json | null
+          slug: string
+          target_search_queries?: string[] | null
+          theme_color?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          description?: string
+          hero_image_url?: string | null
+          icon?: string | null
+          id?: string
+          long_form_intro?: string | null
+          meta_description?: string | null
+          name?: string
+          schema_jsonld?: Json | null
+          slug?: string
+          target_search_queries?: string[] | null
+          theme_color?: string | null
+          updated_at?: string | null
         }
         Relationships: []
       }
@@ -194,6 +636,13 @@ export type Database = {
     }
     Enums: {
       app_role: "admin" | "editor"
+      entity_type:
+        | "concept"
+        | "person"
+        | "organization"
+        | "framework"
+        | "source"
+        | "product"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -322,6 +771,14 @@ export const Constants = {
   public: {
     Enums: {
       app_role: ["admin", "editor"],
+      entity_type: [
+        "concept",
+        "person",
+        "organization",
+        "framework",
+        "source",
+        "product",
+      ],
     },
   },
 } as const
