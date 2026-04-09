@@ -113,6 +113,19 @@ serve(async (req) => {
       if (links !== undefined) record.links = links;
       if (video_urls !== undefined) record.video_urls = video_urls;
       if (published !== undefined) record.published = published;
+      // New fields
+      if (body.slug !== undefined) record.slug = body.slug;
+      if (body.meta_description !== undefined) record.meta_description = body.meta_description;
+      if (body.schema_jsonld !== undefined) record.schema_jsonld = body.schema_jsonld;
+      if (body.published_at !== undefined) record.published_at = body.published_at;
+      if (body.episode_number !== undefined) record.episode_number = body.episode_number;
+      if (body.season_number !== undefined) record.season_number = body.season_number;
+      if (body.duration !== undefined) record.duration = body.duration;
+      if (body.themes !== undefined) record.themes = body.themes;
+      if (body.lenses !== undefined) record.lenses = body.lenses;
+      if (body.hosts !== undefined) record.hosts = body.hosts;
+      if (body.guests !== undefined) record.guests = body.guests;
+      if (body.transcript_markdown !== undefined) record.transcript_markdown = body.transcript_markdown;
 
       const { data, error } = await supabase
         .from("episode_shownotes")
