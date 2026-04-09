@@ -193,11 +193,13 @@ export const defaultCMS: CMSContent = {
   podcastName: "Product Impact Podcast",
 
   navLeftItems: [
-    { label: "Episodes", href: "#episodes" },
-    { label: "About", href: "#about" },
+    { label: "News", href: "/news" },
+    { label: "Themes", href: "/themes" },
   ],
   navRightItems: [
-    { label: "Listen", href: "#engage" },
+    { label: "Podcast", href: "/podcast" },
+    { label: "Episodes", href: "/episodes" },
+    { label: "Partnerships", href: "/partnerships" },
   ],
 
   // Legacy — kept for backward compat with saved data
