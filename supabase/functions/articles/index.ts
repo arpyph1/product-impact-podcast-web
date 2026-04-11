@@ -90,8 +90,9 @@ serve(async (req) => {
       // List articles with filters
       let query = supabase
         .from("articles")
-        .select("id, slug, title, subtitle, format, author_slugs, byline_role, publish_date, read_time_minutes, meta_description, hero_image_url, hero_image_alt, themes, lenses, topics, canonical_url", { count: "exact" })
+        .select("id, slug, title, subtitle, format, author_slugs, byline_role, publish_date, read_time_minutes, meta_description, hero_image_url, hero_image_alt, themes, lenses, topics, canonical_url, overview_bullets, is_lead_story", { count: "exact" })
         .eq("published", true)
+        .order("is_lead_story", { ascending: false })
         .order("publish_date", { ascending: false })
         .range(offset, offset + limit - 1);
 
@@ -130,6 +131,7 @@ serve(async (req) => {
         "content_markdown", "content_html", "themes", "lenses", "topics",
         "primary_podcast_episode_guid", "schema_jsonld", "canonical_url", "published",
         "cms_locked_themes", "cms_locked_meta", "cms_locked_schema", "cms_locked_hero",
+        "overview_bullets", "is_lead_story",
       ];
       for (const f of fields) {
         if (body[f] !== undefined) record[f] = body[f];

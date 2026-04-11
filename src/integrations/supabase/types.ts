@@ -97,9 +97,11 @@ export type Database = {
           hero_image_credit: string | null
           hero_image_url: string | null
           id: string
+          is_lead_story: boolean | null
           last_updated: string | null
           lenses: string[]
           meta_description: string
+          overview_bullets: string[] | null
           primary_podcast_episode_guid: string | null
           publish_date: string
           published: boolean | null
@@ -130,9 +132,11 @@ export type Database = {
           hero_image_credit?: string | null
           hero_image_url?: string | null
           id?: string
+          is_lead_story?: boolean | null
           last_updated?: string | null
           lenses?: string[]
           meta_description?: string
+          overview_bullets?: string[] | null
           primary_podcast_episode_guid?: string | null
           publish_date: string
           published?: boolean | null
@@ -163,9 +167,11 @@ export type Database = {
           hero_image_credit?: string | null
           hero_image_url?: string | null
           id?: string
+          is_lead_story?: boolean | null
           last_updated?: string | null
           lenses?: string[]
           meta_description?: string
+          overview_bullets?: string[] | null
           primary_podcast_episode_guid?: string | null
           publish_date?: string
           published?: boolean | null

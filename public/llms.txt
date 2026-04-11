@@ -1,0 +1,29 @@
+# Product Impact — llms.txt
+# https://llmstxt.org/
+
+> Product Impact is an AI product strategy publication and podcast covering how AI products create value, scale adoption, and measure impact.
+
+## About
+- Product Impact publishes news, analysis, case studies, and features about AI product strategy, enterprise adoption, and the people building AI products.
+- The Product Impact Podcast features interviews with product leaders, AI strategists, and technology executives.
+- Hosted by Arpy Dragffy (PH1 Research) and Brittany Hobbs.
+
+## Content
+- News and analysis: [/news](/news)
+- Podcast episodes: [/podcast](/podcast)
+- Themes: [/themes](/themes)
+- Partnerships: [/partnerships](/partnerships)
+
+## Themes
+- AI Product Strategy
+- Agents & Agentic Systems
+- UX for AI
+- Adoption & Organizational Change
+- Evaluation & Benchmarking
+- Go-to-Market & Distribution
+- Data, Semantics & Knowledge Foundations
+- AI Ethics & Governance
+
+## Contact
+- Email: hello@productimpactpodcast.com
+- Website: https://productimpactpod.com
