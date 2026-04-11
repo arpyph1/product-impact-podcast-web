@@ -130,6 +130,7 @@ serve(async (req) => {
         "content_markdown", "content_html", "themes", "lenses", "topics",
         "primary_podcast_episode_guid", "schema_jsonld", "canonical_url", "published",
         "cms_locked_themes", "cms_locked_meta", "cms_locked_schema", "cms_locked_hero",
+        "overview_bullets", "is_lead_story",
       ];
       for (const f of fields) {
         if (body[f] !== undefined) record[f] = body[f];
