@@ -4,6 +4,21 @@ Allow: /
 User-agent: Bingbot
 Allow: /
 
+User-agent: GPTBot
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Applebot
+Allow: /
+
+User-agent: CCBot
+Allow: /
+
 User-agent: Twitterbot
 Allow: /
 
@@ -13,4 +28,4 @@ Allow: /
 User-agent: *
 Allow: /
 
-Sitemap: https://product-impact-podcast-web.lovable.app/sitemap.xml
+Sitemap: https://productimpactpod.com/sitemap.xml
