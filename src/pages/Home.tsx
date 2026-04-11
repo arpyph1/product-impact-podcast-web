@@ -130,12 +130,12 @@ function ArticleCard({ article }: { article: Article }) {
   return (
     <Link to={`/news/${article.slug}`} className="group studio-card overflow-hidden hover:border-foreground/20 transition-all flex flex-col h-full">
       <div className="relative aspect-[16/9] overflow-hidden bg-card">
-        {article.hero_image_url ? (
+              {article.hero_image_url ? (
           <img src={article.hero_image_url} alt={article.hero_image_alt || article.title}
             className="w-full h-full object-cover group-hover:scale-[1.02] transition-transform duration-500" loading="lazy" />
         ) : (
-          <div className="w-full h-full bg-muted flex items-center justify-center">
-            <Mic2 className="w-8 h-8 text-muted-foreground opacity-30" />
+          <div className="w-full h-full bg-gradient-to-br from-primary/20 to-primary/5 flex items-center justify-center">
+            <span className="font-display font-bold text-white/10 text-lg">Product Impact</span>
           </div>
         )}
         <span className={`absolute top-3 left-3 px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider ${FORMAT_COLORS[article.format] || "bg-muted text-foreground"}`}>
@@ -178,7 +178,9 @@ function SmallCard({ article, badge }: { article: Article; badge?: string }) {
           <img src={article.hero_image_url} alt={article.hero_image_alt || article.title}
             className="w-full h-full object-cover group-hover:scale-[1.02] transition-transform duration-300" loading="lazy" />
         ) : (
-          <div className="w-full h-full bg-muted" />
+          <div className="w-full h-full bg-gradient-to-br from-primary/20 to-primary/5 flex items-center justify-center">
+            <span className="font-display font-bold text-white/10 text-sm">Product Impact</span>
+          </div>
         )}
         <span className={`absolute top-2 left-2 px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider ${FORMAT_COLORS[article.format] || "bg-muted text-foreground"}`}>
           {badge || FORMAT_LABELS[article.format] || article.format}
