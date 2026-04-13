@@ -147,26 +147,34 @@ export default function News() {
               <p className="text-sm">Articles will appear here once published via the API.</p>
             </div>
           ) : (
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
-              {articles.map(article => (
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-5 mb-12">
+              {articles.map(article => {
+                const gradient = THEME_GRADIENTS[article.themes?.[0]] || "from-slate-600 to-slate-800";
+                return (
                 <Link
                   key={article.id}
                   to={`/news/${article.slug}`}
-                  className="group studio-card overflow-hidden hover:border-foreground/20 transition-all"
+                  className="group studio-card overflow-hidden"
                 >
-                  {article.hero_image_url && (
-                    <div className="aspect-[16/9] overflow-hidden">
+                  <div className="aspect-[16/9] overflow-hidden">
+                    {article.hero_image_url ? (
                       <img
                         src={article.hero_image_url}
                         alt={article.hero_image_alt || article.title}
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                        className="w-full h-full object-cover group-hover:scale-[1.03] transition-transform duration-500"
                         loading="lazy"
                       />
-                    </div>
-                  )}
+                    ) : (
+                      <div className={`w-full h-full bg-gradient-to-br ${gradient} flex items-center justify-center p-6`}>
+                        <span className="font-display font-bold text-white/90 text-center text-sm leading-tight line-clamp-3 drop-shadow-sm">
+                          {article.title}
+                        </span>
+                      </div>
+                    )}
+                  </div>
                   <div className="p-5">
                     <div className="flex items-center gap-2 mb-3">
-                      <span className={`px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider ${FORMAT_COLORS[article.format] || "bg-muted text-muted-foreground"}`}>
+                      <span className={`px-2.5 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider ${FORMAT_COLORS[article.format] || "bg-muted text-muted-foreground"}`}>
                         {FORMAT_LABELS[article.format] || article.format}
                       </span>
                       {article.themes.slice(0, 2).map(t => (
@@ -185,7 +193,8 @@ export default function News() {
                     </div>
                   </div>
                 </Link>
-              ))}
+                );
+              })}
             </div>
           )}
 
