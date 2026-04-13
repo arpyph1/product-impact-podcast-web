@@ -39,16 +39,27 @@ const FORMAT_LABELS: Record<string, string> = {
 };
 
 const FORMAT_COLORS: Record<string, string> = {
-  "news-brief": "bg-primary/20 text-primary",
-  "news-analysis": "bg-primary/20 text-primary",
-  "release-note": "bg-teal/20 text-teal",
-  "feature": "bg-amber/20 text-amber",
-  "interview": "bg-lavender/20 text-lavender",
-  "case-study": "bg-sage/20 text-sage",
-  "opinion": "bg-primary/20 text-primary",
-  "explainer": "bg-teal/20 text-teal",
-  "product-review": "bg-amber/20 text-amber",
-  "research-brief": "bg-lavender/20 text-lavender",
+  "news-brief": "bg-primary/10 text-primary",
+  "news-analysis": "bg-primary/10 text-primary",
+  "release-note": "bg-teal/10 text-teal",
+  "feature": "bg-amber/10 text-foreground",
+  "interview": "bg-lavender/10 text-lavender",
+  "case-study": "bg-sage/10 text-sage",
+  "opinion": "bg-primary/10 text-primary",
+  "explainer": "bg-teal/10 text-teal",
+  "product-review": "bg-amber/10 text-foreground",
+  "research-brief": "bg-lavender/10 text-lavender",
+};
+
+const THEME_GRADIENTS: Record<string, string> = {
+  "ai-product-strategy": "from-blue-600 to-indigo-800",
+  "agents-agentic-systems": "from-violet-600 to-purple-800",
+  "ux-for-ai": "from-pink-500 to-rose-700",
+  "adoption-organizational-change": "from-emerald-600 to-teal-800",
+  "evaluation-benchmarking": "from-cyan-500 to-blue-700",
+  "go-to-market-distribution": "from-orange-500 to-red-700",
+  "data-semantics-knowledge-foundations": "from-sky-500 to-indigo-700",
+  "ai-ethics-governance": "from-amber-500 to-orange-700",
 };
 
 export default function News() {
