@@ -2,69 +2,68 @@
 @tailwind components;
 @tailwind utilities;
 
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Montserrat:wght@700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Montserrat:wght@700;800;900&display=swap');
 
 /* =====================================================
-   PRODUCT IMPACT PODCAST — World-Class Agency Edition
-   Inspired by IDEO / Huge / Superside
-   Pure black foundation, editorial type, zero noise.
+   PRODUCT IMPACT — Particle.news-inspired Light Theme
+   Clean, editorial, high-density news layout.
    All colors HSL.
    ===================================================== */
 
 @layer base {
   :root {
-    /* Pure agency black */
-    --background:       0 0% 4%;
-    --foreground:       0 0% 96%;
+    /* Light foundation */
+    --background:       0 0% 98%;
+    --foreground:       0 0% 10%;
 
-    --card:             0 0% 7%;
-    --card-foreground:  0 0% 96%;
+    --card:             0 0% 100%;
+    --card-foreground:  0 0% 10%;
 
-    --popover:          0 0% 6%;
-    --popover-foreground: 0 0% 96%;
+    --popover:          0 0% 100%;
+    --popover-foreground: 0 0% 10%;
 
-    /* Brand — logo coral-red */
-    --primary:          4 85% 60%;
+    /* Brand — deep blue accent (like Particle) */
+    --primary:          220 80% 50%;
     --primary-foreground: 0 0% 100%;
 
-    --secondary:        0 0% 10%;
-    --secondary-foreground: 0 0% 85%;
+    --secondary:        220 15% 94%;
+    --secondary-foreground: 220 10% 30%;
 
-    --muted:            0 0% 12%;
-    --muted-foreground: 0 0% 45%;
+    --muted:            220 10% 94%;
+    --muted-foreground: 220 5% 46%;
 
-    /* Accent — logo warm amber/gold */
+    /* Accent — warm amber/gold for highlights */
     --accent:           38 95% 58%;
-    --accent-foreground: 0 0% 4%;
+    --accent-foreground: 0 0% 10%;
 
     --destructive:      0 70% 50%;
     --destructive-foreground: 0 0% 100%;
 
-    --border:           0 0% 13%;
-    --input:            0 0% 10%;
-    --ring:             4 85% 60%;
+    --border:           220 10% 90%;
+    --input:            220 10% 90%;
+    --ring:             220 80% 50%;
 
-    --radius: 0.25rem;
+    --radius: 0.75rem;
 
-    /* Palette from logo */
-    --coral:         4 85% 60%;
-    --teal:          182 55% 48%;
-    --amber:         38 95% 58%;
-    --lavender:      260 55% 65%;
-    --sage:          140 35% 52%;
-    --orange:        4 85% 60%;
-    --dark-surface:  0 0% 7%;
-    --darker-surface:0 0% 3%;
+    /* Palette */
+    --coral:         4 75% 55%;
+    --teal:          182 55% 42%;
+    --amber:         38 90% 50%;
+    --lavender:      260 50% 58%;
+    --sage:          140 35% 45%;
+    --orange:        20 90% 55%;
+    --dark-surface:  220 10% 96%;
+    --darker-surface:220 10% 93%;
 
     /* Sidebar */
-    --sidebar-background:          0 0% 3%;
-    --sidebar-foreground:          0 0% 90%;
-    --sidebar-primary:             4 85% 60%;
+    --sidebar-background:          220 10% 97%;
+    --sidebar-foreground:          220 10% 20%;
+    --sidebar-primary:             220 80% 50%;
     --sidebar-primary-foreground:  0 0% 100%;
-    --sidebar-accent:              0 0% 10%;
-    --sidebar-accent-foreground:   0 0% 90%;
-    --sidebar-border:              0 0% 11%;
-    --sidebar-ring:                4 85% 60%;
+    --sidebar-accent:              220 10% 93%;
+    --sidebar-accent-foreground:   220 10% 20%;
+    --sidebar-border:              220 10% 90%;
+    --sidebar-ring:                220 80% 50%;
   }
 
   * {
@@ -84,7 +83,7 @@
   h1, h2, h3, h4, h5, h6 {
     font-family: 'Montserrat', sans-serif;
     letter-spacing: -0.02em;
-    font-weight: 900;
+    font-weight: 800;
   }
 }
 
@@ -93,7 +92,7 @@
 ::-webkit-scrollbar-track { background: hsl(var(--background)); }
 ::-webkit-scrollbar-thumb { background: hsl(var(--primary)); border-radius: 2px; }
 
-/* ── Agency horizontal rule ── */
+/* ── Section divider ── */
 .section-divider {
   height: 1px;
   background: hsl(var(--border));
@@ -101,17 +100,16 @@
   margin-bottom: 2rem;
 }
 
-/* ── Glow effects — subtle, not neon ── */
-.glow-orange { box-shadow: 0 0 40px hsl(var(--primary) / 0.35); }
-.glow-purple { box-shadow: 0 0 40px hsl(var(--primary) / 0.35); }
-.glow-teal   { box-shadow: 0 0 30px hsl(var(--teal) / 0.3); }
-.glow-amber  { box-shadow: 0 0 30px hsl(var(--amber) / 0.3); }
-
-/* ── Studio card ── */
+/* ── Studio card — Particle-style with shadow ── */
 .studio-card {
-  background: hsl(var(--dark-surface));
+  background: hsl(var(--card));
   border: 1px solid hsl(var(--border));
-  border-radius: calc(var(--radius) * 2);
+  border-radius: var(--radius);
+  box-shadow: 0 1px 3px hsl(0 0% 0% / 0.04), 0 1px 2px hsl(0 0% 0% / 0.06);
+  transition: box-shadow 0.2s ease, border-color 0.2s ease;
+}
+.studio-card:hover {
+  box-shadow: 0 4px 12px hsl(0 0% 0% / 0.08), 0 2px 4px hsl(0 0% 0% / 0.06);
 }
 
 /* ── Agency link underline hover ── */
@@ -136,15 +134,7 @@
   transition: transform 0.2s ease;
 }
 .episode-card:hover {
-  transform: translateY(-3px);
-}
-
-/* ── Neon border ── */
-.neon-border {
-  border: 1px solid hsl(var(--primary) / 0.3);
-}
-.neon-border-teal {
-  border: 1px solid hsl(var(--teal) / 0.3);
+  transform: translateY(-2px);
 }
 
 /* ── Audio player ── */
@@ -153,9 +143,6 @@ audio {
   height: 32px;
   border-radius: 4px;
   accent-color: hsl(var(--primary));
-}
-audio::-webkit-media-controls-panel {
-  background-color: hsl(var(--card));
 }
 
 /* ── Animated waveform bars ── */
@@ -190,14 +177,14 @@ audio::-webkit-media-controls-panel {
 
 /* ── CMS editable highlights ── */
 .cms-editing [data-cms-editable] {
-  outline: 1px dashed hsl(var(--amber) / 0.8);
+  outline: 1px dashed hsl(var(--primary) / 0.6);
   outline-offset: 3px;
   cursor: text;
   border-radius: 2px;
 }
 .cms-editing [data-cms-editable]:hover {
-  outline-color: hsl(var(--amber));
-  background: hsl(var(--amber) / 0.05);
+  outline-color: hsl(var(--primary));
+  background: hsl(var(--primary) / 0.05);
 }
 
 /* ── Fade-in animation ── */
@@ -210,12 +197,12 @@ audio::-webkit-media-controls-panel {
 .fade-up-delay-2 { animation-delay: 0.2s; opacity: 0; }
 .fade-up-delay-3 { animation-delay: 0.35s; opacity: 0; }
 
-/* ── Gradient text (logo colors) ── */
+/* ── Gradient text ── */
 .gradient-text {
   background: linear-gradient(135deg,
-    hsl(var(--coral)) 0%,
-    hsl(var(--amber)) 40%,
-    hsl(var(--lavender)) 70%,
+    hsl(var(--primary)) 0%,
+    hsl(var(--coral)) 40%,
+    hsl(var(--amber)) 70%,
     hsl(var(--teal)) 100%
   );
   -webkit-background-clip: text;
@@ -225,16 +212,16 @@ audio::-webkit-media-controls-panel {
 
 /* ── Host card ── */
 .host-card-img {
-  filter: grayscale(20%) contrast(1.05);
+  filter: grayscale(10%) contrast(1.02);
   transition: filter 0.4s ease;
 }
-.host-card-img:hover { filter: grayscale(0%) contrast(1.1); }
+.host-card-img:hover { filter: grayscale(0%) contrast(1.05); }
 
 /* ── Article body typography ── */
 .article-body {
   font-size: 19px;
   line-height: 1.75;
-  color: #e5e5e5;
+  color: hsl(var(--foreground));
   font-weight: 400;
 }
 @media (max-width: 639px) {
@@ -248,7 +235,7 @@ audio::-webkit-media-controls-panel {
   font-weight: 800;
   line-height: 1.08;
   letter-spacing: -0.02em;
-  color: #f0f0f0;
+  color: hsl(var(--foreground));
   margin-top: 64px;
   margin-bottom: 20px;
 }
@@ -257,16 +244,16 @@ audio::-webkit-media-controls-panel {
   font-weight: 700;
   line-height: 1.2;
   letter-spacing: -0.01em;
-  color: #f0f0f0;
+  color: hsl(var(--foreground));
   margin-top: 64px;
   margin-bottom: 20px;
   padding-left: 16px;
-  border-left: 4px solid hsl(4, 85%, 60%);
+  border-left: 4px solid hsl(var(--primary));
 }
 .article-body h3 {
   font-size: 26px;
   font-weight: 700;
-  color: #f0f0f0;
+  color: hsl(var(--foreground));
   margin-top: 40px;
   margin-bottom: 12px;
 }
@@ -279,8 +266,8 @@ audio::-webkit-media-controls-panel {
   font-size: 22px;
   font-style: italic;
   line-height: 1.5;
-  color: #d4d4d4;
-  border-left: 4px solid hsl(4, 85%, 60%);
+  color: hsl(var(--muted-foreground));
+  border-left: 4px solid hsl(var(--primary));
   padding-left: 24px;
   margin: 48px 0;
 }
@@ -288,15 +275,15 @@ audio::-webkit-media-controls-panel {
   .article-body blockquote { font-size: 18px; margin: 32px 0; }
 }
 .article-body a {
-  color: hsl(4, 85%, 60%);
+  color: hsl(var(--primary));
   text-decoration: underline;
   text-underline-offset: 2px;
 }
 .article-body a:hover {
-  color: hsl(4, 85%, 70%);
+  color: hsl(220 80% 40%);
 }
 .article-body strong {
-  color: #f0f0f0;
+  color: hsl(var(--foreground));
   font-weight: 600;
 }
 .article-body ul, .article-body ol {
@@ -305,13 +292,45 @@ audio::-webkit-media-controls-panel {
 }
 .article-body li {
   margin-bottom: 0.5em;
-  color: #e5e5e5;
+  color: hsl(var(--foreground));
 }
 .article-body img {
   width: 100%;
   border-radius: 8px;
   margin: 2em 0;
 }
+
 /* Hide scrollbar for horizontal strips */
 .scrollbar-hide::-webkit-scrollbar { display: none; }
 .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+
+/* ── Neon border — softer on light theme ── */
+.neon-border {
+  border: 1px solid hsl(var(--primary) / 0.2);
+}
+.neon-border-teal {
+  border: 1px solid hsl(var(--teal) / 0.2);
+}
+
+/* ── Glow effects — subtle on light theme ── */
+.glow-orange { box-shadow: 0 0 30px hsl(var(--coral) / 0.15); }
+.glow-purple { box-shadow: 0 0 30px hsl(var(--lavender) / 0.15); }
+.glow-teal   { box-shadow: 0 0 20px hsl(var(--teal) / 0.15); }
+.glow-amber  { box-shadow: 0 0 20px hsl(var(--amber) / 0.15); }
+
+/* ── Particle-style hero card overlay ── */
+.particle-hero-overlay {
+  background: linear-gradient(to top, 
+    hsl(0 0% 0% / 0.85) 0%, 
+    hsl(0 0% 0% / 0.5) 40%, 
+    hsl(0 0% 0% / 0.1) 70%,
+    transparent 100%
+  );
+}
+
+/* ── Particle-style overview card ── */
+.overview-card {
+  background: hsl(var(--muted));
+  border-radius: var(--radius);
+  border: 1px solid hsl(var(--border));
+}
