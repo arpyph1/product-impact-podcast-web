@@ -5,6 +5,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Home from "./pages/Home";
 import Podcast from "./pages/Podcast";
+import { Navigate } from "react-router-dom";
 import News from "./pages/News";
 import Article from "./pages/Article";
 import ThemesIndex from "./pages/ThemesIndex";
@@ -24,11 +25,12 @@ const App = () => (
       <Sonner />
       <BrowserRouter>
         <Routes>
-          {/* Publication hub homepage */}
-          <Route path="/" element={<Home />} />
+          {/* Podcast homepage */}
+          <Route path="/" element={<Podcast />} />
 
-          {/* Podcast — current homepage content moved here */}
-          <Route path="/podcast" element={<Podcast />} />
+          {/* Publication hub */}
+          <Route path="/hub" element={<Home />} />
+          <Route path="/podcast" element={<Navigate to="/" replace />} />
 
           {/* News — editorial articles */}
           <Route path="/news" element={<News />} />
