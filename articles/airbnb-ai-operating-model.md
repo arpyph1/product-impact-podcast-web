@@ -1,6 +1,6 @@
-# What We Can Learn from Airbnb's AI Operating Model
+# Airbnb revealed what an AI-native org looks like and how work will change
 
-*What Airbnb's CHRO told Stanford about their AI playbook — and the org-design work Directors and VPs need to do to move their teams into the Frontier zone.*
+*What Iain Roberts's Stanford talk shows about the structural and cultural shifts that separate organizations where AI compounds from ones where it's still a tool.*
 
 ---
 
@@ -8,13 +8,15 @@
 
 I've been waiting for someone to say it out loud, and Iain Roberts finally did.
 
-Speaking at Stanford HAI's AI for Organization Conference last week, Airbnb's Chief Human Resources Officer walked through the company's AI operating model — the actual one, not the deck version. The talk was distilled into a now-circulating LinkedIn post by [Mary Kate Stimmler](https://www.linkedin.com/in/marykate-stimmler/) at Stanford's Center for Advanced Study in the Behavioral Sciences, and if you work in any kind of knowledge role, it should be the most-forwarded thing in your team this week.
+Speaking at Stanford HAI's AI for Organization Conference last week, Airbnb's Chief Human Resources Officer walked through the company's AI operating model — the actual one, not the deck version. The talk was distilled into a now-circulating LinkedIn post by [Mary Kate Stimmler](https://www.linkedin.com/in/marykate-stimmler/) at Stanford's Center for Advanced Study in the Behavioral Sciences, and what he described isn't an optimization of existing work. It's a blueprint for how organizations need to be built for AI to actually work.
 
-I want to walk through what Airbnb is actually doing, why it's a meaningful departure from the "let's add AI to our existing workflow" pattern that most companies are stuck in, and — most importantly — what Directors, VPs, and functional leads can do inside their own scope to translate it. **The operating model is the unlock.** The model itself is almost secondary.
+The operating model tells us something important: most organizations haven't discovered yet what the structural prerequisites are. Microsoft's data says 88% of organizations are using AI. Fewer than 10% have operationalized it at scale. The gap isn't technology. It's operating model — the actual decisions an organization makes about how knowledge flows, how work gets redesigned, and what leaders do with their hands.
 
-> If you're an individual contributor figuring out your own AI strategy in this moment, we covered that here: [The Knowledge Worker Playbook: AI, Layoffs, and the Career Reset](https://productimpactpod.com/news/knowledge-worker-playbook-ai-layoffs-career-reset/). This piece is for the managers and leaders designing the systems around them.
+Here's what Airbnb found they needed to do.
 
-## The chart that explains why this matters
+> If you're an individual contributor building your own AI system inside whatever org you're in, we covered that strategy here: [The Knowledge Worker Playbook: AI, Layoffs, and the Career Reset](https://productimpactpod.com/news/knowledge-worker-playbook-ai-layoffs-career-reset/). This piece is about organizational design at scale.
+
+## Org Design is the AI adoption bottleneck
 
 Microsoft's [2026 Work Trend Index](https://www.microsoft.com/en-us/worklab/work-trend-index) — based on a survey of 20,000 knowledge workers across 10 markets — landed on a number that should keep every executive up at night: **only 19% of AI users are in the "Frontier" zone**, where individual capability and organizational readiness reinforce each other. About half are "Emergent." Sixteen percent are stalled. Ten percent are skilled workers stuck in companies that haven't caught up. Five percent are sitting in well-equipped orgs but haven't picked up the tools.
 
@@ -26,149 +28,74 @@ And it lines up with the Stanford [2026 AI Index](https://hai.stanford.edu/ai-in
 
 This is the gap Airbnb is trying to close. Here's how.
 
-## The five things Airbnb is actually doing
+## The five things Airbnb is doing as an AI-native org
 
-### 1. Trade PDFs for markdown files
+The specifics of Airbnb's operating model aren't unique to Airbnb. They represent a pattern: organizations where AI actually compounds do five concrete structural things. None of them are about buying more models or running more pilots. All of them are about infrastructure decisions that let the work reorganize around what AI can do.
 
-Slides and PDFs were built for human consumption in static, presentational settings. They're visually rich and machine-illegible. Markdown is the opposite — lightweight, version-controllable, diff-able, parseable, and trivially ingestible by any model. **It's also the format that made software disruptive in the first place.** AirBnB's entire leadership team writes in markdown now.
+### 1. Markdown over PDFs
 
-Every PDF in your Drive is a wall between your knowledge and your AI. The moment your strategy doc, your team update, your project brief, your customer research is in markdown, it becomes part of the substrate the model can reason against.
+Slides and PDFs were built for human consumption in static, presentational settings. They're visually rich and machine-illegible. Markdown is the opposite — lightweight, version-controllable, diff-able, parseable, and trivially ingestible by any model. **It's also the format that made software disruptive in the first place.** Airbnb's entire leadership team writes in markdown now.
 
-This is the cheapest, highest-leverage move in the whole playbook, and you can do it tomorrow.
+Every PDF in your knowledge system is a wall between your org's knowledge and your models' ability to reason about it. The Stanford 2026 AI Index found that **data infrastructure is the primary barrier to organizational scaling of AI**: 88% of organizations are using AI, but 81% cite "data constraints" as the primary blocker to scaling beyond pilots. Most of those data constraints are actually *format* constraints — knowledge is trapped in presentational media instead of structured substrates.
 
-### 2. Train a model on your org's best work, then turn it into a "skill"
+The moment your strategy doc, your team update, your project brief, your customer research is in markdown instead of PDF, it becomes part of the substrate the model can build on. Context caching and retrieval improve. The cost per token drops. The ability to compose ideas compounds instead of resetting with every new question.
 
-Airbnb's HR team historically wasn't known for storytelling. So they did the obvious-in-retrospect thing: they took the company's best executive presentations, trained a model on them, and turned the result into a foundational *skill* that any HR employee can plug data into and get a polished, on-brand narrative back in seconds.
+### 2. Train your org's best practices into reusable models, then package them as "skills"
 
-A "skill" is a reusable, composable, and shared documentation for a workflow. It's a piece of organizational capability that lives outside any one person.
+Airbnb's HR team wasn't historically known for storytelling. So they did the obvious thing in retrospect: they took the company's best executive presentations, trained a model on them, and packaged the result as a "skill" that any HR employee can plug data into and receive a polished, on-brand narrative in seconds.
 
-Context engineering at the org level: you're not asking people to be better prompt engineers. You're giving them pre-loaded context — the gold-standard examples, the brand voice, the structural conventions — so they don't have to reinvent the wheel for every output. The [Anthropic guidance](https://www.anthropic.com/news/the-anthropic-economic-index) on this is increasingly clear: the highest-leverage AI work isn't writing better prompts, it's curating better context.
+A "skill" is a reusable, composable, and documented workflow. It's organizational capability that lives outside any one person.
 
-### 3. Measure communication velocity and dissonance with meeting recordings
+The Anthropic Economic Index 2026 found that **experienced AI users dramatically outperform newcomers not because of individual aptitude but because of practice inside systems**. The report emphasizes this: "The gap isn't intelligence. It's reps inside a structure that lets you learn what works." Airbnb's approach embeds that structure. You're not asking people to become better prompt engineers. You're giving them pre-loaded context — the gold-standard examples, the brand voice, the structural conventions — so they don't reinvent the wheel. [Anthropic's economic analysis](https://www.anthropic.com/news/the-anthropic-economic-index) on this is clear: the highest-leverage AI work isn't writing better prompts, it's curating better context at the organizational level.
+
+When every person on your team is starting from the same vetted context and examples, outputs compound. Variance drops. Quality stabilizes. Importantly, **token costs per unit output drop dramatically** — you're running context-cached queries against structured knowledge instead of ad-hoc free-form prompting.
+
+### 3. Measure communication velocity and detect organizational dissonance
 
 Airbnb ingests video from every town hall — VPs, SVPs, C-suite — and uses it to measure two things:
 
-- **Velocity**: How long does a message take to cascade from "here's where we're going" to "here's what it means for your work"?
-- **Veracity**: Where is there dissonance between the stated strategy and what a function is actually doing?
+- **Velocity**: How long does a message cascade from "here's where we're going" to "here's what it means for your work"?
+- **Veracity**: Where is there dissonance between stated strategy and actual function behavior?
 
-Pre-AI, the only way to get this level of insight was to interview hundreds of people, and even then you'd have to triangulate. Now you ingest the source material and let a model do the diff.
+This isn't surveillance. It's feedback infrastructure. Pre-AI, the only way to measure this required interviewing hundreds of people and triangulating the answers. Now you ingest the source material and let the model find the patterns.
 
-For a knowledge worker, the implication is the same in miniature: **your meetings are training data for your own operating model.** Most of you are already recording them. Almost none of you are using them as a feedback loop on your own communication.
+Organizations with poor communication velocity leak capability: people execute the old mandate while leadership has moved on to the new one. The [Microsoft 2026 Work Trend Index](https://www.microsoft.com/en-us/worklab/work-trend-index) explicitly measures organizational misalignment: the 31% of workers classified as "Blocked Agency" or "Unclaimed Capacity" are largely trapped by communication debt. They're either skilled workers whose org structure hasn't caught up with their capability (Blocked), or they're sitting in well-equipped orgs without clarity on what they should be doing (Unclaimed). The common factor: organizational communication is the bottleneck, not individual skill.
 
-### 4. Leaders must build. Not delegate. Build.
+Airbnb's approach to measuring this creates feedback loops. The org becomes aware of its own communication failures and can close them. That's structural change.
 
-Iain's team handed him a six-month roadmap for a "gathering tool" to help hybrid teams plan offsites. He built it over a weekend. The line that's going to get tattooed on people: **"If you delegate the building, you delegate the learning."**
+### 4. Leaders must build, not delegate the learning
 
-He has mandated that his leaders actually build things — not approve roadmaps for things, *build them* — so they're learning and experiencing the AI's capabilities alongside their teams. This is a deeply uncomfortable shift for senior people, and it happens to be the most predictive variable in Microsoft's data. When managers actively model AI use, employees report a **17-point increase in the value they get from AI and a 30-point boost in trust in agents**. When they don't, AI adoption stalls regardless of what the company spends on licenses.
+Iain Roberts's team handed him a six-month roadmap for a "gathering tool" to help hybrid teams plan offsites. He built it over a weekend. The line: **"If you delegate the building, you delegate the learning."**
 
-### 5. Forget Forward Deployed Engineers. Hire embedded organizational architects.
+He's mandated that his leaders actually build things — not approve roadmaps, *build them* — so they're learning the AI's capabilities directly, not through a proxy. This is uncomfortable at senior levels. And it happens to be the single most predictive variable in Microsoft's adoption data. When managers actively model AI use, employees report a **17-point increase in the value they get from AI and a 30-point boost in trust in the organization's AI strategy**. When they don't, adoption stalls regardless of tooling investment.
 
-Palantir popularized the FDE: plumb the data, map the process, plug AI in. Roberts thinks this misses the point. You don't optimize the existing org around AI — you redesign the org around people and technology together.
+The mechanism is organizational: leaders who build with AI understand what work needs to be redesigned. Leaders who delegate the building to teams or vendors see AI as a productivity overlay on existing structures. Those are fundamentally different operating models, and the data shows they produce different outcomes. **The organization becomes shaped by what its leaders actually do with their hands, not what they approve.**
 
-His proposed role is an "embedded organizational architect": someone deeply empathic, deeply social, deeply understanding the human condition. "An organization," he says, "is really just a network of individuals trying to get things done collectively."
+### 5. Hire for embedded organizational design, not just task execution
 
-Most leaders won't internalize this for another two years. The shift isn't from human to AI. It's from hierarchies and reporting lines to networks and workflows. The org chart isn't going away, but it's no longer the unit of analysis — the *flow of work* is.
+Palantir popularized the FDE (Forward Deployed Engineer): plumb the data, map the process, plug AI in. Roberts thinks this misses the critical point. You don't optimize the existing org around AI — you redesign the org around people and technology together.
 
-## Why this is your org-design problem now
+His proposed role is an "embedded organizational architect": someone deeply empathic, deeply social, deeply understanding the human condition. "An organization," he says, "is really just a network of individuals trying to get things done collectively." That's the unit of analysis — not the org chart or the process, but the network of relationships and work flows.
 
-Look at Microsoft's distribution again. 19% Frontier. 50% Emergent. 16% Stalled. 10% Blocked. 5% Unclaimed. If you run a team of 20, the distribution on your floor is roughly four people compounding, ten with private AI practice but no shared norms, three stalled out entirely, two skilled workers held back by your tooling and process, and one with every tool you've licensed sitting unused on their desktop.
+The shift this represents isn't small. The unit of analysis changes from "do we have AI" (every org does) to "is our work structure built so AI moves people forward, or is AI a tool laid on top of a structure that's increasingly misshapen?" The Stanford AI Index 2026 found that fewer than 10% of organizations have operationalized AI beyond pilots. The bottleneck isn't capability — it's structural. Organizations that scaled AI were the ones that hired for redesign: people who could see the flow of work and imagine it differently, not people who could execute the current flow more efficiently.
 
-Your job isn't to get average AI usage up. Your job is to move people *into the Frontier zone* by changing the conditions around them. Microsoft's analysis is unambiguous: organizational factors account for 67% of AI's real impact at work, and individual mindset for 32%. As a Director or VP, you control most of those factors at the team scope — tooling, norms, what gets rewarded, who gets hired, what gets built and by whom.
+Organizational architects are going to be important because the next wave of AI scaling isn't about features or performance. It's about figuring out which org structures actually work when AI is in the loop.
 
-The 31% of users who are "misaligned" — Blocked Agency plus Unclaimed Capacity — are the clearest indictment of management on that chart. Blocked people are skilled workers whose orgs haven't kept up with them. Unclaimed people are sitting inside well-equipped orgs without picking up the tools. Both of those failures land at the manager's door, not the individual's.
+## Organizational architects are going to be important
 
-This is what Roberts is saying when he talks about embedded organizational architects. The unit of analysis is no longer "do we have AI." Every org has AI now. It's: are you designing the work so AI moves people forward, or treating it as a productivity overlay on a structure that's increasingly the wrong shape?
+Most organizations think of AI adoption as a technology problem: which model do we use, which tools do we license, how do we train people on the interface. But the organizations making this actually work are treating it as a structural problem.
 
-## Five moves to elevate your team to the Frontier
+Iain Roberts's insight — that organizations are networks of individuals trying to get things done collectively — matters because AI changes what "getting things done collectively" means. It changes which skills compound, which knowledge is valuable, which work gets centralized vs. distributed, what communication velocity actually means.
 
-Each move maps to one of Airbnb's, scoped for Director and VP-level authority. None of them require a CHRO title or a six-month budget.
+The five things Airbnb is doing all point to the same realization: **the operating model determines whether AI amplifies your org or just adds noise to it.** Markdown as a substrate, trained skills as shared capability, communication velocity as measurable feedback, leaders building directly, organizational architects as a core role.
 
-### 1. Fix the substrate — move Blocked → Frontier
+These aren't innovations. They're discoveries about what organizations need to look like for AI to actually work. Most organizations are still in the "add AI to existing workflows" phase. The ones that scale past that are the ones that ask: what does the organization need to look like for this to work? What infrastructure, what norms, what hiring, what daily decisions by leaders?
 
-Blocked Agency people don't need more training. They need their tools to stop being adversarial. They're already skilled. They're producing work for an environment that won't let the work compound.
-
-What this looks like at your scope: pick the five highest-leverage docs your team produces — strategy briefs, OKRs, customer research, project specs, weekly updates — and mandate they live in markdown in a shared repo your team's AI tools can access. No new tools, no re-org. A substrate change.
-
-You don't have authority to mandate company-wide markdown. You do have authority over what your team produces and where they store it.
-
-### 2. Build team-level "skills" — move Emergent → Frontier
-
-The Emergent 50% already know how to use AI individually. What they lack is shared norms. Three different reports producing customer summaries with three different structures means none of those summaries compound into team capability.
-
-What this looks like: identify the 2–3 workflows your team runs most often and turn each into a reusable "skill" — a parameterized prompt with loaded context, clear criteria, and saved examples. Engineering managers: a feedback-synthesis skill for sprint retros. PMs: a research-to-spec skill. Design leads: a critique-prep skill. Ship one, prove the model, then expand.
-
-This is where your team's token bill starts dropping. Skills run on cached, structured context. Ad-hoc prompting doesn't.
-
-### 3. Audit communication velocity at team scope
-
-You don't have Airbnb's town-hall ingestion pipeline. You have something better at your scope: you can actually listen to your team.
-
-Two metrics translate directly:
-
-- **Velocity**: How long from your communication of strategy to that strategy showing up in your team's actual work?
-- **Dissonance**: When your direct reports describe priorities, do their answers match?
-
-A practical diagnostic: each quarter, ask your reports independently to summarize the top three priorities for the team. The gap between answers is your communication debt. Until you close it, no operating-model work downstream is going to stick.
-
-### 4. Build alongside your team — move Unclaimed → Frontier
-
-The Unclaimed Capacity slice is the most damning one on the chart. These are people sitting in well-equipped orgs with the tools and structural support — and they're not picking it up. What they're watching is their managers.
-
-Microsoft's data: when managers actively model AI use, employees report a **17-point increase in the value they get from AI and a 30-point boost in trust in agents**. When they don't, adoption stalls regardless of license count.
-
-This means you, building with AI yourself. Not approving roadmaps. Not giving feedback on builds. *Building.* Your engineering manager ships an evaluation pipeline this quarter? You should be in the codebase with them. Your PM is writing a research skill? You should be testing it on real research.
-
-This cuts hard against everything mid-management is rewarded for. The political risk is real — it can read as micromanagement or as failing to scale. The data says it's the strongest single predictor of team-level AI value.
-
-### 5. Hire for the shape, not the slot — move Stalled → Frontier
-
-The 16% Stalled slice isn't going to move under current incentives. You either restructure the work, hire differently, or accept the cost.
-
-Roberts's "embedded organizational architect" has a concrete version at your level: in your next hiring cycle, prioritize people who can redesign workflows, not just execute them. These hires are hard to evaluate in interviews because there's no clean credential for "deeply empathic and deeply technical." Look for people who've reorganized work, not just done it — engineers who designed handoff systems, PMs who restructured discovery, designers who built systems instead of shipping screens.
-
-This is the slowest of the five moves. It's also the one that determines whether your operating model survives the next reorg.
-
-## Questions to run before your next AI investment
-
-**On where your team actually is:**
-- If you mapped your team onto Microsoft's chart, what would the actual distribution be?
-- Which of your reports are Blocked Agency — skilled people held back by your structure?
-- Who's Unclaimed Capacity, and what would they need to see from you to move?
-
-**On the substrate:**
-- What percentage of your team's institutional knowledge is machine-readable vs. trapped in PDFs and slides?
-- Where is your team rebuilding the same artifact every week from scratch?
-- What docs in your org should not exist in their current form anymore?
-
-**On the structure:**
-- Where are you optimizing the existing org around AI vs. redesigning around what AI enables?
-- What's one process you could dismantle this quarter rather than make more efficient?
-- Does your org chart describe how work actually flows, or just who reports to whom?
-
-**On your own behavior:**
-- When was the last thing you built — actually built, not approved — with AI?
-- Do your direct reports see you using AI thoughtfully, or avoiding it?
-- What's your team's interpretation of the message you're sending about AI?
-
-**On hiring and team design:**
-- Are you hiring people who can redesign work, or only people who can execute it as it currently exists?
-- Is there a "wedge" hire who could model the new operating norms for the rest?
-
-## Why most orgs won't do this
-
-This work is more politically costly at the org level than at the individual level. You'll be asked to spend budget on substrate changes that won't show ROI for two quarters. You'll push back on senior leadership who want AI deployed as a productivity overlay rather than an organizational redesign. You'll defend hiring profiles that don't pattern-match to your last five hires. You'll model behaviors — building with your team, sitting in the codebase, abandoning the deck — that look like a step down from "managing managers."
-
-This is why the Frontier zone is only 19% of AI users. Elevating people into it is a redesign, not an upgrade. It costs political capital, time, and comfort with familiar structures.
-
-The compounding payoff justifies it. The teams that make this transition won't be the ones with the largest AI budget — they'll be the ones whose managers built the operating model deliberately, with the chart on the wall, before the next reorg made it impossible.
-
-Your individual contributors aren't waiting for you. Many of them are already building their own operating models, with or without organizational support — we covered exactly that scenario in [The Knowledge Worker Playbook](https://productimpactpod.com/news/knowledge-worker-playbook-ai-layoffs-career-reset/). The question is whether they're building it inside your structure or in spite of it. The managers who get this right are the ones who make the structure worth building inside.
-
-The Frontier zone isn't a magical place. Individual practice and structural support reinforce each other instead of fighting. As a manager, you are the structural support. Slides are the enemy of intelligence. So is an org chart treated as a delivery mechanism instead of a flow-of-work model.
+That's not a software problem. That's an organizational design problem. And it's where the next wave of AI capability actually lives.
 
 ---
 
-**Which of these five would land hardest at your company?** Reply in the comments — I'm gathering examples for the next issue.
+**What's your org's substrate right now?** If you mapped your organization against these five moves, which one do you think determines whether your AI work compounds or stays trapped in pilots? Reply in the comments.
 
 ---
 
