@@ -10,8 +10,6 @@ I've been waiting for someone to say it out loud, and Iain Roberts finally did.
 
 Speaking at Stanford HAI's AI for Organization Conference last week, Airbnb's Chief Human Resources Officer walked through the company's AI operating model — the actual one, not the deck version. The talk was distilled into a now-circulating LinkedIn post by [Mary Kate Stimmler](https://www.linkedin.com/in/marykate-stimmler/) at Stanford's Center for Advanced Study in the Behavioral Sciences, and if you work in any kind of knowledge role, it should be the most-forwarded thing in your team this week.
 
-His exact phrase, the one I keep coming back to: **"Slides and PDFs are the enemy of intelligence."**
-
 I want to walk through what Airbnb is actually doing, why it's a meaningful departure from the "let's add AI to our existing workflow" pattern that most companies are stuck in, and — most importantly — how you can apply the same logic to your own work even if you don't run an HR org at a public company. Because here's the thing I've learned from running my own version of this for the last six months: **the operating model is the unlock**. The model itself is almost secondary.
 
 ## The chart that explains why this matters
