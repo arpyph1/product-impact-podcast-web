@@ -1,0 +1,26 @@
+{
+  "slug": "airbnb-ai-operating-model",
+  "title": "What We Can Learn from Airbnb's AI Operating Model",
+  "subtitle": "How to build internal structures that make AI effective at scale",
+  "format": "feature",
+  "author_slugs": ["brittany"],
+  "byline_role": "Director of Product Impact",
+  "publish_date": "2026-05-14",
+  "meta_description": "Airbnb's deliberate AI operating model shows how to move from chaotic AI experimentation to structured, measurable impact. Here's how to build the same system for your own work.",
+  "themes": ["adoption-organizational-change", "ai-product-strategy"],
+  "lenses": ["organizational-design", "capability-building"],
+  "topics": ["AI operating models", "workflow optimization", "organizational adoption", "knowledge work"],
+  "read_time_minutes": 8,
+  "hero_image_url": null,
+  "hero_image_alt": null,
+  "canonical_url": "https://productimpactpod.com/news/airbnb-ai-operating-model",
+  "overview_bullets": [
+    "Airbnb's AI model treats AI as a capability within defined workflows, not a black box",
+    "Clear input specs, structured context, and evaluation criteria dramatically reduce iteration",
+    "You can build this same system in 3-4 weeks starting with one high-impact use case",
+    "Token costs actually drop as workflows become more intentional and context-aware"
+  ],
+  "is_lead_story": false,
+  "published": false,
+  "note": "Article content in airbnb-ai-operating-model.md"
+}
