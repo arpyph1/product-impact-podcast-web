@@ -28,11 +28,9 @@ This is the gap Airbnb is trying to close. Here's how.
 
 ### 1. Trade PDFs for markdown files
 
-This is the headline one, and it sounds trivial until you sit with it.
+Roberts's argument: slides and PDFs were built for human consumption in static, presentational settings. They're visually rich and machine-illegible. Markdown is the opposite — lightweight, version-controllable, diff-able, parseable, and trivially ingestible by any model. **It's also the format that made software disruptive in the first place.** His entire leadership team writes in markdown now.
 
-Roberts's argument: slides and PDFs were built for human consumption in static, presentational settings. They are visually rich and machine-illegible. Markdown is the opposite: lightweight, version-controllable, diff-able, parseable, and trivially ingestible by any model. **It's also the format that made software disruptive in the first place.** His entire leadership team now writes in markdown.
-
-Why this matters: every PDF in your Drive is a wall between your knowledge and your AI. Every slide is a one-way mirror. The moment your strategy doc, your team update, your project brief, your customer research is in markdown, it becomes part of the substrate the model can reason against.
+Every PDF in your Drive is a wall between your knowledge and your AI. Every slide is a one-way mirror. The moment your strategy doc, your team update, your project brief, your customer research is in markdown, it becomes part of the substrate the model can reason against.
 
 This is the cheapest, highest-leverage move in the whole playbook, and you can do it tomorrow.
 
@@ -42,11 +40,11 @@ Airbnb's HR team historically wasn't known for storytelling. So they did the obv
 
 Notice the framing — "skill," not "tool." A skill is reusable, composable, and shared. It's a piece of organizational capability that lives outside any one person.
 
-This is what context engineering actually looks like at the org level. You're not asking your people to be better prompt engineers. You're giving them pre-loaded context — the gold-standard examples, the brand voice, the structural conventions — so they don't have to reinvent the wheel for every output. The [Anthropic guidance](https://www.anthropic.com/news/the-anthropic-economic-index) on this is increasingly clear: the highest-leverage AI work isn't writing better prompts, it's curating better context.
+Context engineering at the org level: you're not asking people to be better prompt engineers. You're giving them pre-loaded context — the gold-standard examples, the brand voice, the structural conventions — so they don't have to reinvent the wheel for every output. The [Anthropic guidance](https://www.anthropic.com/news/the-anthropic-economic-index) on this is increasingly clear: the highest-leverage AI work isn't writing better prompts, it's curating better context.
 
 ### 3. Measure communication velocity and dissonance with meeting recordings
 
-This is the one that made me sit up. Airbnb ingests video from every town hall — VPs, SVPs, C-suite — and uses it to measure two things:
+Airbnb ingests video from every town hall — VPs, SVPs, C-suite — and uses it to measure two things:
 
 - **Velocity**: How long does a message take to cascade from "here's where we're going" to "here's what it means for your work"?
 - **Veracity**: Where is there dissonance between the stated strategy and what a function is actually doing?
@@ -59,17 +57,15 @@ For a knowledge worker, the implication is the same in miniature: **your meeting
 
 Iain's team handed him a six-month roadmap for a "gathering tool" to help hybrid teams plan offsites. He built it over a weekend. The line that's going to get tattooed on people: **"If you delegate the building, you delegate the learning."**
 
-He has mandated that his leaders actually build things — not approve roadmaps for things, *build them* — so they're learning and experiencing the AI's capabilities alongside their teams.
-
-This is a deeply uncomfortable shift for senior people. It also happens to be the most predictive variable in Microsoft's data. When managers actively model AI use, employees report a **17-point increase in the value they get from AI and a 30-point boost in trust in agents**. When they don't, AI adoption stalls regardless of what the company spends on licenses.
+He has mandated that his leaders actually build things — not approve roadmaps for things, *build them* — so they're learning and experiencing the AI's capabilities alongside their teams. This is a deeply uncomfortable shift for senior people, and it happens to be the most predictive variable in Microsoft's data. When managers actively model AI use, employees report a **17-point increase in the value they get from AI and a 30-point boost in trust in agents**. When they don't, AI adoption stalls regardless of what the company spends on licenses.
 
 ### 5. Forget Forward Deployed Engineers. Hire embedded organizational architects.
 
 Palantir popularized the FDE: plumb the data, map the process, plug AI in. Roberts thinks this misses the point. You don't optimize the existing org around AI — you redesign the org around people and technology together.
 
-His proposed role: an "embedded organizational architect" — someone "deeply empathic, deeply social, deeply understanding the human condition — that an organization is really just a network of individuals trying to get things done collectively."
+His proposed role is an "embedded organizational architect": someone deeply empathic, deeply social, deeply understanding the human condition. "An organization," he says, "is really just a network of individuals trying to get things done collectively."
 
-This is the part most leaders won't internalize for another two years. The shift isn't from human to AI. It's from hierarchies and reporting lines to networks and workflows. The org chart isn't going away, but it's no longer the unit of analysis. The unit of analysis is the *flow of work*.
+Most leaders won't internalize this for another two years. The shift isn't from human to AI. It's from hierarchies and reporting lines to networks and workflows. The org chart isn't going away, but it's no longer the unit of analysis — the *flow of work* is.
 
 ## What this looks like for one person
 
@@ -99,86 +95,59 @@ Put them in one folder. This is your context substrate.
 
 ### Step 2: Build one "skill" — a reusable, parameterized prompt
 
-Pick the single highest-frequency output you produce. For me, it was article drafts. For you it might be customer summaries, status reports, talking points, candidate evaluations, design rationales.
+Pick the single highest-frequency output you produce (article drafts for me; customer summaries, status reports, talking points, candidate evaluations, or design rationales for you).
 
-Write a single prompt that:
-- Loads your context substrate (the markdown files from Step 1)
-- States the task in plain language
-- Lists the criteria for "good"
-- Has clearly marked input slots ("[topic]", "[audience]", "[length]")
-
-Use it three times. Note what's wrong. Refine. This is your first skill. Save it somewhere you can find it again — a Notion page, a Claude Project, a GitHub gist, doesn't matter.
+Write a single prompt that loads your context substrate, states the task in plain language, lists the criteria for "good," and has marked input slots ("[topic]", "[audience]", "[length]"). Use it three times. Note what's wrong. Refine. Save it somewhere findable — Notion page, Claude Project, GitHub gist.
 
 ### Step 3: Build a feedback loop
 
-Every time you use the skill, keep a one-line note on what worked and what didn't. After 5–10 uses, you'll see patterns. Adjust the prompt. Adjust the context. Adjust the criteria.
+Keep a one-line note after every use on what worked and what didn't. After 5–10 uses, patterns emerge. Adjust the prompt, context, and criteria based on what you've seen fail.
 
-This is the part 90% of people skip. **It is the entire game.** The skill gets better not because you write a cleverer prompt the second time, but because you've watched it fail in ten specific ways and can fix five of them.
+90% of people skip this. The skill compounds not from cleverer prompting but from watching it fail in ten specific ways and fixing five of them.
 
 ### Step 4: Build it yourself
 
-Don't outsource this to your AI-savvy intern, your agency, your platform team. *You* build it. Roberts's line — "If you delegate the building, you delegate the learning" — applies to individuals too, not just leaders.
-
-Even if your version is duct tape, the act of building is what teaches you what's possible.
+Don't outsource this to an intern, agency, or platform team — *you* build it. Roberts's line applies to individuals too: if you delegate the building, you delegate the learning. Even if your version is duct tape, building teaches you what's possible.
 
 ### Step 5: Add a second skill, then a third
 
-Once one workflow is humming, repeat. The investment per skill drops fast because your context substrate is already there. Each new skill compounds on the previous ones.
-
-Within three months, you should have 4–6 skills you use weekly, a context substrate that's quietly getting better, and a real, measured drop in your iteration time.
+Once one workflow is humming, repeat. Investment per skill drops because your context substrate is already there. Each new skill compounds on the previous ones. Within three months, you should have 4–6 weekly skills, a quietly improving substrate, and measurably lower iteration time.
 
 ## Questions to ask yourself
 
-Whenever I'm building a new skill, I run through these. They take five minutes and they catch most of the things that would otherwise eat a week.
+When building a new skill, run through these — they catch most problems that would otherwise take a week to debug.
 
-**On the work itself:**
-- What is the actual output I want? (Not the task — the *artifact*.)
-- Who is the audience for this output, and what would they push back on?
-- Is this work I do at least once a week? (If not, don't systematize it yet.)
+**On the work:**
+- What's the actual output, not just the task?
+- Who's the audience, and what would they push back on?
+- Do I do this at least once a week?
 
 **On context:**
-- What does the model need to know about *me* (or my org) to get this right on the first pass?
-- What examples of "good" can I include? What examples of "bad" should I include as counter-examples?
-- Is there context I'm including out of habit that the model doesn't actually need?
+- What does the model need to know about me (or my org) to get this right on the first pass?
+- What good and bad examples can I include?
+- Am I including context out of habit that the model doesn't need?
 
 **On evaluation:**
-- What does "good" look like, in concrete, observable terms?
-- What's the one thing that, if wrong, makes the whole output unusable?
-- How will I know — without rereading the whole thing — whether this draft is on track?
+- What does "good" look like concretely?
+- What one thing, if wrong, makes the whole output unusable?
+- How do I know if a draft is on track without rereading it all?
 
 **On cost and replication:**
-- Could a colleague run this same workflow and get a similar-quality output?
-- What part of my context is stable enough to cache?
-- Where am I burning tokens on the same context I sent yesterday?
+- Could a colleague run this workflow and get similar output?
+- What context is stable enough to cache?
+- Where am I burning tokens on context I sent yesterday?
 
 **On the build:**
-- Am I delegating the building of this to someone else? If so, why?
-- What am I going to learn by building this myself that I can't learn from a finished version?
+- Am I delegating the building itself? Why?
+- What do I learn by building this that I can't learn from a finished version?
 
 ## The honest part
 
-I want to be clear about something, because the AI discourse is mostly people selling things.
+I want to be clear about something, because the AI discourse is mostly people selling things: this is a costly period of working. The payoff is back-loaded — you won't see compound returns for two or three months. Token bills are real, time investment is real, cognitive cost of changing workflows is real.
 
-This is a costly period of working. Token bills are real. The time investment to build an operating model — even the lightweight, individual version I'm describing — is real. The cognitive cost of changing how you work is real. And the payoff is back-loaded: you don't see the compound returns for two or three months.
+The reason I think it's worth it anyway is that the alternative is worse. The alternative is what most knowledge workers are doing right now: ad-hoc prompting, inconsistent outputs, tokens flowing out the door for marginal value, and zero cumulative learning. You wake up six months in with a higher AI bill, no skills you can hand to a colleague, and outputs that are still fundamentally you-with-an-assistant rather than something more interesting.
 
-The reason I think it's worth it anyway, and the reason I think Airbnb's playbook matters beyond Airbnb, is that the alternative is worse. The alternative is what most knowledge workers are doing right now: ad-hoc prompting, inconsistent outputs, tokens flowing out the door for marginal value, and zero cumulative learning. You wake up six months in with a higher AI bill, no skills you can hand to a colleague, and outputs that are still fundamentally you-with-an-assistant rather than something more interesting.
-
-The Frontier zone in Microsoft's data isn't a magical place. It's just where individual practice and structural support reinforce each other instead of fighting. Airbnb's bet — and the bet I've been making in my own work — is that you can build that structure deliberately, even at the scale of one person.
-
-**Slides are the enemy of intelligence.** So are workflows that don't compound. So are tools without skills, skills without context, and context without a feedback loop.
-
-Build the operating model. Then do the work.
-
----
-
-## Key takeaways
-
-- **The bottleneck has moved.** Microsoft's 2026 Work Trend Index puts only 19% of AI users in the "Frontier" zone where individual capability and organizational readiness reinforce each other. The technology isn't holding most people back. The operating model around it is.
-- **Markdown beats slides.** The single highest-leverage move in Airbnb's playbook is converting your knowledge substrate from PDFs and decks into machine-legible markdown. Do this first.
-- **Build skills, not prompts.** A skill is a reusable, context-loaded, parameterized workflow. One good skill used 50 times beats 50 clever one-off prompts.
-- **Leaders must build.** "If you delegate the building, you delegate the learning." Microsoft's data backs this up: when managers model AI use, value perception jumps 17 points and trust in agents jumps 30 points.
-- **Token costs drop with structure.** Counter-intuitively, more structured workflows use fewer tokens — fewer re-prompts, more cacheable context, less wasted iteration. This is the only way the economics work as usage scales.
-- **The unit of analysis is the workflow, not the org chart.** Airbnb's "embedded organizational architect" is a hint at where this all lands: redesigning the work itself, around the people and technology together.
+The Frontier zone isn't a magical place. Individual practice and structural support reinforce each other instead of fighting. You can build that structure deliberately, even at the scale of one person. Slides are the enemy of intelligence. So are workflows without feedback loops, tools without skills, and skills without context.
 
 ---
 
