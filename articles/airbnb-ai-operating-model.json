@@ -1,36 +1,36 @@
 {
   "slug": "airbnb-ai-operating-model",
   "title": "What We Can Learn from Airbnb's AI Operating Model",
-  "subtitle": "\"Slides and PDFs are the enemy of intelligence.\" Here's Iain Roberts's five-point framework, his exact words, and how to build your own.",
+  "subtitle": "What Airbnb's CHRO told Stanford about their AI playbook — and the org-design work Directors and VPs need to do to move their teams into the Frontier zone.",
   "format": "feature",
   "author_slugs": ["brittany-hobbs"],
   "byline_role": "Co-host, Product Impact Podcast",
   "publish_date": "2026-05-14",
-  "meta_description": "Airbnb's Iain Roberts revealed his company's AI operating model at Stanford. Five structural moves—from trading PDFs for markdown to 'if you delegate the building, you delegate the learning'—and how to replicate them at your level.",
+  "meta_description": "Iain Roberts revealed Airbnb's AI operating model at Stanford. Microsoft's 2026 data says only 19% of AI users are in the Frontier zone — and 67% of the gap is organizational, not individual. Here are five moves Directors and VPs can make to elevate their teams.",
   "themes": ["adoption-organizational-change", "ai-product-strategy"],
   "lenses": ["business-lens", "product-lens"],
   "topics": [
     "AI operating models",
+    "organizational design",
+    "manager playbook",
+    "Frontier firms",
     "context engineering",
-    "knowledge work",
-    "organizational adoption",
-    "prompt skills",
-    "token cost optimization",
+    "team-level AI adoption",
     "Airbnb",
     "Microsoft Work Trend Index",
     "Stanford AI Index",
     "Anthropic Economic Index"
   ],
-  "read_time_minutes": 8,
-  "word_count": 2245,
+  "read_time_minutes": 9,
+  "word_count": 2450,
   "hero_image_url": null,
   "hero_image_alt": null,
   "canonical_url": "https://productimpactpod.com/news/airbnb-ai-operating-model",
   "overview_bullets": [
     "Airbnb CHRO Iain Roberts laid out a five-part AI operating model at Stanford HAI — the headline: 'slides and PDFs are the enemy of intelligence.'",
-    "Microsoft's 2026 Work Trend Index puts only 19% of AI users in the Frontier zone where individual skill and org readiness reinforce each other; org factors drive 67% of AI's real impact.",
-    "Brittany has run a similar lightweight version internally for six months — stronger outputs, easier to challenge, and substantially lower token usage as the operating model compounds.",
-    "Includes a step-by-step field guide for low-to-intermediate AI operators and a question set for designing your own skills, context substrate, and feedback loops."
+    "Microsoft's 2026 Work Trend Index shows only 19% of AI users are in the Frontier zone; 67% of AI's real impact comes from organizational factors, 32% from individual mindset.",
+    "Sister piece for individuals: 'The Knowledge Worker Playbook' covers what to do if you're an IC. This article is for the Directors and VPs designing the systems around them.",
+    "Five org-design moves mapped to Airbnb's playbook, each tied to elevating a different segment of your team from Blocked / Stalled / Emergent / Unclaimed into the Frontier zone."
   ],
   "is_lead_story": true,
   "published": false,
@@ -39,12 +39,13 @@
     { "entity_slug": "iain-roberts", "type": "person", "relevance": "primary" },
     { "entity_slug": "mary-kate-stimmler", "type": "person", "relevance": "mention" },
     { "entity_slug": "stanford-hai", "type": "organization", "relevance": "supporting" },
-    { "entity_slug": "microsoft-work-trend-index-2026", "type": "source", "relevance": "supporting" },
+    { "entity_slug": "microsoft-work-trend-index-2026", "type": "source", "relevance": "primary" },
     { "entity_slug": "anthropic-economic-index", "type": "source", "relevance": "supporting" },
     { "entity_slug": "stanford-ai-index-2026", "type": "source", "relevance": "supporting" },
-    { "entity_slug": "context-engineering", "type": "concept", "relevance": "primary" },
+    { "entity_slug": "frontier-firms", "type": "concept", "relevance": "primary" },
     { "entity_slug": "ai-operating-model", "type": "concept", "relevance": "primary" },
-    { "entity_slug": "prompt-skills", "type": "concept", "relevance": "primary" }
+    { "entity_slug": "organizational-design", "type": "concept", "relevance": "primary" },
+    { "entity_slug": "context-engineering", "type": "concept", "relevance": "supporting" }
   ],
   "faqs": [
     {
@@ -56,12 +57,12 @@
       "answer": "From a LinkedIn post by Mary Kate Stimmler, PhD (Stanford Practitioner Fellow), summarizing Iain Roberts's (Airbnb's CHRO) talk at Stanford HAI's AI for Organization Conference."
     },
     {
-      "question": "Why does the article claim token usage drops with a stronger operating model?",
-      "answer": "Three reasons: (1) fewer re-prompts because the first response is closer to usable, (2) reusable context substrates that can be cached at significant discount, and (3) tighter, parameterized 'skills' that don't re-send the same examples and instructions each session."
+      "question": "Who is this article for?",
+      "answer": "Directors, VPs, and functional leads who run teams of 10–100 people. The first half covers what Airbnb is doing at the CHRO level; the second half translates each move to actions a mid-management leader can take within their own scope. For individual contributors, our sister piece is The Knowledge Worker Playbook."
     },
     {
-      "question": "I'm a low-to-intermediate AI user. Where do I start?",
-      "answer": "Start by converting your five most-referenced documents to markdown, then build one parameterized prompt ('skill') for the single highest-frequency output you produce. Use it three times, refine, and only then add a second skill. The compounding only works if you start narrow."
+      "question": "What is the 'Frontier zone' and why does it matter for managers?",
+      "answer": "Microsoft's 2026 Work Trend Index segments AI users into five zones based on individual capability and organizational readiness. The Frontier zone — where both are high — is where compounding returns happen. It's only 19% of AI users. The manager's job isn't to raise average AI usage; it's to move people into the Frontier zone by changing the structural conditions around them."
     }
   ]
 }

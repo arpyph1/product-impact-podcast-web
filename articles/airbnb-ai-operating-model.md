@@ -1,6 +1,6 @@
 # What We Can Learn from Airbnb's AI Operating Model
 
-*What Airbnb's CHRO told Stanford about their AI playbook — and what it means for the rest of us trying to do real work with these tools.*
+*What Airbnb's CHRO told Stanford about their AI playbook — and the org-design work Directors and VPs need to do to move their teams into the Frontier zone.*
 
 ---
 
@@ -10,7 +10,9 @@ I've been waiting for someone to say it out loud, and Iain Roberts finally did.
 
 Speaking at Stanford HAI's AI for Organization Conference last week, Airbnb's Chief Human Resources Officer walked through the company's AI operating model — the actual one, not the deck version. The talk was distilled into a now-circulating LinkedIn post by [Mary Kate Stimmler](https://www.linkedin.com/in/marykate-stimmler/) at Stanford's Center for Advanced Study in the Behavioral Sciences, and if you work in any kind of knowledge role, it should be the most-forwarded thing in your team this week.
 
-I want to walk through what Airbnb is actually doing, why it's a meaningful departure from the "let's add AI to our existing workflow" pattern that most companies are stuck in, and — most importantly — how you can apply the same logic to your own work even if you don't run an HR org at a public company. Because here's the thing I've learned from running my own version of this for the last six months: **the operating model is the unlock**. The model itself is almost secondary.
+I want to walk through what Airbnb is actually doing, why it's a meaningful departure from the "let's add AI to our existing workflow" pattern that most companies are stuck in, and — most importantly — what Directors, VPs, and functional leads can do inside their own scope to translate it. **The operating model is the unlock.** The model itself is almost secondary.
+
+> If you're an individual contributor figuring out your own AI strategy in this moment, we covered that here: [The Knowledge Worker Playbook: AI, Layoffs, and the Career Reset](https://productimpactpod.com/news/knowledge-worker-playbook-ai-layoffs-career-reset/). This piece is for the managers and leaders designing the systems around them.
 
 ## The chart that explains why this matters
 
@@ -67,87 +69,102 @@ His proposed role is an "embedded organizational architect": someone deeply empa
 
 Most leaders won't internalize this for another two years. The shift isn't from human to AI. It's from hierarchies and reporting lines to networks and workflows. The org chart isn't going away, but it's no longer the unit of analysis — the *flow of work* is.
 
-## What this looks like for one person
+## Why this is your org-design problem now
 
-Here's where I get personal.
+Look at Microsoft's distribution again. 19% Frontier. 50% Emergent. 16% Stalled. 10% Blocked. 5% Unclaimed. If you run a team of 20, the distribution on your floor is roughly four people compounding, ten with private AI practice but no shared norms, three stalled out entirely, two skilled workers held back by your tooling and process, and one with every tool you've licensed sitting unused on their desktop.
 
-I've been running a version of this internally for about six months. Not at Airbnb scale — I'm one person with a podcast, a research practice, and a pile of weekly artifacts to ship. But the principles transferred almost directly, and I want to tell you what changed.
+Your job isn't to get average AI usage up. Your job is to move people *into the Frontier zone* by changing the conditions around them. Microsoft's analysis is unambiguous: organizational factors account for 67% of AI's real impact at work, and individual mindset for 32%. As a Director or VP, you control most of those factors at the team scope — tooling, norms, what gets rewarded, who gets hired, what gets built and by whom.
 
-**My outputs are stronger.** Not because the model got smarter (it did, but that's not the variable here). Because the context I give it is curated and consistent. My drafts now read like *me* on the first pass instead of needing three rounds of voice editing.
+The 31% of users who are "misaligned" — Blocked Agency plus Unclaimed Capacity — are the clearest indictment of management on that chart. Blocked people are skilled workers whose orgs haven't kept up with them. Unclaimed people are sitting inside well-equipped orgs without picking up the tools. Both of those failures land at the manager's door, not the individual's.
 
-**They're easier to challenge.** When the structure is consistent, I can argue with the output. I can point at a section and say "this is the wrong frame" and we can have a conversation about why. Before, every output felt bespoke and hard to critique because I had no baseline.
+This is what Roberts is saying when he talks about embedded organizational architects. The unit of analysis is no longer "do we have AI." Every org has AI now. It's: are you designing the work so AI moves people forward, or treating it as a productivity overlay on a structure that's increasingly the wrong shape?
 
-**My token usage has dropped substantially.** This is the unintuitive one. You'd think a more elaborate system would use more tokens. The opposite has been true. I'm not re-prompting because the first answer was off. I'm not pasting in five examples because the system already has them. Anthropic's [context caching](https://www.anthropic.com/news/prompt-caching) gives me a 90% discount on the stable parts of my context. Multiply that by every interaction and the math gets serious.
+## Five moves to elevate your team to the Frontier
 
-That last point matters in the broader story. We're in a moment where the cost of AI is genuinely a line item, not a rounding error. Every product team I talk to is watching their bill creep up. The companies — and the individuals — who get this right won't be the ones with the biggest budget. They'll be the ones who built the operating model that keeps cost flat as usage scales.
+Each move maps to one of Airbnb's, scoped for Director and VP-level authority. None of them require a CHRO title or a six-month budget.
 
-## A field guide for knowledge workers (low-to-intermediate operators, this is for you)
+### 1. Fix the substrate — move Blocked → Frontier
 
-If the Airbnb story sounds like something only an HR org with a CHRO and a six-month budget can do — it isn't. Here is a step-by-step version you can run on yourself starting this week.
+Blocked Agency people don't need more training. They need their tools to stop being adversarial. They're already skilled. They're producing work for an environment that won't let the work compound.
 
-### Step 1: Convert your "intelligence" to markdown
+What this looks like at your scope: pick the five highest-leverage docs your team produces — strategy briefs, OKRs, customer research, project specs, weekly updates — and mandate they live in markdown in a shared repo your team's AI tools can access. No new tools, no re-org. A substrate change.
 
-Pick the five documents you reference most often: a strategy doc, a brand voice guide, a recurring report template, a key customer profile, your weekly update format.
+You don't have authority to mandate company-wide markdown. You do have authority over what your team produces and where they store it.
 
-Convert them to markdown. (Most tools — Notion, Google Docs, Word — can export to markdown now, or you can paste them into Claude or ChatGPT and ask for a clean markdown version.)
+### 2. Build team-level "skills" — move Emergent → Frontier
 
-Put them in one folder. This is your context substrate.
+The Emergent 50% already know how to use AI individually. What they lack is shared norms. Three different reports producing customer summaries with three different structures means none of those summaries compound into team capability.
 
-### Step 2: Build one "skill" — a reusable, parameterized prompt
+What this looks like: identify the 2–3 workflows your team runs most often and turn each into a reusable "skill" — a parameterized prompt with loaded context, clear criteria, and saved examples. Engineering managers: a feedback-synthesis skill for sprint retros. PMs: a research-to-spec skill. Design leads: a critique-prep skill. Ship one, prove the model, then expand.
 
-Pick the single highest-frequency output you produce (article drafts for me; customer summaries, status reports, talking points, candidate evaluations, or design rationales for you).
+This is where your team's token bill starts dropping. Skills run on cached, structured context. Ad-hoc prompting doesn't.
 
-Write a single prompt that loads your context substrate, states the task in plain language, lists the criteria for "good," and has marked input slots ("[topic]", "[audience]", "[length]"). Use it three times. Note what's wrong. Refine. Save it somewhere findable — Notion page, Claude Project, GitHub gist.
+### 3. Audit communication velocity at team scope
 
-### Step 3: Build a feedback loop
+You don't have Airbnb's town-hall ingestion pipeline. You have something better at your scope: you can actually listen to your team.
 
-Keep a one-line note after every use on what worked and what didn't. After 5–10 uses, patterns emerge. Adjust the prompt, context, and criteria based on what you've seen fail.
+Two metrics translate directly:
 
-90% of people skip this. The skill compounds not from cleverer prompting but from watching it fail in ten specific ways and fixing five of them.
+- **Velocity**: How long from your communication of strategy to that strategy showing up in your team's actual work?
+- **Dissonance**: When your direct reports describe priorities, do their answers match?
 
-### Step 4: Build it yourself
+A practical diagnostic: each quarter, ask your reports independently to summarize the top three priorities for the team. The gap between answers is your communication debt. Until you close it, no operating-model work downstream is going to stick.
 
-Don't outsource this to an intern, agency, or platform team — *you* build it. This line applies to individuals too: if you delegate the building, you delegate the learning. Even if your version is duct tape, building teaches you what's possible.
+### 4. Build alongside your team — move Unclaimed → Frontier
 
-### Step 5: Add a second skill, then a third
+The Unclaimed Capacity slice is the most damning one on the chart. These are people sitting in well-equipped orgs with the tools and structural support — and they're not picking it up. What they're watching is their managers.
 
-Once one workflow is humming, repeat. Investment per skill drops because your context substrate is already there. Each new skill compounds on the previous ones. Within three months, you should have 4–6 weekly skills, a quietly improving substrate, and measurably lower iteration time.
+Microsoft's data: when managers actively model AI use, employees report a **17-point increase in the value they get from AI and a 30-point boost in trust in agents**. When they don't, adoption stalls regardless of license count.
 
-## Questions to ask yourself
+This means you, building with AI yourself. Not approving roadmaps. Not giving feedback on builds. *Building.* Your engineering manager ships an evaluation pipeline this quarter? You should be in the codebase with them. Your PM is writing a research skill? You should be testing it on real research.
 
-When building a new skill, run through these — they catch most problems that would otherwise take a week to debug.
+This cuts hard against everything mid-management is rewarded for. The political risk is real — it can read as micromanagement or as failing to scale. The data says it's the strongest single predictor of team-level AI value.
 
-**On the work:**
-- What's the actual output, not just the task?
-- Who's the audience, and what would they push back on?
-- Do I do this at least once a week?
+### 5. Hire for the shape, not the slot — move Stalled → Frontier
 
-**On context:**
-- What does the model need to know about me (or my org) to get this right on the first pass?
-- What good and bad examples can I include?
-- Am I including context out of habit that the model doesn't need?
+The 16% Stalled slice isn't going to move under current incentives. You either restructure the work, hire differently, or accept the cost.
 
-**On evaluation:**
-- What does "good" look like concretely?
-- What one thing, if wrong, makes the whole output unusable?
-- How do I know if a draft is on track without rereading it all?
+Roberts's "embedded organizational architect" has a concrete version at your level: in your next hiring cycle, prioritize people who can redesign workflows, not just execute them. These hires are hard to evaluate in interviews because there's no clean credential for "deeply empathic and deeply technical." Look for people who've reorganized work, not just done it — engineers who designed handoff systems, PMs who restructured discovery, designers who built systems instead of shipping screens.
 
-**On cost and replication:**
-- Could a colleague run this workflow and get similar output?
-- What context is stable enough to cache?
-- Where am I burning tokens on context I sent yesterday?
+This is the slowest of the five moves. It's also the one that determines whether your operating model survives the next reorg.
 
-**On the build:**
-- Am I delegating the building itself? Why?
-- What do I learn by building this that I can't learn from a finished version?
+## Questions to run before your next AI investment
 
-## The honest part
+**On where your team actually is:**
+- If you mapped your team onto Microsoft's chart, what would the actual distribution be?
+- Which of your reports are Blocked Agency — skilled people held back by your structure?
+- Who's Unclaimed Capacity, and what would they need to see from you to move?
 
-I want to be clear about something, because the AI discourse is mostly people selling things: this is a costly period of working. The payoff is back-loaded — you won't see compound returns for two or three months. Token bills are real, time investment is real, cognitive cost of changing workflows is real.
+**On the substrate:**
+- What percentage of your team's institutional knowledge is machine-readable vs. trapped in PDFs and slides?
+- Where is your team rebuilding the same artifact every week from scratch?
+- What docs in your org should not exist in their current form anymore?
 
-The reason I think it's worth it anyway is that the alternative is worse. The alternative is what most knowledge workers are doing right now: ad-hoc prompting, inconsistent outputs, tokens flowing out the door for marginal value, and zero cumulative learning. You wake up six months in with a higher AI bill, no skills you can hand to a colleague, and outputs that are still fundamentally you-with-an-assistant rather than something more interesting.
+**On the structure:**
+- Where are you optimizing the existing org around AI vs. redesigning around what AI enables?
+- What's one process you could dismantle this quarter rather than make more efficient?
+- Does your org chart describe how work actually flows, or just who reports to whom?
 
-The Frontier zone isn't a magical place. Individual practice and structural support reinforce each other instead of fighting. You can build that structure deliberately, even at the scale of one person. Slides are the enemy of intelligence. So are workflows without feedback loops, tools without skills, and skills without context.
+**On your own behavior:**
+- When was the last thing you built — actually built, not approved — with AI?
+- Do your direct reports see you using AI thoughtfully, or avoiding it?
+- What's your team's interpretation of the message you're sending about AI?
+
+**On hiring and team design:**
+- Are you hiring people who can redesign work, or only people who can execute it as it currently exists?
+- Is there a "wedge" hire who could model the new operating norms for the rest?
+
+## Why most orgs won't do this
+
+This work is more politically costly at the org level than at the individual level. You'll be asked to spend budget on substrate changes that won't show ROI for two quarters. You'll push back on senior leadership who want AI deployed as a productivity overlay rather than an organizational redesign. You'll defend hiring profiles that don't pattern-match to your last five hires. You'll model behaviors — building with your team, sitting in the codebase, abandoning the deck — that look like a step down from "managing managers."
+
+This is why the Frontier zone is only 19% of AI users. Elevating people into it is a redesign, not an upgrade. It costs political capital, time, and comfort with familiar structures.
+
+The compounding payoff justifies it. The teams that make this transition won't be the ones with the largest AI budget — they'll be the ones whose managers built the operating model deliberately, with the chart on the wall, before the next reorg made it impossible.
+
+Your individual contributors aren't waiting for you. Many of them are already building their own operating models, with or without organizational support — we covered exactly that scenario in [The Knowledge Worker Playbook](https://productimpactpod.com/news/knowledge-worker-playbook-ai-layoffs-career-reset/). The question is whether they're building it inside your structure or in spite of it. The managers who get this right are the ones who make the structure worth building inside.
+
+The Frontier zone isn't a magical place. Individual practice and structural support reinforce each other instead of fighting. As a manager, you are the structural support. Slides are the enemy of intelligence. So is an org chart treated as a delivery mechanism instead of a flow-of-work model.
 
 ---
 
