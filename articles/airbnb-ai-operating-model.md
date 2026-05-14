@@ -28,9 +28,9 @@ This is the gap Airbnb is trying to close. Here's how.
 
 ### 1. Trade PDFs for markdown files
 
-Roberts's argument: slides and PDFs were built for human consumption in static, presentational settings. They're visually rich and machine-illegible. Markdown is the opposite — lightweight, version-controllable, diff-able, parseable, and trivially ingestible by any model. **It's also the format that made software disruptive in the first place.** His entire leadership team writes in markdown now.
+Slides and PDFs were built for human consumption in static, presentational settings. They're visually rich and machine-illegible. Markdown is the opposite — lightweight, version-controllable, diff-able, parseable, and trivially ingestible by any model. **It's also the format that made software disruptive in the first place.** AirBnB's entire leadership team writes in markdown now.
 
-Every PDF in your Drive is a wall between your knowledge and your AI. Every slide is a one-way mirror. The moment your strategy doc, your team update, your project brief, your customer research is in markdown, it becomes part of the substrate the model can reason against.
+Every PDF in your Drive is a wall between your knowledge and your AI. The moment your strategy doc, your team update, your project brief, your customer research is in markdown, it becomes part of the substrate the model can reason against.
 
 This is the cheapest, highest-leverage move in the whole playbook, and you can do it tomorrow.
 
@@ -38,7 +38,7 @@ This is the cheapest, highest-leverage move in the whole playbook, and you can d
 
 Airbnb's HR team historically wasn't known for storytelling. So they did the obvious-in-retrospect thing: they took the company's best executive presentations, trained a model on them, and turned the result into a foundational *skill* that any HR employee can plug data into and get a polished, on-brand narrative back in seconds.
 
-Notice the framing — "skill," not "tool." A skill is reusable, composable, and shared. It's a piece of organizational capability that lives outside any one person.
+A "skill" is a reusable, composable, and shared documentation for a workflow. It's a piece of organizational capability that lives outside any one person.
 
 Context engineering at the org level: you're not asking people to be better prompt engineers. You're giving them pre-loaded context — the gold-standard examples, the brand voice, the structural conventions — so they don't have to reinvent the wheel for every output. The [Anthropic guidance](https://www.anthropic.com/news/the-anthropic-economic-index) on this is increasingly clear: the highest-leverage AI work isn't writing better prompts, it's curating better context.
 
@@ -49,7 +49,7 @@ Airbnb ingests video from every town hall — VPs, SVPs, C-suite — and uses it
 - **Velocity**: How long does a message take to cascade from "here's where we're going" to "here's what it means for your work"?
 - **Veracity**: Where is there dissonance between the stated strategy and what a function is actually doing?
 
-For an organizational scientist, this is a holy grail. We have wanted this data forever. Pre-AI, the only way to get it was to interview hundreds of people, and even then you'd have to triangulate. Now you ingest the source material and let a model do the diff.
+Pre-AI, the only way to get this level of insight was to interview hundreds of people, and even then you'd have to triangulate. Now you ingest the source material and let a model do the diff.
 
 For a knowledge worker, the implication is the same in miniature: **your meetings are training data for your own operating model.** Most of you are already recording them. Almost none of you are using them as a feedback loop on your own communication.
 
@@ -107,7 +107,7 @@ Keep a one-line note after every use on what worked and what didn't. After 5–1
 
 ### Step 4: Build it yourself
 
-Don't outsource this to an intern, agency, or platform team — *you* build it. Roberts's line applies to individuals too: if you delegate the building, you delegate the learning. Even if your version is duct tape, building teaches you what's possible.
+Don't outsource this to an intern, agency, or platform team — *you* build it. This line applies to individuals too: if you delegate the building, you delegate the learning. Even if your version is duct tape, building teaches you what's possible.
 
 ### Step 5: Add a second skill, then a third
 
