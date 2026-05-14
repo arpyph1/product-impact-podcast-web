@@ -1,26 +1,67 @@
 {
   "slug": "airbnb-ai-operating-model",
-  "title": "What We Can Learn from Airbnb's AI Operating Model",
-  "subtitle": "How to build internal structures that make AI effective at scale",
+  "title": "Slides Are the Enemy of Intelligence: Inside Airbnb's AI Operating Model",
+  "subtitle": "What Airbnb's CHRO told Stanford about their AI playbook — and a field guide for building your own.",
   "format": "feature",
-  "author_slugs": ["brittany"],
-  "byline_role": "Director of Product Impact",
+  "author_slugs": ["brittany-hobbs"],
+  "byline_role": "Co-host, Product Impact Podcast",
   "publish_date": "2026-05-14",
-  "meta_description": "Airbnb's deliberate AI operating model shows how to move from chaotic AI experimentation to structured, measurable impact. Here's how to build the same system for your own work.",
+  "meta_description": "Airbnb CHRO Iain Roberts walked Stanford HAI through the company's AI operating model. Here are the five lessons — from 'PDFs are the enemy of intelligence' to 'leaders must build' — and a step-by-step field guide for knowledge workers who want to build their own.",
   "themes": ["adoption-organizational-change", "ai-product-strategy"],
-  "lenses": ["organizational-design", "capability-building"],
-  "topics": ["AI operating models", "workflow optimization", "organizational adoption", "knowledge work"],
-  "read_time_minutes": 8,
+  "lenses": ["business-lens", "product-lens"],
+  "topics": [
+    "AI operating models",
+    "context engineering",
+    "knowledge work",
+    "organizational adoption",
+    "prompt skills",
+    "token cost optimization",
+    "Airbnb",
+    "Microsoft Work Trend Index",
+    "Stanford AI Index",
+    "Anthropic Economic Index"
+  ],
+  "read_time_minutes": 9,
+  "word_count": 2350,
   "hero_image_url": null,
   "hero_image_alt": null,
   "canonical_url": "https://productimpactpod.com/news/airbnb-ai-operating-model",
   "overview_bullets": [
-    "Airbnb's AI model treats AI as a capability within defined workflows, not a black box",
-    "Clear input specs, structured context, and evaluation criteria dramatically reduce iteration",
-    "You can build this same system in 3-4 weeks starting with one high-impact use case",
-    "Token costs actually drop as workflows become more intentional and context-aware"
+    "Airbnb CHRO Iain Roberts laid out a five-part AI operating model at Stanford HAI — the headline: 'slides and PDFs are the enemy of intelligence.'",
+    "Microsoft's 2026 Work Trend Index puts only 19% of AI users in the Frontier zone where individual skill and org readiness reinforce each other; org factors drive 67% of AI's real impact.",
+    "Brittany has run a similar lightweight version internally for six months — stronger outputs, easier to challenge, and substantially lower token usage as the operating model compounds.",
+    "Includes a step-by-step field guide for low-to-intermediate AI operators and a question set for designing your own skills, context substrate, and feedback loops."
   ],
-  "is_lead_story": false,
+  "is_lead_story": true,
   "published": false,
-  "note": "Article content in airbnb-ai-operating-model.md"
+  "entity_refs": [
+    { "entity_slug": "airbnb", "type": "organization", "relevance": "primary" },
+    { "entity_slug": "iain-roberts", "type": "person", "relevance": "primary" },
+    { "entity_slug": "mary-kate-stimmler", "type": "person", "relevance": "mention" },
+    { "entity_slug": "stanford-hai", "type": "organization", "relevance": "supporting" },
+    { "entity_slug": "microsoft-work-trend-index-2026", "type": "source", "relevance": "supporting" },
+    { "entity_slug": "anthropic-economic-index", "type": "source", "relevance": "supporting" },
+    { "entity_slug": "stanford-ai-index-2026", "type": "source", "relevance": "supporting" },
+    { "entity_slug": "context-engineering", "type": "concept", "relevance": "primary" },
+    { "entity_slug": "ai-operating-model", "type": "concept", "relevance": "primary" },
+    { "entity_slug": "prompt-skills", "type": "concept", "relevance": "primary" }
+  ],
+  "faqs": [
+    {
+      "question": "What is Airbnb's AI Operating Model in plain language?",
+      "answer": "It's the structural and cultural system Airbnb has built around AI use — not just which models they use, but how they format internal knowledge (markdown over PDFs), package repeatable workflows as 'skills,' measure communication velocity from leadership recordings, mandate that leaders build with AI directly, and embed organizational architects who redesign work around people and AI together."
+    },
+    {
+      "question": "Where did the five-point summary of Airbnb's model come from?",
+      "answer": "From a LinkedIn post by Mary Kate Stimmler, PhD (Stanford Practitioner Fellow), summarizing Iain Roberts's (Airbnb's CHRO) talk at Stanford HAI's AI for Organization Conference."
+    },
+    {
+      "question": "Why does the article claim token usage drops with a stronger operating model?",
+      "answer": "Three reasons: (1) fewer re-prompts because the first response is closer to usable, (2) reusable context substrates that can be cached at significant discount, and (3) tighter, parameterized 'skills' that don't re-send the same examples and instructions each session."
+    },
+    {
+      "question": "I'm a low-to-intermediate AI user. Where do I start?",
+      "answer": "Start by converting your five most-referenced documents to markdown, then build one parameterized prompt ('skill') for the single highest-frequency output you produce. Use it three times, refine, and only then add a second skill. The compounding only works if you start narrow."
+    }
+  ]
 }
