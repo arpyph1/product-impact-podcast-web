@@ -1,12 +1,14 @@
-# Slides Are the Enemy of Intelligence: Inside Airbnb's AI Operating Model
+# What We Can Learn from Airbnb's AI Operating Model
 
 *What Airbnb's CHRO told Stanford about their AI playbook — and what it means for the rest of us trying to do real work with these tools.*
 
 ---
 
+**"Slides and PDFs are the enemy of intelligence."**
+
 I've been waiting for someone to say it out loud, and Iain Roberts finally did.
 
-Speaking at Stanford HAI's AI for Organization Conference last week, Airbnb's Chief Human Resources Officer walked through the company's AI operating model — the actual one, not the deck version. The talk was distilled into a now-circulating LinkedIn post by Mary Kate Stimmler at Stanford's Center for Advanced Study in the Behavioral Sciences, and if you work in any kind of knowledge role, it should be the most-forwarded thing in your Slack this week.
+Speaking at Stanford HAI's AI for Organization Conference last week, Airbnb's Chief Human Resources Officer walked through the company's AI operating model — the actual one, not the deck version. The talk was distilled into a now-circulating LinkedIn post by [Mary Kate Stimmler](https://www.linkedin.com/in/marykate-stimmler/) at Stanford's Center for Advanced Study in the Behavioral Sciences, and if you work in any kind of knowledge role, it should be the most-forwarded thing in your team this week.
 
 His exact phrase, the one I keep coming back to: **"Slides and PDFs are the enemy of intelligence."**
 
@@ -151,4 +153,8 @@ The Frontier zone isn't a magical place. Individual practice and structural supp
 
 ---
 
-*Sources referenced: [Mary Kate Stimmler's LinkedIn summary of Iain Roberts's Stanford HAI talk](https://www.linkedin.com/feed/update/urn:li:activity:7460686634704015360/); [Microsoft 2026 Work Trend Index](https://www.microsoft.com/en-us/worklab/work-trend-index); [Anthropic Economic Index, March 2026 report](https://www.anthropic.com/research/economic-index-march-2026-report); [Stanford HAI 2026 AI Index Report](https://hai.stanford.edu/ai-index/2026-ai-index-report); [Airbnb Engineering: Automation Platform v2](https://medium.com/airbnb-engineering/automation-platform-v2-improving-conversational-ai-at-airbnb-d86c9386e0cb).*
+**Which of these five would land hardest at your company?** Reply in the comments — I'm gathering examples for the next issue.
+
+---
+
+*Sources referenced: [Mary Kate Stimmler's LinkedIn summary of Iain Roberts's Stanford HAI talk](https://www.linkedin.com/feed/update/urn:li:activity:7460686634704015360/); [Microsoft 2026 Work Trend Index](https://www.microsoft.com/en-us/worklab/work-trend-index); [Anthropic Economic Index, March 2026 report](https://www.anthropic.com/research/economic-index-march-2026-report); [Stanford HAI 2026 AI Index Report](https://hai.stanford.edu/ai-index/2026-ai-index-report); [Airbnb Engineering: Intelligent Automation Platform](https://airbnb.tech/ai-ml/intelligent-automation-platform-empowering-conversational-ai-and-beyond-at-airbnb/).*

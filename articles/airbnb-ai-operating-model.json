@@ -1,12 +1,12 @@
 {
   "slug": "airbnb-ai-operating-model",
-  "title": "Slides Are the Enemy of Intelligence: Inside Airbnb's AI Operating Model",
-  "subtitle": "What Airbnb's CHRO told Stanford about their AI playbook — and a field guide for building your own.",
+  "title": "What We Can Learn from Airbnb's AI Operating Model",
+  "subtitle": "\"Slides and PDFs are the enemy of intelligence.\" Here's Iain Roberts's five-point framework, his exact words, and how to build your own.",
   "format": "feature",
   "author_slugs": ["brittany-hobbs"],
   "byline_role": "Co-host, Product Impact Podcast",
   "publish_date": "2026-05-14",
-  "meta_description": "Airbnb CHRO Iain Roberts walked Stanford HAI through the company's AI operating model. Here are the five lessons — from 'PDFs are the enemy of intelligence' to 'leaders must build' — and a step-by-step field guide for knowledge workers who want to build their own.",
+  "meta_description": "Airbnb's Iain Roberts revealed his company's AI operating model at Stanford. Five structural moves—from trading PDFs for markdown to 'if you delegate the building, you delegate the learning'—and how to replicate them at your level.",
   "themes": ["adoption-organizational-change", "ai-product-strategy"],
   "lenses": ["business-lens", "product-lens"],
   "topics": [
