@@ -1,12 +1,12 @@
 {
   "slug": "airbnb-ai-operating-model",
-  "title": "Airbnb revealed what an AI-native org looks like and how work will change",
-  "subtitle": "What Iain Roberts's Stanford talk shows about the structural and cultural shifts that separate organizations where AI compounds from ones where it's still a tool.",
+  "title": "WTF is an AI-native org anyways? Let's compare Airbnb & Meta's opposing plans",
+  "subtitle": "Two companies. Same obsession: becoming AI-native. Wildly different approaches. One is collaborative. One is coercive. Both tell us what's actually required to make AI work at scale.",
   "format": "feature",
   "author_slugs": ["brittany-hobbs"],
   "byline_role": "Co-host, Product Impact Podcast",
   "publish_date": "2026-05-14",
-  "meta_description": "Airbnb's CHRO revealed the five structural shifts that separate AI-native organizations from companies still treating AI as a tool. Here's what 88% of organizations claim to do with AI, why fewer than 10% actually scale it, and what the gap tells us about organizational design.",
+  "meta_description": "As Meta lays off 8,000 people and Airbnb redesigns its org, two companies are racing to build AI-native operating systems. One is collaborative. One is coercive. Here's what both strategies reveal about the future of work.",
   "themes": ["adoption-organizational-change", "ai-product-strategy"],
   "lenses": ["business-lens", "product-lens"],
   "topics": [
@@ -27,10 +27,11 @@
   "hero_image_alt": null,
   "canonical_url": "https://productimpactpod.com/news/airbnb-ai-operating-model",
   "overview_bullets": [
-    "Airbnb CHRO Iain Roberts laid out a five-part AI operating model at Stanford HAI — the headline: 'slides and PDFs are the enemy of intelligence.'",
-    "Microsoft's 2026 Work Trend Index shows only 19% of AI users are in the Frontier zone; 67% of AI's real impact comes from organizational factors, 32% from individual mindset.",
-    "Sister piece for individuals: 'The Knowledge Worker Playbook' covers what to do if you're an IC. This article is for the Directors and VPs designing the systems around them.",
-    "Five org-design moves mapped to Airbnb's playbook, each tied to elevating a different segment of your team from Blocked / Stalled / Emergent / Unclaimed into the Frontier zone."
+    "Meta announced 8,000 layoffs (10% of workforce) despite record $26.8B Q1 profits. Explicitly tied to AI reorganization. Employees report 'horrifically low' morale.",
+    "Only 19% of AI users are in Microsoft's 'Frontier zone' where AI compounds. The bottleneck isn't technology — it's organizational design. 88% of orgs use AI; fewer than 10% scaled it.",
+    "Airbnb's approach: Retrofit your org collaboratively. Markdown, skills, meeting context, leaders building, org architects. Pull people into AI adoption.",
+    "Meta's approach: Force organizational change through pressure, metrics, and restructuring. Push people into AI adoption. Same goal (AI-native OS), opposite method.",
+    "Underneath the contrast, both companies are racing to build an operating system where AI generates the majority of code and work output."
   ],
   "is_lead_story": true,
   "published": false,
