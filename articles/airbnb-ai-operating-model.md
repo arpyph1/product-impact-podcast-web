@@ -10,9 +10,7 @@ I've been waiting for someone to say it out loud, and Iain Roberts finally did.
 
 Speaking at Stanford HAI's AI for Organization Conference last week, Airbnb's Chief Human Resources Officer walked through the company's AI operating model — the actual one, not the deck version. The talk was distilled into a now-circulating LinkedIn post by [Mary Kate Stimmler](https://www.linkedin.com/in/marykate-stimmler/) at Stanford's Center for Advanced Study in the Behavioral Sciences, and what he described isn't an optimization of existing work. It's a blueprint for how organizations need to be built for AI to actually work.
 
-The operating model tells us something important: most organizations haven't discovered yet what the structural prerequisites are. Microsoft's data says 88% of organizations are using AI. Fewer than 10% have operationalized it at scale. The gap isn't technology. It's operating model — the actual decisions an organization makes about how knowledge flows, how work gets redesigned, and what leaders do with their hands.
-
-Here's what Airbnb found they needed to do.
+What's striking about Airbnb's model isn't that it's clever — it's that it's *deliberate*. Most organizations are bolting AI onto existing workflows and hoping for productivity gains. Airbnb is making intentional structural and cultural choices about what excellence looks like with AI in the loop, then designing the org so anyone working inside it can be elevated by it. Those choices — five of them, specifically — are what an AI-native org actually has to commit to.
 
 > If you're an individual contributor building your own AI system inside whatever org you're in, we covered that strategy here: [The Knowledge Worker Playbook: AI, Layoffs, and the Career Reset](https://productimpactpod.com/news/knowledge-worker-playbook-ai-layoffs-career-reset/). This piece is about organizational design at scale.
 
@@ -26,72 +24,80 @@ This lines up with what Anthropic's most recent [Economic Index report](https://
 
 And it lines up with the Stanford [2026 AI Index](https://hai.stanford.edu/ai-index/2026-ai-index-report), which reported that 88% of organizations are using AI but fewer than 10% have fully scaled it inside any single function. Adoption is everywhere. Operationalization is rare.
 
-This is the gap Airbnb is trying to close. Here's how.
+Airbnb is one of the few companies treating that gap as a design problem rather than a tooling one. Five concrete moves make up their answer.
 
 ## The five things Airbnb is doing as an AI-native org
 
-The specifics of Airbnb's operating model aren't unique to Airbnb. They represent a pattern: organizations where AI actually compounds do five concrete structural things. None of them are about buying more models or running more pilots. All of them are about infrastructure decisions that let the work reorganize around what AI can do.
+1. **Trading PDFs for markdown** as the default format for institutional knowledge.
+2. **Turning their best executive work into reusable "skills"** that anyone in the org can plug into.
+3. **Mining meeting and town hall recordings** to measure communication velocity and detect strategic dissonance.
+4. **Mandating that leaders build with AI themselves** — not approve roadmaps, *build*.
+5. **Hiring embedded organizational architects** instead of plumbing AI into the existing org chart.
 
-### 1. Markdown over PDFs
+None of these are about buying more models or running more pilots. All of them are decisions about how the organization itself is shaped. Each one deserves a closer look at *why* it matters and what the research says about it.
+
+## Markdown will be the most important file type moving forward
 
 Slides and PDFs were built for human consumption in static, presentational settings. They're visually rich and machine-illegible. Markdown is the opposite — lightweight, version-controllable, diff-able, parseable, and trivially ingestible by any model. **It's also the format that made software disruptive in the first place.** Airbnb's entire leadership team writes in markdown now.
 
-Every PDF in your knowledge system is a wall between your org's knowledge and your models' ability to reason about it. The Stanford 2026 AI Index found that **data infrastructure is the primary barrier to organizational scaling of AI**: 88% of organizations are using AI, but 81% cite "data constraints" as the primary blocker to scaling beyond pilots. Most of those data constraints are actually *format* constraints — knowledge is trapped in presentational media instead of structured substrates.
+The reason this matters is mechanical, not aesthetic. Every PDF in your knowledge system is a wall between your org's knowledge and your models' ability to reason about it. The Stanford 2026 AI Index found that **data infrastructure is the primary barrier to organizational scaling of AI**: 88% of organizations are using AI, but 81% cite "data constraints" as the top blocker to scaling beyond pilots. A meaningful share of those constraints are actually *format* constraints — knowledge trapped in presentational media instead of structured substrates.
 
-The moment your strategy doc, your team update, your project brief, your customer research is in markdown instead of PDF, it becomes part of the substrate the model can build on. Context caching and retrieval improve. The cost per token drops. The ability to compose ideas compounds instead of resetting with every new question.
+Anthropic's own engineering guidance on context engineering points in the same direction: the highest-leverage thing you can do for an AI workflow is structure the input so the model can build on it. Markdown is the native format for that. Strategy docs, project briefs, customer research, team updates in markdown means context caching and retrieval improve, token cost per query drops, and ideas compound across sessions instead of resetting every time someone opens a fresh chat.
 
-### 2. Train your org's best practices into reusable models, then package them as "skills"
+It's the cheapest, highest-leverage move in the whole playbook. It's also the one that will quietly determine which orgs can actually let AI reason against their institutional knowledge two years from now and which ones are still uploading deck PDFs one at a time.
 
-Airbnb's HR team wasn't historically known for storytelling. So they did the obvious thing in retrospect: they took the company's best executive presentations, trained a model on them, and packaged the result as a "skill" that any HR employee can plug data into and receive a polished, on-brand narrative in seconds.
+## Turning your best in class artefacts into skills is an unlock
 
-A "skill" is a reusable, composable, and documented workflow. It's organizational capability that lives outside any one person.
+Airbnb's HR team wasn't historically known for storytelling. So they did the obvious-in-retrospect thing: they took the company's best executive presentations, trained a model on them, and packaged the result as a "skill" any HR employee can plug data into and receive a polished, on-brand narrative from in seconds.
 
-The Anthropic Economic Index 2026 found that **experienced AI users dramatically outperform newcomers not because of individual aptitude but because of practice inside systems**. The report emphasizes this: "The gap isn't intelligence. It's reps inside a structure that lets you learn what works." Airbnb's approach embeds that structure. You're not asking people to become better prompt engineers. You're giving them pre-loaded context — the gold-standard examples, the brand voice, the structural conventions — so they don't reinvent the wheel. [Anthropic's economic analysis](https://www.anthropic.com/news/the-anthropic-economic-index) on this is clear: the highest-leverage AI work isn't writing better prompts, it's curating better context at the organizational level.
+A "skill" in this sense is a reusable, composable, documented workflow — organizational capability that lives outside any one person. It encapsulates what good looks like, the brand voice, the structural conventions, the gold-standard examples. Once it exists, no one is starting from scratch and no one is reinventing the wheel.
 
-When every person on your team is starting from the same vetted context and examples, outputs compound. Variance drops. Quality stabilizes. Importantly, **token costs per unit output drop dramatically** — you're running context-cached queries against structured knowledge instead of ad-hoc free-form prompting.
+The research backing this is some of the strongest in the AI adoption literature. The Anthropic Economic Index 2026 found that experienced AI users dramatically outperform newcomers — and the gap is explained by practice inside structured systems, not raw aptitude. The same report flagged that the highest-leverage AI work in organizations isn't writing better prompts; it's curating better context. Skills are how that curated context becomes a reusable asset rather than a one-off output.
 
-### 3. Measure communication velocity and detect organizational dissonance
+There's a financial argument too. Skills run on cached, structured context against vetted examples. Ad-hoc prompting doesn't. Anthropic's [prompt caching documentation](https://www.anthropic.com/news/prompt-caching) shows up to a 90% reduction in cost and significant latency improvements for cached context. An org that turns its best work into skills gets compounding quality *and* a dropping token bill. An org that doesn't gets the opposite of both.
+
+This is also where the "elevation" Iain Roberts talks about becomes concrete. Skills mean the median person in the function operates closer to the gold standard than they otherwise would. That's organizational capability, not individual capability — exactly the unit Microsoft's data says actually moves the needle.
+
+## Mining your meeting transcripts can maximize your context training
 
 Airbnb ingests video from every town hall — VPs, SVPs, C-suite — and uses it to measure two things:
 
 - **Velocity**: How long does a message cascade from "here's where we're going" to "here's what it means for your work"?
-- **Veracity**: Where is there dissonance between stated strategy and actual function behavior?
+- **Veracity**: Where is there dissonance between stated strategy and what a function is actually doing?
 
-This isn't surveillance. It's feedback infrastructure. Pre-AI, the only way to measure this required interviewing hundreds of people and triangulating the answers. Now you ingest the source material and let the model find the patterns.
+Pre-AI, getting this level of organizational insight required interviewing hundreds of people and triangulating answers. Now the source material itself is the dataset. You ingest the recordings and let the model find the patterns.
 
-Organizations with poor communication velocity leak capability: people execute the old mandate while leadership has moved on to the new one. The [Microsoft 2026 Work Trend Index](https://www.microsoft.com/en-us/worklab/work-trend-index) explicitly measures organizational misalignment: the 31% of workers classified as "Blocked Agency" or "Unclaimed Capacity" are largely trapped by communication debt. They're either skilled workers whose org structure hasn't caught up with their capability (Blocked), or they're sitting in well-equipped orgs without clarity on what they should be doing (Unclaimed). The common factor: organizational communication is the bottleneck, not individual skill.
+This isn't surveillance. It's feedback infrastructure — and the research suggests it's exactly where most organizations are leaking capability. The [Microsoft 2026 Work Trend Index](https://www.microsoft.com/en-us/worklab/work-trend-index) explicitly measures organizational misalignment: the 31% of workers classified as "Blocked Agency" or "Unclaimed Capacity" are largely trapped by communication debt. They're either skilled workers whose org structure hasn't caught up with their capability, or they're sitting in well-equipped orgs without clarity on priorities. In both cases, the bottleneck is organizational communication, not individual skill.
 
-Airbnb's approach to measuring this creates feedback loops. The org becomes aware of its own communication failures and can close them. That's structural change.
+The deeper unlock isn't measurement — it's training data. Every meeting transcript is a record of how your org actually talks about strategy, decisions, customers, and trade-offs. Fed back into your context layer, that material becomes part of what the model knows about how *your* organization thinks. The vocabulary, the trade-offs leaders actually weigh, the decisions that got made and unmade — that's the texture no off-the-shelf model can produce. Stanford's 2026 AI Index has a related finding: organizations citing "lack of contextual fit" as a barrier to AI value capture outnumber those citing model quality by a wide margin. Mining your own meeting corpus is one of the most direct ways to close that gap.
 
-### 4. Leaders must build, not delegate the learning
+The orgs that do this build a feedback loop where their AI gets more useful the longer it's been inside the org. The orgs that don't keep starting from a generic baseline every time someone opens a chat.
+
+## Leadership needs to model AI usage in a meaningful way
 
 Iain Roberts's team handed him a six-month roadmap for a "gathering tool" to help hybrid teams plan offsites. He built it over a weekend. The line: **"If you delegate the building, you delegate the learning."**
 
-He's mandated that his leaders actually build things — not approve roadmaps, *build them* — so they're learning the AI's capabilities directly, not through a proxy. This is uncomfortable at senior levels. And it happens to be the single most predictive variable in Microsoft's adoption data. When managers actively model AI use, employees report a **17-point increase in the value they get from AI and a 30-point boost in trust in the organization's AI strategy**. When they don't, adoption stalls regardless of tooling investment.
+He's mandated that his leaders actually build things — not approve roadmaps, *build them* — so they're learning the AI's capabilities directly, not through a proxy. This is uncomfortable at senior levels. It cuts against how mid- and upper-management has been rewarded for decades. And it happens to be the single most predictive variable in Microsoft's adoption data.
 
-The mechanism is organizational: leaders who build with AI understand what work needs to be redesigned. Leaders who delegate the building to teams or vendors see AI as a productivity overlay on existing structures. Those are fundamentally different operating models, and the data shows they produce different outcomes. **The organization becomes shaped by what its leaders actually do with their hands, not what they approve.**
+When managers actively model AI use, employees report a **17-point increase in the value they get from AI and a 30-point boost in trust in the organization's AI strategy**. When they don't, adoption stalls regardless of tooling investment. That gap doesn't close with more training, more licenses, or better onboarding. It closes when leaders pick up the tools themselves.
 
-### 5. Hire for embedded organizational design, not just task execution
+The mechanism is organizational, not behavioral. Leaders who build with AI develop intuition for what work needs to be redesigned. Leaders who delegate the building see AI as a productivity overlay on existing structures. Those are fundamentally different operating models, and they produce different outcomes — both in what gets built and in what employees infer about the company's actual posture toward AI.
 
-Palantir popularized the FDE (Forward Deployed Engineer): plumb the data, map the process, plug AI in. Roberts thinks this misses the critical point. You don't optimize the existing org around AI — you redesign the org around people and technology together.
-
-His proposed role is an "embedded organizational architect": someone deeply empathic, deeply social, deeply understanding the human condition. "An organization," he says, "is really just a network of individuals trying to get things done collectively." That's the unit of analysis — not the org chart or the process, but the network of relationships and work flows.
-
-The shift this represents isn't small. The unit of analysis changes from "do we have AI" (every org does) to "is our work structure built so AI moves people forward, or is AI a tool laid on top of a structure that's increasingly misshapen?" The Stanford AI Index 2026 found that fewer than 10% of organizations have operationalized AI beyond pilots. The bottleneck isn't capability — it's structural. Organizations that scaled AI were the ones that hired for redesign: people who could see the flow of work and imagine it differently, not people who could execute the current flow more efficiently.
-
-Organizational architects are going to be important because the next wave of AI scaling isn't about features or performance. It's about figuring out which org structures actually work when AI is in the loop.
+There's a second-order effect the Stanford AI Index 2026 surfaces clearly: organizations where leadership engagement with AI is "active and visible" report fully-scaled AI deployments at roughly 3x the rate of those where leadership engagement is "directional only." Leaders' hands on the keyboard isn't symbolic — it's the strongest single signal that the org is past the experimentation phase. **The organization becomes shaped by what its leaders actually do, not what they approve.**
 
 ## Organizational architects are going to be important
 
-Most organizations think of AI adoption as a technology problem: which model do we use, which tools do we license, how do we train people on the interface. But the organizations making this actually work are treating it as a structural problem.
+Palantir popularized the FDE (Forward Deployed Engineer): plumb the data, map the process, plug AI in. Roberts thinks this misses the critical point. You don't optimize the existing org around AI — you redesign the org around people and technology together.
 
-Iain Roberts's insight — that organizations are networks of individuals trying to get things done collectively — matters because AI changes what "getting things done collectively" means. It changes which skills compound, which knowledge is valuable, which work gets centralized vs. distributed, what communication velocity actually means.
+His proposed role is an "embedded organizational architect": someone deeply empathic, deeply social, deeply understanding the human condition. "An organization," he says, "is really just a network of individuals trying to get things done collectively." That's the unit of analysis — not the org chart, not the process map, but the network of relationships and the flow of work between them.
 
-The five things Airbnb is doing all point to the same realization: **the operating model determines whether AI amplifies your org or just adds noise to it.** Markdown as a substrate, trained skills as shared capability, communication velocity as measurable feedback, leaders building directly, organizational architects as a core role.
+The shift this represents isn't small. The unit of analysis changes from "do we have AI" — every org does — to "is our work structure built so AI moves people forward, or is AI a tool sitting on top of a structure that's increasingly the wrong shape?" The Stanford AI Index 2026 found that fewer than 10% of organizations have operationalized AI beyond pilots. The bottleneck isn't capability. It's structural. Organizations that scaled were the ones that hired and empowered people to redesign workflows — not just execute the current ones more efficiently.
 
-These aren't innovations. They're discoveries about what organizations need to look like for AI to actually work. Most organizations are still in the "add AI to existing workflows" phase. The ones that scale past that are the ones that ask: what does the organization need to look like for this to work? What infrastructure, what norms, what hiring, what daily decisions by leaders?
+The five moves all converge here. Markdown as a substrate, skills as shared capability, meeting transcripts as feedback infrastructure, leaders building directly — none of those individually transform an organization. What transforms it is someone whose job is specifically to see those pieces as a system and redesign how the work flows between them. That's the organizational architect role.
 
-That's not a software problem. That's an organizational design problem. And it's where the next wave of AI capability actually lives.
+This is the move most organizations will resist longest, because there's no clean credential for it. You can't recruit "deeply empathic and deeply technical" off LinkedIn. The people who can do this job are the ones who've already reorganized work elsewhere — engineers who designed handoff systems, PMs who restructured discovery, designers who built systems instead of shipping screens. They exist, but they don't pattern-match to standard hiring rubrics.
+
+Most leaders won't internalize this for another two years. The shift isn't from human to AI. It's from hierarchies and reporting lines to networks and workflows. The org chart isn't going away, but it's no longer the unit of analysis — the *flow of work* is. The organizations that figure this out first will be the ones writing the playbook everyone else copies in 2028.
 
 ---
 
@@ -99,4 +105,4 @@ That's not a software problem. That's an organizational design problem. And it's
 
 ---
 
-*Sources referenced: [Mary Kate Stimmler's LinkedIn summary of Iain Roberts's Stanford HAI talk](https://www.linkedin.com/feed/update/urn:li:activity:7460686634704015360/); [Microsoft 2026 Work Trend Index](https://www.microsoft.com/en-us/worklab/work-trend-index); [Anthropic Economic Index, March 2026 report](https://www.anthropic.com/research/economic-index-march-2026-report); [Stanford HAI 2026 AI Index Report](https://hai.stanford.edu/ai-index/2026-ai-index-report); [Airbnb Engineering: Intelligent Automation Platform](https://airbnb.tech/ai-ml/intelligent-automation-platform-empowering-conversational-ai-and-beyond-at-airbnb/).*
+*Sources referenced: [Mary Kate Stimmler's LinkedIn summary of Iain Roberts's Stanford HAI talk](https://www.linkedin.com/feed/update/urn:li:activity:7460686634704015360/); [Microsoft 2026 Work Trend Index](https://www.microsoft.com/en-us/worklab/work-trend-index); [Anthropic Economic Index, March 2026 report](https://www.anthropic.com/research/economic-index-march-2026-report); [Stanford HAI 2026 AI Index Report](https://hai.stanford.edu/ai-index/2026-ai-index-report); [Anthropic prompt caching documentation](https://www.anthropic.com/news/prompt-caching); [Airbnb Engineering: Intelligent Automation Platform](https://airbnb.tech/ai-ml/intelligent-automation-platform-empowering-conversational-ai-and-beyond-at-airbnb/).*
